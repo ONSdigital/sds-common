@@ -41,3 +41,19 @@ bump:
 	uv run --only-group version-check python .github/scripts/bump_version.py
 	@echo "🔄 Generating new lock file..."
 	uv lock
+
+.PHONY: install
+install: ## Install dependencies
+	uv sync
+
+
+.PHONY: build-dist
+build-dist: install ## Build tar and wheel
+	uv build
+
+.PHONY: publish-dist
+publish-dist: build-dist ## Publish to artifact registry (must be logged into gcloud)
+	pip install keyring
+	pip install keyrings.google-artifactregistry-auth
+	pip install twine
+	twine upload --repository-url https://europe-west2-python.pkg.dev/ons-sds-jb/sds-python-packages --verbose dist/sds_common-*

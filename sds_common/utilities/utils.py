@@ -1,13 +1,14 @@
 import json
 from pathlib import Path
 
-import google
+import google.oauth2.id_token
 import requests
 
+
 from sds_common.config.logging_config import logging
-from sds_common.config.schema_config import CONFIG
+from sds_common.config.config import CONFIG
 from sds_common.models.schema_publish_errors import FilepathError, SchemaJSONDecodeError, SchemaFetchError
-from sds_common.services.authenticated_http_service import SDS_HTTP_SERVICE
+from sds_common.services.http_service import HttpService
 from sds_common.services.secret_service import SECRET_SERVICE
 
 logger = logging.getLogger(__name__)
@@ -46,7 +47,7 @@ def decode_json_response(response: requests.Response) -> dict | None:
         raise SchemaJSONDecodeError("N/A") from None
 
 
-def fetch_raw_schema(path: str) -> dict:
+def fetch_raw_schema_from_github(path: str) -> dict:
     """
     Fetches the schema from the ONSdigital GitHub repository.
 
@@ -58,7 +59,8 @@ def fetch_raw_schema(path: str) -> dict:
     """
     url = CONFIG.GITHUB_SCHEMA_URL + path
     logger.info(f"Fetching schema from {url}")
-    response = SDS_HTTP_SERVICE.make_get_request(url)
+    http_service = HttpService.create(None)
+    response = http_service.make_get_request(url)
 
     if response.status_code != 200:
         raise SchemaFetchError(path, response.status_code, url)

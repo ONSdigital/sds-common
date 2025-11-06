@@ -1,7 +1,7 @@
 from sds_common.config.config_helpers import ConfigHelpers
 
 
-class SchemaConfig:
+class Config:
     PROJECT_ID = ConfigHelpers.get_value_from_env("PROJECT_ID", "ons-sds-jb")
     PROCESS_TIMEOUT = int(ConfigHelpers.get_value_from_env("PROCESS_TIMEOUT", "540"))
     SDS_URL = ConfigHelpers.get_value_from_env("SDS_URL", "test_url")
@@ -33,4 +33,4 @@ class SchemaConfig:
     )
 
 
-CONFIG = SchemaConfig()
+CONFIG = Config()

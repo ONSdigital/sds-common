@@ -1,4 +1,4 @@
-from sds_common.config.schema_config import CONFIG
+from sds_common.config.config import CONFIG
 from google.cloud.pubsub_v1 import PublisherClient
 from sds_common.models.schema_publish_errors import SchemaPublishError
 

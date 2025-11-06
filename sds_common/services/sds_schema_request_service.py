@@ -1,6 +1,6 @@
 import requests
 from sds_common.config.logging_config import logging
-from sds_common.config.schema_config import CONFIG
+from sds_common.config.config import CONFIG
 from sds_common.models.schema_publish_errors import (
     SchemaMetadataError,
     SchemaPostError,
