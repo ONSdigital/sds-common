@@ -2,6 +2,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
+from sds_common.utilities.utils import generate_authentication_headers
+
 
 class HttpService:
 
@@ -59,3 +61,6 @@ class HttpService:
         """
         response = self.session.get(url, headers=self.headers)
         return response
+
+HTTP_SERVICE = HttpService.create(None)
+AUTHENTICATED_HTTP_SERVICE = HttpService.create(generate_authentication_headers())

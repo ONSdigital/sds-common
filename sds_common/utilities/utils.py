@@ -8,7 +8,7 @@ import requests
 from sds_common.config.logging_config import logging
 from sds_common.config.config import CONFIG
 from sds_common.models.schema_publish_errors import FilepathError, SchemaJSONDecodeError, SchemaFetchError
-from sds_common.services.http_service import HttpService
+from sds_common.services.http_service import HttpService, HTTP_SERVICE
 from sds_common.services.secret_service import SECRET_SERVICE
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ def fetch_raw_schema_from_github(path: str) -> dict:
     """
     url = CONFIG.GITHUB_SCHEMA_URL + path
     logger.info(f"Fetching schema from {url}")
-    http_service = HttpService.create(None)
+    http_service = HTTP_SERVICE
     response = http_service.make_get_request(url)
 
     if response.status_code != 200:
@@ -68,7 +68,7 @@ def fetch_raw_schema_from_github(path: str) -> dict:
     return schema
 
 
-def generate_sds_headers() -> dict[str, str]:
+def generate_authentication_headers() -> dict[str, str]:
     """
     Create headers for authentication through SDS load balancer.
 

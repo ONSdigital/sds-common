@@ -8,7 +8,7 @@ from sds_common.models.schema_publish_errors import (
 
 class Schema:
     def __init__(
-        self, schema_json: dict, filepath: str, survey_id: str, schema_version: str
+        self, schema_json: dict, filepath: str | None, survey_id: str, schema_version: str
     ) -> None:
         self.json = schema_json
         self.filepath = filepath

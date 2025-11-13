@@ -6,8 +6,7 @@ from sds_common.models.schema_publish_errors import (
     SchemaPostError,
 )
 from sds_common.schema.schema import Schema
-from sds_common.services.http_service import HttpService
-from sds_common.utilities.utils import generate_sds_headers
+from sds_common.services.http_service import HttpService, AUTHENTICATED_HTTP_SERVICE
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +16,7 @@ class SdsSchemaRequestService:
     Service to handle requests to SDS schema endpoints.
     """
     def __init__(self):
-        self.http_service = HttpService.create(generate_sds_headers())
+        self.http_service = AUTHENTICATED_HTTP_SERVICE
 
     def get_schema_metadata(self, survey_id: str) -> requests.Response:
         """

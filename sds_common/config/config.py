@@ -26,10 +26,13 @@ class Config:
         "PUBLISH_SCHEMA_QUEUE_TOPIC_ID", "publish-schema-queue"
     )
     FIRESTORE_DB_NAME = ConfigHelpers.get_value_from_env(
-        "FIRESTORE_DB_NAME", "ons-sds-jb-sds"
+        "FIRESTORE_DB_NAME", "ons-sds-ci-sds"
     )
     SCHEMA_BUCKET_NAME = ConfigHelpers.get_value_from_env(
-        "SCHEMA_BUCKET_NAME", "ons-sds-jb-sds-europe-west2-schema"
+        "SCHEMA_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema"
+    )
+    SCHEMA_PUBLISH_BUCKET_NAME = ConfigHelpers.get_value_from_env(
+        "SCHEMA_PUBLISH_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema-publish"
     )
 
 
