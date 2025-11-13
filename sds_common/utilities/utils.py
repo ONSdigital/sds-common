@@ -1,15 +1,13 @@
 import json
 from pathlib import Path
 
-import google.oauth2.id_token
 import requests
 
 
 from sds_common.config.logging_config import logging
 from sds_common.config.config import CONFIG
 from sds_common.models.schema_publish_errors import FilepathError, SchemaJSONDecodeError, SchemaFetchError
-from sds_common.services.http_service import HttpService, HTTP_SERVICE
-from sds_common.services.secret_service import SECRET_SERVICE
+from sds_common.services.http_service import HTTP_SERVICE
 
 logger = logging.getLogger(__name__)
 
@@ -66,24 +64,3 @@ def fetch_raw_schema_from_github(path: str) -> dict:
         raise SchemaFetchError(path, response.status_code, url)
     schema = decode_json_response(response)
     return schema
-
-
-def generate_authentication_headers() -> dict[str, str]:
-    """
-    Create headers for authentication through SDS load balancer.
-
-    Returns:
-        dict[str, str]: the headers required for remote authentication.
-    """
-    oauth_client_id = SECRET_SERVICE.get_oauth_client_id()
-    auth_req = google.auth.transport.requests.Request()
-    auth_token = google.oauth2.id_token.fetch_id_token(
-        auth_req, audience=oauth_client_id
-    )
-
-    headers = {
-        "Authorization": f"Bearer {auth_token}",
-        "Content-Type": "application/json",
-    }
-
-    return headers

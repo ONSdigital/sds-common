@@ -1,8 +1,9 @@
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
+import google.oauth2.id_token
 
-from sds_common.utilities.utils import generate_authentication_headers
+from sds_common.services.secret_service import SECRET_SERVICE
 
 
 class HttpService:
@@ -12,9 +13,9 @@ class HttpService:
         self.headers = headers
 
     @classmethod
-    def create(cls, headers: dict[str, str] | None):
+    def create(cls, authentication_headers: bool):
         session = cls._setup_session()
-        headers = headers
+        headers = cls.generate_authentication_headers() if authentication_headers else None
         return cls(session, headers)
 
     @staticmethod
@@ -48,13 +49,12 @@ class HttpService:
         response = self.session.post(url, json=data, headers=self.headers)
         return response
 
-    def make_get_request(self, url: str, sds_headers=None) -> requests.Response:
+    def make_get_request(self, url: str) -> requests.Response:
         """
         Make a GET request to a specified URL.
 
         Parameters:
             url (str): the URL to send the GET request to.
-            sds_headers (bool): whether to include the SDS headers in the request (for SDS API).
 
         Returns:
             requests.Response: the response from the GET request.
@@ -62,5 +62,26 @@ class HttpService:
         response = self.session.get(url, headers=self.headers)
         return response
 
-HTTP_SERVICE = HttpService.create(None)
-AUTHENTICATED_HTTP_SERVICE = HttpService.create(generate_authentication_headers())
+    @staticmethod
+    def generate_authentication_headers() -> dict[str, str]:
+        """
+        Create headers for authentication through SDS load balancer.
+
+        Returns:
+            dict[str, str]: the headers required for remote authentication.
+        """
+        oauth_client_id = SECRET_SERVICE.get_oauth_client_id()
+        auth_req = google.auth.transport.requests.Request()
+        auth_token = google.oauth2.id_token.fetch_id_token(
+            auth_req, audience=oauth_client_id
+        )
+
+        headers = {
+            "Authorization": f"Bearer {auth_token}",
+            "Content-Type": "application/json",
+        }
+
+        return headers
+
+HTTP_SERVICE = HttpService.create(False)
+AUTHENTICATED_HTTP_SERVICE = HttpService.create(True)
