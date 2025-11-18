@@ -1,7 +1,9 @@
 import json
 
 from google.cloud import storage
+from sds_common.config.logging_config import logging
 
+logger = logging.getLogger(__name__)
 
 class BucketRepository:
     def __init__(self, bucket: storage.Bucket):
@@ -13,3 +15,7 @@ class BucketRepository:
     def upload_file_from_path(self, filepath: str):
         blob = self.bucket.blob(filepath)
         blob.upload_from_filename(filepath)
+
+    def delete_file(self, filename: str):
+        blob = self.bucket.blob(filename)
+        blob.delete()

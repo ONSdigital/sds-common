@@ -35,7 +35,7 @@ class SdsSchemaRequestService:
             raise SchemaMetadataError(survey_id, response.status_code)
         return response
 
-    def post_schema(self, schema: Schema) -> None:
+    def post_schema(self, schema: Schema) -> requests.Response:
         """
         Post the schema to SDS.
 
@@ -51,6 +51,7 @@ class SdsSchemaRequestService:
             logger.info(
                 f"Schema {schema.filepath} posted for survey {schema.survey_id}"
             )
+            return response
 
 
 SDS_SCHEMA_REQUEST_SERVICE = SdsSchemaRequestService()

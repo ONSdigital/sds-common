@@ -23,6 +23,3 @@ class BucketLoader:
             except exceptions.NotFound as exc:
                 raise Exception(f"Bucket {bucket.value} not found") from exc
         return getattr(self, attr_name)
-
-
-bucket_loader = BucketLoader()
