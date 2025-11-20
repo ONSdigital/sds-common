@@ -56,4 +56,4 @@ publish-dist: build-dist ## Publish to artifact registry (must be logged into gc
 	pip install keyring
 	pip install keyrings.google-artifactregistry-auth
 	pip install twine
-	twine upload --repository-url https://europe-west2-python.pkg.dev/ons-sds-jb/sds-python-packages --verbose dist/sds_common-*
+	twine upload --repository-url https://europe-west2-python.pkg.dev/ons-sds-ci/sds-python-packages --verbose dist/sds_common-*
