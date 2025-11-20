@@ -6,7 +6,7 @@ from sds_common.models.schema_publish_errors import (
     SchemaPostError,
 )
 from sds_common.schema.schema import Schema
-from sds_common.services.http_service import HttpService, AUTHENTICATED_HTTP_SERVICE
+from sds_common.services.http_service import AUTHENTICATED_HTTP_SERVICE
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +52,3 @@ class SdsSchemaRequestService:
                 f"Schema {schema.filepath} posted for survey {schema.survey_id}"
             )
             return response
-
-
-SDS_SCHEMA_REQUEST_SERVICE = SdsSchemaRequestService()

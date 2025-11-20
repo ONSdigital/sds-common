@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from sds_common.models.schema_publish_errors import (
     SchemaVersionError,
     SurveyIDError,
@@ -10,7 +8,7 @@ from sds_common.models.schema_publish_errors import (
 
 class Schema:
     def __init__(
-        self, schema_json: dict, survey_id: str, schema_version: str, filepath: Optional[str] = None
+        self, schema_json: dict, survey_id: str, schema_version: str, filepath: str
     ) -> None:
         self.json = schema_json
         self.filepath = filepath
@@ -18,7 +16,7 @@ class Schema:
         self.schema_version = schema_version
 
     @classmethod
-    def set_schema(cls, schema_json: dict, filepath: Optional[str] = None) -> Schema:
+    def set_schema(cls, schema_json: dict, filepath: str) -> Schema:
         """
         Sets the schema object with the survey ID and schema version from the schema JSON.
         Parameters:

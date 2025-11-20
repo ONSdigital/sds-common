@@ -2,6 +2,7 @@ from sds_common.config.config import CONFIG
 from google.cloud import exceptions, storage
 from sds_common.enums.buckets import Bucket
 
+
 class BucketLoader:
 
     def __init__(self):
