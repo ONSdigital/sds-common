@@ -11,6 +11,11 @@ class BucketLoader:
     def fetch_bucket(self, bucket: Bucket) -> storage.Bucket:
         """
         Lazily fetches and caches the specified bucket from Google Cloud Storage.
+
+        :param bucket: An instance of the Bucket enum representing the desired bucket.
+        :return: The Google Cloud Storage Bucket instance.
+        :raises TypeError: If the provided bucket is not an instance of the Bucket enum.
+        :raises Exception: If the specified bucket is not found.
         """
         if not isinstance(bucket, Bucket):
             raise TypeError(f"Expected bucket to be an instance of Bucket enum, got {type(bucket)}")

@@ -16,8 +16,7 @@ class SecretService:
         """
         Get the OAuth client ID for authenticating with SDS.
 
-        Returns:
-            str: the OAuth client ID.
+        :return: the OAuth client ID.
         """
         try:
             secret = self._get_secret_version()
@@ -30,8 +29,7 @@ class SecretService:
         """
         Access the latest secret version from Google Cloud Secret Manager.
 
-        Returns:
-            str: The Secret value.
+        :return: The Secret value.
         """
         try:
             name = (
@@ -42,5 +40,3 @@ class SecretService:
         except (GoogleAPICallError, RetryError):
             raise SecretAccessError("N/A") from None
 
-
-SECRET_SERVICE = SecretService()

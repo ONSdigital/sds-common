@@ -1,19 +1,21 @@
+from typing import Self
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 import google.oauth2.id_token
 
-from sds_common.services.secret_service import SECRET_SERVICE
+from sds_common.services.secret_service import SecretService
 
 
 class HttpService:
-
     def __init__(self, session: requests.Session, headers: dict[str, str] | None):
         self.session = session
         self.headers = headers
+        self.secret_service = SecretService()
 
     @classmethod
-    def create(cls, authentication_headers: bool):
+    def create(cls, authentication_headers: bool) -> Self:
         session = cls._setup_session()
         headers = cls.generate_authentication_headers() if authentication_headers else None
         return cls(session, headers)
@@ -23,8 +25,7 @@ class HttpService:
         """
         Set up an http/s session.
 
-        Returns:
-            Session: an http/s session.
+        :return: an http/s session.
         """
         session = requests.Session()
         retry = Retry(connect=3, backoff_factor=0.5)
@@ -38,12 +39,10 @@ class HttpService:
         """
         Make a POST request to a specified URL.
 
-        Parameters:
-            url (str): the URL to send the POST request to.
-            data (dict): the JSON data to send in the POST request.
+        :param url: the URL to send the POST request to.
+        :param data: the JSON data to send in the POST request.
 
-        Returns:
-            requests.Response: the response from the POST request.
+        :return: the response from the POST request.
         """
 
         response = self.session.post(url, json=data, headers=self.headers)
@@ -53,11 +52,9 @@ class HttpService:
         """
         Make a GET request to a specified URL.
 
-        Parameters:
-            url (str): the URL to send the GET request to.
+        :param url: the URL to send the GET request to.
 
-        Returns:
-            requests.Response: the response from the GET request.
+        :return: the response from the GET request.
         """
         response = self.session.get(url, headers=self.headers)
         return response
@@ -67,8 +64,7 @@ class HttpService:
         """
         Create headers for authentication through SDS load balancer.
 
-        Returns:
-            dict[str, str]: the headers required for remote authentication.
+        :return: the headers required for remote authentication.
         """
         oauth_client_id = SECRET_SERVICE.get_oauth_client_id()
         auth_req = google.auth.transport.requests.Request()
@@ -82,6 +78,3 @@ class HttpService:
         }
 
         return headers
-
-HTTP_SERVICE = HttpService.create(False)
-AUTHENTICATED_HTTP_SERVICE = HttpService.create(True)

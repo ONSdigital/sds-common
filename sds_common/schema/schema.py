@@ -19,11 +19,10 @@ class Schema:
     def set_schema(cls, schema_json: dict, filepath: str) -> Schema:
         """
         Sets the schema object with the survey ID and schema version from the schema JSON.
-        Parameters:
-            schema_json (dict): the schema JSON.
-            filepath (str): the path to the schema JSON.
-        Returns:
-            Schema: the schema object.
+
+        :param schema_json: the schema JSON.
+        :param filepath: the path to the schema JSON.
+        :returns Schema: the schema object.
         """
         try:
             survey_id = cls._get_survey_id_from_json(schema_json)
@@ -41,8 +40,11 @@ class Schema:
     def _get_survey_id_from_json(schema_json: dict) -> str | None:
         """
         Fetches the survey ID from the schema JSON.
-        Returns:
-            str: the survey ID.
+
+        :param schema_json: the schema JSON.
+        :return: the survey ID.
+        :return: None if not found.
+
         """
         return schema_json["properties"]["survey_id"]["enum"][0]
 
@@ -50,7 +52,8 @@ class Schema:
     def _get_schema_version_from_json(schema_json: dict) -> str | None:
         """
         Fetches the schema version from the schema JSON.
-        Returns
-            str: the schema version.
+
+        :param schema_json: the schema JSON.
+        :return: the schema version.
         """
         return schema_json["properties"]["schema_version"]["const"]

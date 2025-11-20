@@ -6,7 +6,7 @@ from sds_common.models.schema_publish_errors import (
     SchemaPostError,
 )
 from sds_common.schema.schema import Schema
-from sds_common.services.http_service import AUTHENTICATED_HTTP_SERVICE
+from sds_common.services.http_service import HttpService
 
 logger = logging.getLogger(__name__)
 
@@ -16,17 +16,15 @@ class SdsSchemaRequestService:
     Service to handle requests to SDS schema endpoints.
     """
     def __init__(self):
-        self.http_service = AUTHENTICATED_HTTP_SERVICE
+        self.http_service = HttpService.create(True)
 
     def get_schema_metadata(self, survey_id: str) -> requests.Response:
         """
         Call the GET schema_metadata SDS endpoint and return the response.
 
-        Parameters:
-            survey_id (str): the survey_id of the schema.
+        :param survey_id: the survey_id of the schema.
 
-        Returns:
-            requests.Response: the response from the schema_metadata endpoint.
+        :return: the response from the schema_metadata endpoint.
         """
         url = f"{CONFIG.SDS_URL}{CONFIG.GET_SCHEMA_METADATA_ENDPOINT}{survey_id}"
         response = self.http_service.make_get_request(url)
@@ -39,8 +37,7 @@ class SdsSchemaRequestService:
         """
         Post the schema to SDS.
 
-        Parameters:
-            schema (Schema): the schema to be posted.
+        :param schema: the schema to be posted.
         """
         logger.info(f"Posting schema for survey {schema.survey_id}")
         url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}{schema.survey_id}"
