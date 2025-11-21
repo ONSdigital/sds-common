@@ -1,6 +1,6 @@
 [project]
 name = "sds-common"
-version = "1.0.3"
+version = "1.0.4"
 description = "A Python library for common functionality used to interact with SDS."
 requires-python = "==3.13.*"
 dependencies = [
