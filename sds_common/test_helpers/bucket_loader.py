@@ -12,7 +12,8 @@ class BucketLoader:
         """
         return self.schema_bucket
 
-    def _initialise_bucket(self, bucket_name) -> storage.Bucket:
+    @staticmethod
+    def _initialise_bucket(bucket_name) -> storage.Bucket:
         """
         Connect to google cloud storage client using PROJECT_ID
         If bucket does not exists, then create the bucket

@@ -62,10 +62,10 @@ class PubSubHelper:
         subscription_path = self.subscriber_client.subscription_path(
             CONFIG.PROJECT_ID, subscriber_id
         )
-        NUM_MESSAGES = 5
+        max_messages = 5
 
         response = self.subscriber_client.pull(
-            request={"subscription": subscription_path, "max_messages": NUM_MESSAGES},
+            request={"subscription": subscription_path, "max_messages": max_messages},
         )
 
         message_count = len(response.received_messages)

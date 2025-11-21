@@ -66,7 +66,8 @@ class HttpService:
 
         :return: the headers required for remote authentication.
         """
-        oauth_client_id = SECRET_SERVICE.get_oauth_client_id()
+        secret_service = SecretService()
+        oauth_client_id = secret_service.get_oauth_client_id()
         auth_req = google.auth.transport.requests.Request()
         auth_token = google.oauth2.id_token.fetch_id_token(
             auth_req, audience=oauth_client_id

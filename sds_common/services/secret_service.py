@@ -39,4 +39,3 @@ class SecretService:
             return response.payload.data.decode("UTF-8")
         except (GoogleAPICallError, RetryError):
             raise SecretAccessError("N/A") from None
-
