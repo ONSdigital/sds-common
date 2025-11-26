@@ -23,6 +23,7 @@ class BucketLoader:
 
         :param bucket_name: The bucket name
         :return: Google Cloud Storage Bucket instance
+        :raises RuntimeError: If the specified bucket is not found.
         """
         __storage_client = storage.Client(project=CONFIG.PROJECT_ID)
         try:

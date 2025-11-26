@@ -5,6 +5,8 @@ import os
 def get_log_level() -> int:
     """
     Get the logging level from the LOG_LEVEL environment variable, or use the default value of INFO
+
+    :return int: logging level
     """
     log_level = os.environ.get("LOG_LEVEL", "INFO")
     return getattr(logging, log_level)

@@ -23,6 +23,8 @@ class Schema:
         :param schema_json: the schema JSON.
         :param filepath: the path to the schema JSON.
         :return Schema: the schema object.
+        :raises SurveyIDError: if the survey ID cannot be fetched from the schema JSON.
+        :raises SchemaVersionError: if the schema version cannot be fetched from the schema JSON.
         """
         try:
             survey_id = cls._get_survey_id_from_json(schema_json)

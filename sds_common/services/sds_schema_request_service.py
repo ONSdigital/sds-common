@@ -24,6 +24,7 @@ class SdsSchemaRequestService:
 
         :param survey_id: the survey_id of the schema.
         :return: the response from the schema_metadata endpoint.
+        :raises SchemaMetadataError: if the response status code is not 200 or 404.
         """
         url = f"{CONFIG.SDS_URL}{CONFIG.GET_SCHEMA_METADATA_ENDPOINT}{survey_id}"
         response = self.http_service.make_get_request(url)
@@ -38,6 +39,7 @@ class SdsSchemaRequestService:
 
         :param schema: the schema to be posted.
         :return response: the response from the POST request.
+        :raises SchemaPostError: if the response status code is not 200.
         """
         logger.info(f"Posting schema for survey {schema.survey_id}")
         url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}{schema.survey_id}"

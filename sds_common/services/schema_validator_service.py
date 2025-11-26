@@ -30,6 +30,7 @@ class SchemaValidatorService:
         Method to verify the schema version in the JSON matches the filename.
 
         :param schema: the schema object to be posted.
+        :raises SchemaVersionMismatchError: if the schema version does not match the filename.
         """
         trimmed_filename = split_filename(schema.filepath)
         if schema.schema_version != trimmed_filename:
@@ -40,6 +41,7 @@ class SchemaValidatorService:
         Check that the schema_version for the new schema is not already present in SDS.
 
         :param schema: the schema to be posted.
+        :raises SchemaDuplicationError: if the schema version already exists in SDS.
         """
         schema_metadata = self.sds_schema_request_service.get_schema_metadata(schema.survey_id)
 

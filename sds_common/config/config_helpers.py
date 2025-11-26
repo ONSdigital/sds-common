@@ -45,6 +45,7 @@ class ConfigHelpers:
         :param env_value: value to check environment for
         :param default_value: optional argument to allow defaulting of values
         :return str: the environment value corresponding to the input
+        :raises Exception: if the environment variable is not set and no default value is provided
         """
         value = os.environ.get(env_value)
 

@@ -17,6 +17,7 @@ class SecretService:
         Get the OAuth client ID for authenticating with SDS.
 
         :return: the OAuth client ID.
+        :raises SecretKeyError: If the client ID key is not found in the secret.
         """
         try:
             secret = self._get_secret_version()
@@ -30,6 +31,7 @@ class SecretService:
         Access the latest secret version from Google Cloud Secret Manager.
 
         :return: The Secret value.
+        :raises SecretAccessError: If unable to access the secret version.
         """
         try:
             name = (

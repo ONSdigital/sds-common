@@ -18,6 +18,7 @@ def split_filename(path: str) -> str | None:
 
     :param path: the path to the file.
     :return: the filename.
+    :raises FilepathError: if the filename cannot be split from the path.
     """
     try:
         return Path(path).stem
@@ -31,6 +32,7 @@ def decode_json_response(response: requests.Response) -> dict | None:
 
     :param response: the response object to decode.
     :return: the decoded JSON response.
+    :raises SchemaJSONDecodeError: if the response cannot be decoded.
     """
     try:
         decoded_response = response.json()
@@ -45,6 +47,7 @@ def fetch_raw_schema_from_github(path: str) -> dict:
 
     :param path: the path to the schema JSON.
     :return dict: the schema JSON.
+    :raises SchemaFetchError: if the schema cannot be fetched.
     """
     url = CONFIG.GITHUB_SCHEMA_URL + path
     logger.info(f"Fetching schema from {url}")
