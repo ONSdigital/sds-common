@@ -11,11 +11,12 @@ class SchemaPublisher(ABC):
         self.schema_request_service = SdsSchemaRequestService()
 
     @abstractmethod
-    def _retrieve_schema(self, file_name: str):
+    def _retrieve_schema(self, file_name: str) -> dict:
         """
         Retrieves the schema for the given file name.
 
         :param file_name: The name of the schema file to be retrieved.
+        :return: The schema as a dictionary.
         """
         pass
 

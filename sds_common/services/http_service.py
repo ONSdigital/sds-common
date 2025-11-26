@@ -58,7 +58,6 @@ class HttpService:
         Make a GET request to a specified URL.
 
         :param url: the URL to send the GET request to.
-
         :return: the response from the GET request.
         """
         response = self.session.get(url, headers=self.headers)
