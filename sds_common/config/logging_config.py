@@ -2,7 +2,7 @@ import logging
 import os
 
 
-def get_log_level():
+def get_log_level() -> int:
     """
     Get the logging level from the LOG_LEVEL environment variable, or use the default value of INFO
     """

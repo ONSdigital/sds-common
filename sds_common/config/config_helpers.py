@@ -25,7 +25,7 @@ class ConfigHelpers:
         """
         Formats the value to return a boolean if it casts, otherwise return a string.
 
-        :param value: env value
+        :param value: environment variable value
         :return str | bool: formatted value
         """
         return (
