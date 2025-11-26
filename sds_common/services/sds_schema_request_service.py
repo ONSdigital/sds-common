@@ -1,0 +1,53 @@
+import requests
+from sds_common.config.logging_config import logging
+from sds_common.config.config import CONFIG
+from sds_common.models.schema_publish_errors import (
+    SchemaMetadataError,
+    SchemaPostError,
+)
+from sds_common.schema.schema import Schema
+from sds_common.services.http_service import HttpService
+
+logger = logging.getLogger(__name__)
+
+
+class SdsSchemaRequestService:
+    """
+    Service to handle requests to SDS schema endpoints.
+    """
+    def __init__(self):
+        self.http_service = HttpService.create(True)
+
+    def get_schema_metadata(self, survey_id: str) -> requests.Response:
+        """
+        Call the GET schema_metadata SDS endpoint and return the response.
+
+        :param survey_id: the survey_id of the schema.
+        :return: the response from the schema_metadata endpoint.
+        :raises SchemaMetadataError: if the response status code is not 200 or 404.
+        """
+        url = f"{CONFIG.SDS_URL}{CONFIG.GET_SCHEMA_METADATA_ENDPOINT}{survey_id}"
+        response = self.http_service.make_get_request(url)
+        # If the response status code is 404, a new survey is being onboarded.
+        if response.status_code != 200 and response.status_code != 404:
+            raise SchemaMetadataError(survey_id, response.status_code)
+        return response
+
+    def post_schema(self, schema: Schema) -> requests.Response:
+        """
+        Post the schema to SDS.
+
+        :param schema: the schema to be posted.
+        :return response: the response from the POST request.
+        :raises SchemaPostError: if the response status code is not 200.
+        """
+        logger.info(f"Posting schema for survey {schema.survey_id}")
+        url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}{schema.survey_id}"
+        response = self.http_service.make_post_request(url, schema.json)
+        if response.status_code != 200:
+            raise SchemaPostError(schema.filepath, response.status_code)
+        else:
+            logger.info(
+                f"Schema {schema.filepath} posted for survey {schema.survey_id}"
+            )
+            return response

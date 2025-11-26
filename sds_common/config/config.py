@@ -1,0 +1,39 @@
+from sds_common.config.config_helpers import ConfigHelpers
+
+
+class Config:
+    PROJECT_ID = ConfigHelpers.get_value_from_env("PROJECT_ID", "ons-sds-jb")
+    PROCESS_TIMEOUT = int(ConfigHelpers.get_value_from_env("PROCESS_TIMEOUT", "540"))
+    SDS_URL = ConfigHelpers.get_value_from_env("SDS_URL", "test_url")
+    SECRET_ID = ConfigHelpers.get_value_from_env("SECRET_ID", "oauth-client-id")
+    GITHUB_SCHEMA_URL = ConfigHelpers.get_value_from_env(
+        "GITHUB_SCHEMA_URL",
+        "https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/"
+    )
+    POST_SCHEMA_ENDPOINT = ConfigHelpers.get_value_from_env(
+        "POST_SCHEMA_URL", "/v1/schema?survey_id="
+    )
+    GET_SCHEMA_METADATA_ENDPOINT = ConfigHelpers.get_value_from_env(
+        "GET_SCHEMA_METADATA_URL", "/v1/schema_metadata?survey_id="
+    )
+    PUBLISH_SCHEMA_ERROR_TOPIC_ID = ConfigHelpers.get_value_from_env(
+        "PUBLISH_SCHEMA_ERROR_TOPIC_ID", "publish-schema-error"
+    )
+    PUBLISH_SCHEMA_SUCCESS_TOPIC_ID = ConfigHelpers.get_value_from_env(
+        "PUBLISH_SCHEMA_SUCCESS_TOPIC_ID", "publish-schema-success"
+    )
+    PUBLISH_SCHEMA_QUEUE_TOPIC_ID = ConfigHelpers.get_value_from_env(
+        "PUBLISH_SCHEMA_QUEUE_TOPIC_ID", "publish-schema-queue"
+    )
+    FIRESTORE_DB_NAME = ConfigHelpers.get_value_from_env(
+        "FIRESTORE_DB_NAME", "ons-sds-ci-sds"
+    )
+    SCHEMA_BUCKET_NAME = ConfigHelpers.get_value_from_env(
+        "SCHEMA_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema"
+    )
+    SCHEMA_PUBLISH_BUCKET_NAME = ConfigHelpers.get_value_from_env(
+        "SCHEMA_PUBLISH_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema-publish"
+    )
+
+
+CONFIG = Config()
