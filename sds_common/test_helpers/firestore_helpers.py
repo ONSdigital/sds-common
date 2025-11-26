@@ -9,8 +9,9 @@ def perform_delete_on_collection_with_test_survey_id(
     """
     Recursively deletes the collection and its subcollections.
 
-    Parameters:
-    collection_ref (firestore.CollectionReference): the reference of the collection being deleted.
+    :param client: the firestore client.
+    :param collection_ref: the reference of the collection being deleted.
+    :param test_survey_id: the survey id prefix to filter documents for deletion.
     """
 
     # Query the collection for documents equivalent to survey_id LIKE "test_survey_id%"
@@ -33,12 +34,10 @@ def _delete_sub_collection_in_batches(
     """
     Deletes a sub collection in batches.
 
-    Parameters:
-    sub_collection_ref (firestore.CollectionReference): The reference to the sub collection
-    batch_size (int): The size of the batch to be deleted
+    :param sub_collection_ref (firestore.CollectionReference): The reference to the sub collection
+    :param batch_size (int): The size of the batch to be deleted
 
-    Returns:
-    int: Number of documents deleted in the sub collection.
+    :return int: Number of documents deleted in the sub collection.
     """
     docs = sub_collection_ref.limit(batch_size).get()
     doc_count = 0

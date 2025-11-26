@@ -16,8 +16,7 @@ class SchemaPublishError(Exception):
         """
         Generates a JSON formatted string message from the error.
 
-        Returns:
-            str: The JSON formatted string message.
+        :return: str: JSON formatted string message.
         """
         return json.dumps(
             {

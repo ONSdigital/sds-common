@@ -7,8 +7,7 @@ class ConfigHelpers:
         """
         Checks if a string value can be cast to a bool value when made lowercase.
 
-        Parameters:
-        value: env value
+        :param value: env value
         """
         return value.lower() in ["true", "false"]
 
@@ -17,8 +16,7 @@ class ConfigHelpers:
         """
         Returns true if the lowercase string value is true, otherwise returns false.
 
-        Parameters:
-        value: env value
+        :param value: env value
         """
         return value.lower() == "true"
 
@@ -27,8 +25,7 @@ class ConfigHelpers:
         """
         Formats the value to return a boolean if it casts, otherwise return a string.
 
-        Parameters:
-        value: env value
+        :param value: env value
         """
         return (
             ConfigHelpers.get_bool_value(value)
@@ -44,12 +41,10 @@ class ConfigHelpers:
         Method to determine if a desired enviroment variable has been set and return it.
         If an enviroment variable or default value are not set an expection is raised.
 
-        Parameters:
-            env_value: value to check environment for
-            default_value: optional argument to allow defaulting of values
+        :param env_value: value to check environment for
+        :param default_value: optional argument to allow defaulting of values
 
-        Returns:
-            str: the environment value corresponding to the input
+        :return str: the environment value corresponding to the input
         """
         value = os.environ.get(env_value)
 

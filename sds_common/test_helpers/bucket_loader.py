@@ -19,8 +19,7 @@ class BucketLoader:
         If bucket does not exists, then create the bucket
         Else connect to the bucket
 
-        Parameters:
-        bucket_name (str): The bucket name
+        :param bucket_name: The bucket name
         """
         __storage_client = storage.Client(project=CONFIG.PROJECT_ID)
         try:

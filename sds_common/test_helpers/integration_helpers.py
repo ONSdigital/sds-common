@@ -49,11 +49,7 @@ def inject_wait_time(seconds: int) -> None:
     """
     Method to inject a wait time into the test to allow resources properly spin up and tear down.
 
-    Parameters:
-        seconds: the number of seconds to wait
-
-    Returns:
-        None
+    :param seconds: the number of seconds to wait
     """
     time.sleep(seconds)
 

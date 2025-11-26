@@ -159,10 +159,9 @@ class PubSubHelper:
         """
         Waits for a subscription to be created and checks if it exists.
 
-        Parameters:
-        subscriber_id: the unique id of the subscriber being checked.
-        attempts: the number of attempts to check if the subscription exists.
-        backoff: the time to wait between attempts.
+        :param subscriber_id: the unique id of the subscriber being checked.
+        :param attempts: the number of attempts to check if the subscription exists.
+        :param backoff: the time to wait between attempts.
         """
         while attempts != 0:
             if self._subscription_exists(subscriber_id):
@@ -183,10 +182,9 @@ class PubSubHelper:
         """
         Waits for a subscription to be created and checks if it is deleted.
 
-        Parameters:
-        subscriber_id: the unique id of the subscriber being checked.
-        attempts: the number of attempts to check if the subscription is deleted.
-        backoff: the time to wait between attempts.
+        :param subscriber_id: the unique id of the subscriber being checked.
+        :param attempts: the number of attempts to check if the subscription is deleted.
+        :param backoff: the time to wait between attempts.
         """
         while attempts != 0:
             if not self._subscription_exists(subscriber_id):
