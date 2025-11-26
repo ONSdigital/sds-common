@@ -9,6 +9,8 @@ class BucketLoader:
     def get_schema_bucket(self) -> storage.Bucket:
         """
         Get the schema bucket from Google cloud
+
+        :return: Google Cloud Storage Bucket instance
         """
         return self.schema_bucket
 
@@ -20,6 +22,7 @@ class BucketLoader:
         Else connect to the bucket
 
         :param bucket_name: The bucket name
+        :return: Google Cloud Storage Bucket instance
         """
         __storage_client = storage.Client(project=CONFIG.PROJECT_ID)
         try:

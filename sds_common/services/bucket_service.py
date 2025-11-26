@@ -21,13 +21,14 @@ class BucketService:
         Retrieves a JSON file from the associated bucket.
 
         :param filename: Name of the file to be retrieved.
+        :return: The file loaded as a JSON dictionary.
         """
         return self.bucket_repository.get_file_as_json(filename)
 
     def delete_file_from_bucket(self, filename: str):
         """
         Deletes a file from the associated bucket.
-        
+
         :param filename: Name of the file to be deleted.
         """
         self.bucket_repository.delete_file(filename)

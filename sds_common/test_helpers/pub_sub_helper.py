@@ -15,8 +15,8 @@ class PubSubHelper:
         """
         Creates a subscriber with a unique subscriber id if one does not already exist.
 
-        Parameters:
-        subscriber_id: the unique id of the subscriber being created.
+        :param subscriber_id: the unique id of the subscriber being created.
+        :param attempts: the number of attempts to check if the subscription exists.
         """
         topic_path = self.publisher_client.topic_path(CONFIG.PROJECT_ID, self.topic_id)
 
@@ -45,8 +45,7 @@ class PubSubHelper:
         """
         Publishes a message to a topic.
 
-        Parameters:
-        message: the message to be published.
+        :param message: the message to be published.
         """
         topic_path = self.publisher_client.topic_path(CONFIG.PROJECT_ID, self.topic_id)
 
@@ -56,8 +55,8 @@ class PubSubHelper:
         """
         Pulls all messages published to a topic via a subscriber.
 
-        Parameters:
-        subscriber_id: the unique id of the subscriber being created.
+        :param subscriber_id: the unique id of the subscriber being created.
+        :return list[dict] | None: The list of formatted messages received from the topic, or None if no messages were received.
         """
         subscription_path = self.subscriber_client.subscription_path(
             CONFIG.PROJECT_ID, subscriber_id
@@ -90,8 +89,7 @@ class PubSubHelper:
         """
         Purges all messages published to a subscriber by seeking through future timestamp.
 
-        Parameters:
-        subscriber_id: the unique id of the subscriber being created.
+        :param subscriber_id: the unique id of the subscriber being created.
         """
         subscription_path = self.subscriber_client.subscription_path(
             CONFIG.PROJECT_ID, subscriber_id
@@ -105,8 +103,8 @@ class PubSubHelper:
         """
         Formats a messages received from a topic.
 
-        Parameters:
-        received_message: The message received from the topic.
+        :param received_message: The message received from the topic.
+        :return dict: The formatted message data.
         """
         return json.loads(
             received_message.message.data.decode("utf-8").replace("'", '"')
@@ -135,8 +133,8 @@ class PubSubHelper:
         """
         Checks a subscription exists.
 
-        Parameters:
-        subscriber_id: the unique id of the subscriber being checked.
+        :param subscriber_id: the unique id of the subscriber being checked.
+        :return bool: True if the subscription exists, False otherwise.
         """
         subscription_path = self.subscriber_client.subscription_path(
             CONFIG.PROJECT_ID, subscriber_id
@@ -162,6 +160,7 @@ class PubSubHelper:
         :param subscriber_id: the unique id of the subscriber being checked.
         :param attempts: the number of attempts to check if the subscription exists.
         :param backoff: the time to wait between attempts.
+        :return bool: True if the subscription exists, False otherwise.
         """
         while attempts != 0:
             if self._subscription_exists(subscriber_id):
@@ -185,6 +184,7 @@ class PubSubHelper:
         :param subscriber_id: the unique id of the subscriber being checked.
         :param attempts: the number of attempts to check if the subscription is deleted.
         :param backoff: the time to wait between attempts.
+        :return bool: True if the subscription is deleted, False otherwise.
         """
         while attempts != 0:
             if not self._subscription_exists(subscriber_id):

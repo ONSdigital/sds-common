@@ -14,35 +14,32 @@ class SchemaValidatorService:
     def __init__(self):
         self.sds_schema_request_service = SdsSchemaRequestService()
 
-    def validate_schema(self, schema: Schema) -> None:
+    def validate_schema(self, schema: Schema):
         """
         Validate the schema by verifying the version and checking for duplicate versions.
 
         :param schema: The schema object to validate.
-        :return: None
         """
         logger.info(f"Validating schema {schema.filepath}")
         self._verify_version(schema)
         self._check_duplicate_versions(schema)
 
     @staticmethod
-    def _verify_version(schema: Schema) -> None:
+    def _verify_version(schema: Schema):
         """
         Method to verify the schema version in the JSON matches the filename.
 
         :param schema: the schema object to be posted.
-        :return: None
         """
         trimmed_filename = split_filename(schema.filepath)
         if schema.schema_version != trimmed_filename:
             raise SchemaVersionMismatchError(schema.filepath)
 
-    def _check_duplicate_versions(self, schema: Schema) -> None:
+    def _check_duplicate_versions(self, schema: Schema):
         """
         Check that the schema_version for the new schema is not already present in SDS.
 
         :param schema: the schema to be posted.
-        :return: None
         """
         schema_metadata = self.sds_schema_request_service.get_schema_metadata(schema.survey_id)
 

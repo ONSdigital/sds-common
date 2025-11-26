@@ -44,8 +44,7 @@ def fetch_raw_schema_from_github(path: str) -> dict:
     Fetches the schema from the ONSdigital GitHub repository.
 
     :param path: the path to the schema JSON.
-
-    :return: the schema JSON.
+    :return dict: the schema JSON.
     """
     url = CONFIG.GITHUB_SCHEMA_URL + path
     logger.info(f"Fetching schema from {url}")

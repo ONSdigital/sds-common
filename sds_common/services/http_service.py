@@ -16,6 +16,12 @@ class HttpService:
 
     @classmethod
     def create(cls, authentication_headers: bool) -> Self:
+        """
+        Factory method to create an instance of HttpService.
+
+        :param authentication_headers: whether to include authentication headers.
+        :return: an instance of HttpService.
+        """
         session = cls._setup_session()
         headers = cls.generate_authentication_headers() if authentication_headers else None
         return cls(session, headers)
@@ -41,7 +47,6 @@ class HttpService:
 
         :param url: the URL to send the POST request to.
         :param data: the JSON data to send in the POST request.
-
         :return: the response from the POST request.
         """
 

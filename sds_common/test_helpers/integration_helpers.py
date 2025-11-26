@@ -15,7 +15,7 @@ from sds_common.test_helpers.common_test_data import test_survey_id
 storage_client = storage.Client()
 
 
-def cleanup() -> None:
+def cleanup():
     """
     Method to clean up all schema test data created in buckets/FireStore.
     Should be run before and after test to account for test failures.
@@ -30,22 +30,22 @@ def cleanup() -> None:
     )
 
 
-def pubsub_setup(pubsub_helper: PubSubHelper, subscriber_id: str) -> None:
+def pubsub_setup(pubsub_helper: PubSubHelper, subscriber_id: str):
     """Creates any subscribers that may be used in tests"""
     pubsub_helper.try_create_subscriber(subscriber_id)
 
 
-def pubsub_teardown(pubsub_helper: PubSubHelper, subscriber_id: str) -> None:
+def pubsub_teardown(pubsub_helper: PubSubHelper, subscriber_id: str):
     """Deletes subscribers that may have been used in tests"""
     pubsub_helper.try_delete_subscriber(subscriber_id)
 
 
-def pubsub_purge_messages(pubsub_helper: PubSubHelper, subscriber_id: str) -> None:
+def pubsub_purge_messages(pubsub_helper: PubSubHelper, subscriber_id: str):
     """Purge any messages that may have been sent to a subscriber"""
     pubsub_helper.purge_messages(subscriber_id)
 
 
-def inject_wait_time(seconds: int) -> None:
+def inject_wait_time(seconds: int):
     """
     Method to inject a wait time into the test to allow resources properly spin up and tear down.
 

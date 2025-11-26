@@ -36,7 +36,6 @@ def _delete_sub_collection_in_batches(
 
     :param sub_collection_ref (firestore.CollectionReference): The reference to the sub collection
     :param batch_size (int): The size of the batch to be deleted
-
     :return int: Number of documents deleted in the sub collection.
     """
     docs = sub_collection_ref.limit(batch_size).get()
@@ -59,8 +58,8 @@ def _delete_document(
     """
     Deletes the dataset with Document Reference
 
-    Parameters:
-    doc_ref (firestore.DocumentReference): The reference to the dataset to be deleted.
+    :param doc_ref (firestore.DocumentReference): The reference to the dataset to be deleted.
+    :return bool: True if the document was deleted successfully.
     """
     batch_size = 100
 

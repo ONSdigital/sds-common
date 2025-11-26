@@ -23,7 +23,6 @@ class SdsSchemaRequestService:
         Call the GET schema_metadata SDS endpoint and return the response.
 
         :param survey_id: the survey_id of the schema.
-
         :return: the response from the schema_metadata endpoint.
         """
         url = f"{CONFIG.SDS_URL}{CONFIG.GET_SCHEMA_METADATA_ENDPOINT}{survey_id}"
@@ -38,6 +37,7 @@ class SdsSchemaRequestService:
         Post the schema to SDS.
 
         :param schema: the schema to be posted.
+        :return response: the response from the POST request.
         """
         logger.info(f"Posting schema for survey {schema.survey_id}")
         url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}{schema.survey_id}"

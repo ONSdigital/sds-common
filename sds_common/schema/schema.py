@@ -22,7 +22,7 @@ class Schema:
 
         :param schema_json: the schema JSON.
         :param filepath: the path to the schema JSON.
-        :returns Schema: the schema object.
+        :return Schema: the schema object.
         """
         try:
             survey_id = cls._get_survey_id_from_json(schema_json)
@@ -42,9 +42,8 @@ class Schema:
         Fetches the survey ID from the schema JSON.
 
         :param schema_json: the schema JSON.
-        :return: the survey ID.
-        :return: None if not found.
-
+        :return dict: the survey ID.
+        :return None: if not found.
         """
         return schema_json["properties"]["survey_id"]["enum"][0]
 
@@ -54,6 +53,6 @@ class Schema:
         Fetches the schema version from the schema JSON.
 
         :param schema_json: the schema JSON.
-        :return: the schema version.
+        :return dict: the schema version.
         """
         return schema_json["properties"]["schema_version"]["const"]
