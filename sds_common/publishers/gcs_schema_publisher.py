@@ -38,5 +38,7 @@ class GcsSchemaPublisher(SchemaPublisher):
     def cleanup(self, schema_file_name: str):
         """
         Clean up the schema file from the GCS bucket after publishing.
+
+        :param schema_file_name: The name of the schema file to delete.
         """
         self.bucket_service.delete_file_from_bucket(schema_file_name)
