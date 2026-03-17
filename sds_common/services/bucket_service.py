@@ -21,7 +21,7 @@ class BucketService:
         Retrieves a JSON file from the associated bucket.
 
         :param filename: Name of the file to be retrieved.
-        :return: The file loaded as a JSON dictionary.
+        :return dict: The file loaded as a JSON dictionary.
         """
         return self.bucket_repository.get_file_as_json(filename)
 

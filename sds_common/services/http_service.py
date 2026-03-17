@@ -68,7 +68,7 @@ class HttpService:
         """
         Create headers for authentication through SDS load balancer.
 
-        :return: the headers required for remote authentication.
+        :return dict[str, str]: the headers required for remote authentication.
         """
         secret_service = SecretService()
         oauth_client_id = secret_service.get_oauth_client_id()
