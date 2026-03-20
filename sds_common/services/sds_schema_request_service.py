@@ -33,6 +33,18 @@ class SdsSchemaRequestService:
             raise SchemaMetadataError(survey_id, response.status_code)
         return response
 
+    def get_all_schema_metadata(self) -> requests.Response:
+        """
+        Call the GET schema_metadata endpoint and return the response.
+
+        :return: the response from the schema_metadata endpoint.
+        """
+        url = f"{CONFIG.SDS_URL}{CONFIG.GET_ALL_SCHEMA_METADATA_ENDPOINT}"
+        response = self.http_service.make_get_request(url)
+        if response.status_code != 200:
+            raise SchemaMetadataError(response.json(), response.status_code)
+        return response
+
     def post_schema(self, schema: Schema) -> requests.Response:
         """
         Post the schema to SDS.
