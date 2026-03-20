@@ -16,6 +16,9 @@ class Config:
     GET_SCHEMA_METADATA_ENDPOINT = ConfigHelpers.get_value_from_env(
         "GET_SCHEMA_METADATA_URL", "/v1/schema_metadata?survey_id="
     )
+    GET_ALL_SCHEMA_METADATA_ENDPOINT = ConfigHelpers.get_value_from_env(
+        "GET_ALL_SCHEMA_METADATA_URL", "/v1/all_schema_metadata"
+    )
     PUBLISH_SCHEMA_ERROR_TOPIC_ID = ConfigHelpers.get_value_from_env(
         "PUBLISH_SCHEMA_ERROR_TOPIC_ID", "publish-schema-error"
     )
