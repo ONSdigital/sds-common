@@ -1,6 +1,6 @@
 [project]
 name = "sds-common"
-version = "1.0.11"
+version = "1.0.12"
 description = "A Python library for common functionality used to interact with SDS."
 requires-python = "==3.13.*"
 dependencies = [
@@ -18,6 +18,7 @@ dependencies = [
     "pip_audit==2.9.0",
     "setuptools==80.9.0",
     "pytest-order==1.3.0",
+    "google-cloud-iam>=2.21.0",
 ]
 
 [dependency-groups]
