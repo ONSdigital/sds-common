@@ -39,5 +39,5 @@ class SecretService:
             )
             response = self.client.access_secret_version(name=name)
             return response.payload.data.decode("UTF-8")
-        except (GoogleAPICallError, RetryError):
-            raise SecretAccessError("N/A") from None
+        except (GoogleAPICallError, RetryError) as e:
+            raise SecretAccessError(e.__str__()) from e
