@@ -32,7 +32,7 @@ class Config:
         "FIRESTORE_DB_NAME", "ons-sds-ci-sds"
     )
     SCHEMA_BUCKET_NAME = ConfigHelpers.get_value_from_env(
-        "SCHEMA_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema"
+        "SCHEMA_BUCKET_NAME", ""
     )
     SCHEMA_PUBLISH_BUCKET_NAME = ConfigHelpers.get_value_from_env(
         "SCHEMA_PUBLISH_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema-publish"
