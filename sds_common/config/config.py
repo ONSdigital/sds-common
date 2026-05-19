@@ -37,6 +37,9 @@ class Config:
     SCHEMA_PUBLISH_BUCKET_NAME = ConfigHelpers.get_value_from_env(
         "SCHEMA_PUBLISH_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-schema-publish"
     )
+    DATASET_BUCKET_NAME = ConfigHelpers.get_value_from_env(
+        "DATASET_BUCKET_NAME", "ons-sds-ci-sds-europe-west2-dataset"
+    )
 
 
 CONFIG = Config()
