@@ -26,8 +26,8 @@ class SdsSchemaRequestService:
         :return: the response from the schema_metadata endpoint.
         :raises SchemaMetadataError: if the response status code is not 200 or 404.
         """
-        url = f"{CONFIG.SDS_URL}{CONFIG.GET_SCHEMA_METADATA_ENDPOINT}{survey_id}"
-        response = self.http_service.make_get_request(url)
+        url = f"{CONFIG.SDS_URL}{CONFIG.GET_SCHEMA_METADATA_ENDPOINT}"
+        response = self.http_service.make_get_request(url, params={"survey_id": survey_id})
         # If the response status code is 404, a new survey is being onboarded.
         if response.status_code != 200 and response.status_code != 404:
             raise SchemaMetadataError(survey_id, response.status_code)
@@ -54,8 +54,8 @@ class SdsSchemaRequestService:
         :raises SchemaPostError: if the response status code is not 200.
         """
         logger.info(f"Posting schema for survey {schema.survey_id}")
-        url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}{schema.survey_id}"
-        response = self.http_service.make_post_request(url, schema.json)
+        url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}"
+        response = self.http_service.make_post_request(url, schema.json, params={"survey_id": schema.survey_id})
         if response.status_code != 200:
             raise SchemaPostError(schema.filepath, response.status_code)
         else:
