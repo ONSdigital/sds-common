@@ -3,11 +3,12 @@ import os
 
 from google.cloud import storage
 from sds_common.config.logging_config import logging
+from sds_common.interfaces.file_repository_interface import FileRepositoryInterface
 
 logger = logging.getLogger(__name__)
 
 
-class BucketRepository:
+class BucketFileRepository(FileRepositoryInterface):
     def __init__(self, bucket: storage.Bucket):
         self.bucket = bucket
 
@@ -38,3 +39,13 @@ class BucketRepository:
         """
         blob = self.bucket.blob(filename)
         blob.delete()
+
+    def check_file_exists(self, filename: str) -> bool:
+        """
+        Checks if a file exists in the bucket with the specified filename.
+
+        :param filename: name of the file to be checked.
+        :return: True if file exists, False otherwise.
+        """
+        blob = self.bucket.blob(filename)
+        return blob.exists()
