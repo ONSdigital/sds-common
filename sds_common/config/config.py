@@ -2,10 +2,10 @@ from sds_common.config.config_helpers import ConfigHelpers
 
 
 class Config:
+    # Required environment variables.
     PROJECT_ID = ConfigHelpers.get_value_from_env("PROJECT_ID", "ons-sds-sandbox")
-    SDS_URL = ConfigHelpers.get_value_from_env("SDS_URL", "test_url")
-    LOADER_URL = ConfigHelpers.get_value_from_env("LOADER_URL", "test_url")
 
+    # Default values for environment variables.
     PROCESS_TIMEOUT = int(ConfigHelpers.get_value_from_env("PROCESS_TIMEOUT", "540"))
     SECRET_ID = ConfigHelpers.get_value_from_env("SECRET_ID", "iap-secret")
     GITHUB_SCHEMA_URL = ConfigHelpers.get_value_from_env(
@@ -38,6 +38,10 @@ class Config:
     )
     PUBLISH_DATASET_TOPIC_ID = ConfigHelpers.get_value_from_env(
         "PUBLISH_DATASET_TOPIC_ID", "ons-sds-publish-dataset"
+    )
+    SDS_URL = ConfigHelpers.get_value_from_env("SDS_URL", "https://sds.ons.gov.uk")
+    GET_DATASET_METADATA_ENDPOINT = ConfigHelpers.get_value_from_env(
+        "GET_DATASET_METADATA_ENDPOINT", "/v1/dataset_metadata"
     )
     FIRESTORE_DB_NAME = ConfigHelpers.get_value_from_env(
         "FIRESTORE_DB_NAME", f"{PROJECT_ID}-sds"

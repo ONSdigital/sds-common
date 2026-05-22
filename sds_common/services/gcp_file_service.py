@@ -3,8 +3,8 @@ from sds_common.repositories.bucket_loader import BucketLoader
 from sds_common.repositories.bucket_file_repository import BucketFileRepository
 
 
-class FileService:
-    def __init__(self, bucket: Bucket, loader: BucketLoader, repository_cls=BucketFileRepository):
+class GcpFileService:
+    def __init__(self, bucket: Bucket, loader: BucketLoader = BucketLoader(), repository_cls=BucketFileRepository):
         self.bucket = loader.fetch_bucket(bucket)
         self.bucket_repository = repository_cls(self.bucket)
 

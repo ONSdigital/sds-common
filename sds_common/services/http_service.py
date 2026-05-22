@@ -1,32 +1,37 @@
 from typing import Self
 
+import google.auth.transport.requests
+import google.oauth2.id_token
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
-import google.oauth2.id_token
 from google.cloud import iam_credentials_v1
 
 from sds_common.config.config import CONFIG
-from sds_common.services.secret_service import SecretService
+from sds_common.services.gcp_secret_service import GcpSecretService
+from sds_common.interfaces.secret_service_interface import SecretServiceInterface
+from sds_common.interfaces.http_service_interface import HttpServiceInterface
 
 
-class HttpService:
-    def __init__(self, session: requests.Session, headers: dict[str, str] | None):
+class HttpService(HttpServiceInterface):
+    def __init__(self, secret_service: SecretServiceInterface, session: requests.Session, headers: dict[str, str] | None):
+        self.secret_service = secret_service
         self.session = session
         self.headers = headers
-        self.secret_service = SecretService()
 
     @classmethod
-    def create(cls, authentication_headers: bool) -> Self:
+    def create(cls, authentication_headers: bool, secret_service: SecretServiceInterface | None = None) -> Self:
         """
         Factory method to create an instance of HttpService.
 
         :param authentication_headers: whether to include authentication headers.
+        :param secret_service: an instance of SecretServiceInterface to retrieve secrets for authentication.
+                               Only required when authentication_headers=True.
         :return: an instance of HttpService.
         """
         session = cls._setup_session()
         headers = cls.generate_authentication_headers() if authentication_headers else None
-        return cls(session, headers)
+        return cls(secret_service, session, headers)
 
     @staticmethod
     def _setup_session() -> requests.Session:
@@ -75,7 +80,7 @@ class HttpService:
 
         :return dict[str, str]: the headers required for remote authentication.
         """
-        secret_service = SecretService()
+        secret_service = GcpSecretService()
         oauth_client_id = secret_service.get_oauth_client_id()
         auth_req = google.auth.transport.requests.Request()
         auth_token = google.oauth2.id_token.fetch_id_token(
@@ -99,7 +104,7 @@ class HttpService:
 
         :return dict[str, str]: the headers required for remote authentication.
         """
-        secret_service = SecretService()
+        secret_service = GcpSecretService()
         oauth_client_id = secret_service.get_oauth_client_id()
         impersonated_sa_email = f"{CONFIG.PROJECT_ID}@appspot.gserviceaccount.com"
         iam_credentials_client = iam_credentials_v1.IAMCredentialsClient()

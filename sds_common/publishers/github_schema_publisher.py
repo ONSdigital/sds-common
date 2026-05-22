@@ -1,6 +1,7 @@
 from sds_common.publishers.schema_publisher import SchemaPublisher
 from sds_common.schema.schema import Schema
 from sds_common.services.schema_validator_service import SchemaValidatorService
+from sds_common.services.sds_request_service import SdsRequestService
 from sds_common.utilities.utils import fetch_raw_schema_from_github
 
 
@@ -8,9 +9,9 @@ class GithubSchemaPublisher(SchemaPublisher):
     """
     Publisher class to publish schemas retrieved from a GitHub repository.
     """
-    def __init__(self):
-        super().__init__()
-        self.validator = SchemaValidatorService()
+    def __init__(self, sds_request_service: SdsRequestService, validator: SchemaValidatorService):
+        super().__init__(sds_request_service)
+        self.validator = validator
 
     def _retrieve_schema(self, file_name: str):
         """

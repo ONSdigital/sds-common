@@ -1,18 +1,17 @@
 import requests
-from sds_common.enums.buckets import Bucket
 from sds_common.publishers.schema_publisher import SchemaPublisher
-from sds_common.repositories.bucket_loader import BucketLoader
 from sds_common.schema.schema import Schema
-from sds_common.services.file_service import FileService
+from sds_common.services.gcp_file_service import GcpFileService
+from sds_common.services.sds_request_service import SdsRequestService
 
 
 class GcsSchemaPublisher(SchemaPublisher):
     """
     Publisher for retrieving and publishing schemas from Google Cloud Storage (GCS) buckets.
     """
-    def __init__(self):
-        super().__init__()
-        self.bucket_service = FileService(Bucket.SCHEMA_PUBLISH_BUCKET, BucketLoader())
+    def __init__(self, sds_request_service: SdsRequestService, file_service: GcpFileService):
+        super().__init__(sds_request_service)
+        self.file_service = file_service
 
     def _retrieve_schema(self, file_name: str) -> dict:
         """
@@ -21,7 +20,7 @@ class GcsSchemaPublisher(SchemaPublisher):
         :param file_name: The name of the schema file to retrieve.
         :return: The schema as a dictionary.
         """
-        return self.bucket_service.retrieve_json_file(file_name)
+        return self.file_service.retrieve_json_file(file_name)
 
     def publish_schema(self, file_name: str) -> requests.Response:
         """
@@ -41,4 +40,4 @@ class GcsSchemaPublisher(SchemaPublisher):
 
         :param schema_file_name: The name of the schema file to delete.
         """
-        self.bucket_service.delete_file(schema_file_name)
+        self.file_service.delete_file(schema_file_name)

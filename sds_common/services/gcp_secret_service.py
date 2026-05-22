@@ -4,9 +4,10 @@ from sds_common.config.config import CONFIG
 from google.api_core.exceptions import GoogleAPICallError, RetryError
 from google.cloud import secretmanager
 from sds_common.models.schema_publish_errors import SecretAccessError, SecretKeyError
+from sds_common.interfaces.secret_service_interface import SecretServiceInterface
 
 
-class SecretService:
+class GcpSecretService(SecretServiceInterface):
     def __init__(self):
         self.client = secretmanager.SecretManagerServiceClient()
         self.project_id = CONFIG.PROJECT_ID

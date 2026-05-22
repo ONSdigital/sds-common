@@ -1,16 +1,17 @@
 import json
 import os
 
-from google.cloud import storage
 from sds_common.config.logging_config import logging
+from sds_common.enums.buckets import Bucket
 from sds_common.interfaces.file_repository_interface import FileRepositoryInterface
+from sds_common.repositories.bucket_loader import BucketLoader
 
 logger = logging.getLogger(__name__)
 
 
 class BucketFileRepository(FileRepositoryInterface):
-    def __init__(self, bucket: storage.Bucket):
-        self.bucket = bucket
+    def __init__(self, bucket: Bucket):
+        self.bucket = BucketLoader().fetch_bucket(bucket.value)
 
     def get_file_as_json(self, filename: str) -> dict:
         """

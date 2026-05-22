@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
-from sds_common.services.sds_schema_request_service import SdsSchemaRequestService
+from sds_common.services.sds_request_service import SdsRequestService
 
 
 class SchemaPublisher(ABC):
     """
     Abstract base class for schema publishers.
     """
-    def __init__(self):
-        self.schema_request_service = SdsSchemaRequestService()
+    def __init__(self, sds_request_service: SdsRequestService):
+        self.schema_request_service = sds_request_service
 
     @abstractmethod
     def _retrieve_schema(self, file_name: str) -> dict:

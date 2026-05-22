@@ -4,15 +4,15 @@ from sds_common.models.schema_publish_errors import (
     SchemaVersionMismatchError,
 )
 from sds_common.schema.schema import Schema
-from sds_common.services.sds_schema_request_service import SdsSchemaRequestService
+from sds_common.services.sds_request_service import SdsRequestService
 from sds_common.utilities.utils import split_filename
 
 logger = logging.getLogger(__name__)
 
 
 class SchemaValidatorService:
-    def __init__(self):
-        self.sds_schema_request_service = SdsSchemaRequestService()
+    def __init__(self, sds_request_service: SdsRequestService):
+        self.sds_schema_request_service = sds_request_service
 
     def validate_schema(self, schema: Schema):
         """
