@@ -34,7 +34,7 @@ class Config:
         "PUBLISH_SCHEMA_SUCCESS_TOPIC_ID", "ons-sds-publish-schema"
     )
     PUBLISH_SCHEMA_QUEUE_TOPIC_ID = ConfigHelpers.get_value_from_env(
-        "PUBLISH_SCHEMA_QUEUE_TOPIC_ID", "publish-schema-queue"
+        "PUBLISH_SCHEMA_QUEUE_TOPIC_ID", "schema-publish-queue"
     )
     PUBLISH_DATASET_TOPIC_ID = ConfigHelpers.get_value_from_env(
         "PUBLISH_DATASET_TOPIC_ID", "ons-sds-publish-dataset"
