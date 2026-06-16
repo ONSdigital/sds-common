@@ -30,7 +30,6 @@ class SdsDatasetRequestService:
         :return: a list of DatasetMetadata objects.
         """
         url = CONFIG.SDS_URL + CONFIG.GET_DATASET_METADATA_ENDPOINT
-        logger.info(f"Using URL: {url}")
         response = self.http_service.make_get_request(url, params={"survey_id": survey_id, "period_id": period_id})
         if response.status_code != 200:
             raise DatasetMetadataRetrievalError(survey_id, period_id, response.status_code)
