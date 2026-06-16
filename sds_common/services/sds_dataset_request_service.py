@@ -1,6 +1,7 @@
 from sds_common.config.config import CONFIG
 from sds_common.models.dataset_models import DatasetMetadata
 from sds_common.models.dataset_publish_errors import DatasetMetadataRetrievalError, DatasetCreateError
+from sds_common.models.schema_publish_errors import logger
 from sds_common.services.http_service import HttpService
 
 
@@ -29,6 +30,7 @@ class SdsDatasetRequestService:
         :return: a list of DatasetMetadata objects.
         """
         url = CONFIG.SDS_URL + CONFIG.GET_DATASET_METADATA_ENDPOINT
+        logger.info(f"Using URL: {url}")
         response = self.http_service.make_get_request(url, params={"survey_id": survey_id, "period_id": period_id})
         if response.status_code != 200:
             raise DatasetMetadataRetrievalError(survey_id, period_id, response.status_code)
