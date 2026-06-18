@@ -1,5 +1,6 @@
 from abc import ABC
 
+
 class FileRepositoryInterface(ABC):
     def get_file_as_json(self, filename: str) -> dict:
         """
