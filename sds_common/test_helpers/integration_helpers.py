@@ -1,10 +1,25 @@
 import time
 
 from google.cloud import storage
+from sds_common.test_helpers.firebase_loader import firebase_loader
+from sds_common.test_helpers.firestore_helpers import (
+    perform_delete_on_collection_with_test_survey_id,
+)
 from sds_common.test_helpers.pub_sub_helper import PubSubHelper
+from sds_common.test_helpers.common_test_data import test_survey_id
 
 storage_client = storage.Client()
 
+def cleanup():
+    """
+    Method to clean up all schema test data created in buckets/FireStore.
+    Should be run before and after test to account for test failures.
+    """
+    client = firebase_loader.get_client()
+
+    perform_delete_on_collection_with_test_survey_id(
+        client, firebase_loader.get_schemas_collection(), test_survey_id
+    )
 
 def pubsub_setup(pubsub_helper: PubSubHelper, subscriber_id: str):
     """Creates any subscribers that may be used in tests"""
