@@ -8,18 +8,6 @@ class SdsDatasetRequestService:
     def __init__(self):
         self.http_service = HttpService.create(True)
 
-    def get_dataset_create(self):
-        """
-        Call the GET dataset/create SDS endpoint to process a new dataset.
-
-        :return: the response from the dataset/create endpoint.
-        """
-        url = CONFIG.SDS_URL + CONFIG.DATASET_CREATE_PATH
-        response = self.http_service.make_get_request(url)
-        if response.status_code != 200:
-            raise DatasetCreateError(response.status_code)
-        return response
-
     def get_dataset_metadata(self, survey_id: str, period_id: str) -> list[DatasetMetadata]:
         """
         Call the GET dataset_metadata SDS endpoint and return the response.
