@@ -1,6 +1,6 @@
 from sds_common.config.config import CONFIG
 from sds_common.models.dataset_models import DatasetMetadata
-from sds_common.models.dataset_publish_errors import DatasetMetadataRetrievalError, DatasetCreateError
+from sds_common.models.dataset_publish_errors import DatasetMetadataRetrievalError
 from sds_common.services.http_service import HttpService
 
 
