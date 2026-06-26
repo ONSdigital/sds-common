@@ -43,26 +43,28 @@ class HttpService:
 
         return session
 
-    def make_post_request(self, url: str, data: dict) -> requests.Response:
+    def make_post_request(self, url: str, data: dict, params: dict = None) -> requests.Response:
         """
         Make a POST request to a specified URL.
 
         :param url: the URL to send the POST request to.
         :param data: the JSON data to send in the POST request.
+        :param params: the query parameters to include in the POST request.
         :return: the response from the POST request.
         """
 
-        response = self.session.post(url, json=data, headers=self.headers)
+        response = self.session.post(url, json=data, headers=self.headers, params=params)
         return response
 
-    def make_get_request(self, url: str) -> requests.Response:
+    def make_get_request(self, url: str, params: dict = None) -> requests.Response:
         """
         Make a GET request to a specified URL.
 
         :param url: the URL to send the GET request to.
+        :param params: the query parameters to include in the GET request.
         :return: the response from the GET request.
         """
-        response = self.session.get(url, headers=self.headers)
+        response = self.session.get(url, headers=self.headers, params=params)
         return response
 
     @staticmethod
