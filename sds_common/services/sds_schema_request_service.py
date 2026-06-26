@@ -55,7 +55,6 @@ class SdsSchemaRequestService:
         """
         logger.info(f"Posting schema for survey {schema.survey_id}")
         url = f"{CONFIG.SDS_URL}{CONFIG.POST_SCHEMA_ENDPOINT}"
-        logger.info(f"Using URL: {url}")
         response = self.http_service.make_post_request(url, schema.json, params={"survey_id": schema.survey_id})
         if response.status_code != 200:
             raise SchemaPostError(schema.filepath, response.status_code)
