@@ -13,13 +13,13 @@ class Config:
         "https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/"
     )
     POST_SCHEMA_ENDPOINT = ConfigHelpers.get_value_from_env(
-        "POST_SCHEMA_URL", "/v1/schema"
+        "POST_SCHEMA_URL", "/schemas"
     )
     GET_SCHEMA_METADATA_ENDPOINT = ConfigHelpers.get_value_from_env(
-        "GET_SCHEMA_METADATA_URL", "/v1/schema_metadata"
+        "GET_SCHEMA_METADATA_URL", "/schemas/metadata"
     )
     GET_ALL_SCHEMA_METADATA_ENDPOINT = ConfigHelpers.get_value_from_env(
-        "GET_ALL_SCHEMA_METADATA_URL", "/v1/all_schema_metadata"
+        "GET_ALL_SCHEMA_METADATA_URL", "/schemas/all-metadata"
     )
     DATASET_CREATE_ENDPOINT = ConfigHelpers.get_value_from_env(
         "DATASET_CREATE_PATH", "/events/dataset/create"
