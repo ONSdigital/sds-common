@@ -81,7 +81,7 @@ The library is configured entirely through environment variables. All variables 
 | `SCHEMA_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema` | GCS bucket for published schemas |
 | `SCHEMA_STAGING_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas awaiting publishing |
 | `DATASET_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-dataset` | GCS bucket for datasets |
-| `LOG_LEVEL` | `INFO` | Log level for the host application (see `get_log_level()`) |
+| `LOG_LEVEL` | `INFO` | Log level for GCP structured logging (see [Logging for GCP](docs/configuration.md#logging-for-gcp-cloud-logging)) |
 
 ---
 
