@@ -1,4 +1,4 @@
-← [Schema operations](schemas.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)
+← [Schema publishers](publishers.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)
 
 ---
 
@@ -67,4 +67,4 @@ except DatasetMetadataRetrievalError as e:
 
 ---
 
-← [Schema operations](schemas.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)
+← [Schema publishers](publishers.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)

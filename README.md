@@ -119,8 +119,8 @@ client = SdsCommon(config=my_config)
 | `iap_auth` | `AuthHeaderProvider` | Generates IAP auth headers — see [Authentication](docs/authentication.md) |
 | `schemas` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints — see [Schema operations](docs/schemas.md) |
 | `datasets` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints — see [Dataset operations](docs/datasets.md) |
-| `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-gcs) |
-| `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-github) |
+| `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema publishers](docs/publishers.md#publishing-a-schema-from-gcs) |
+| `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema publishers](docs/publishers.md#publishing-a-schema-from-github) |
 | `firestore` | `FirebaseLoader` | Typed Firestore wrapper for schema collection access — see [Firestore](docs/firestore.md) |
 
 ---
@@ -132,7 +132,8 @@ Read these in order for a complete tour, or jump directly to what you need:
 | Guide | What it covers |
 |---|---|
 | [Authentication](docs/authentication.md) | Generating IAP headers, metadata server vs impersonation, secret format |
-| [Schema operations](docs/schemas.md) | Fetching metadata, posting schemas, publishing from GitHub or GCS |
+| [Schema operations](docs/schemas.md) | Fetching metadata, posting schemas directly to SDS |
+| [Schema publishers](docs/publishers.md) | Publishing schemas from GitHub or GCS with validation |
 | [Dataset operations](docs/datasets.md) | Fetching dataset metadata |
 | [File storage (GCS)](docs/file_storage.md) | Uploading, downloading, and deleting files across GCS buckets |
 | [Pub/Sub messaging](docs/pub_sub.md) | Sending messages to Pub/Sub topics |
