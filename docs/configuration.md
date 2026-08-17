@@ -60,7 +60,7 @@ print(CONFIG.PROJECT_ID)
 | `SCHEMA_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema` | GCS bucket for published schema files |
 | `SCHEMA_STAGING_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas staged for publishing |
 | `DATASET_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-dataset` | GCS bucket for dataset files |
-| `LOG_LEVEL` | `INFO` | Log level string used by `get_log_level()` for host application log configuration |
+| `LOG_LEVEL` | `INFO` | Log level for GCP structured logging (see [Logging for GCP](#logging-for-gcp-cloud-logging)) |
 
 ---
 
