@@ -1,9 +1,9 @@
 """Tests for GCP logging configuration helpers."""
+import importlib
 import json
 import logging
 
-import pytest
-
+import sds_common.config.logging_config as lc
 from sds_common.config.logging_config import GcpJsonFormatter, configure_gcp_logging, get_log_level
 
 
@@ -71,18 +71,33 @@ class TestGcpJsonFormatter:
         output = json.loads(formatter.format(self._make_record()))
         assert "traceback" not in output
 
-    def test_stack_trace_included_when_stack_info_present(self):
+    def test_stack_trace_auto_included_for_warning(self):
         formatter = GcpJsonFormatter()
-        record = self._make_record()
+        output = json.loads(formatter.format(self._make_record(level=logging.WARNING)))
+        assert "stackTrace" in output
+
+    def test_stack_trace_auto_included_for_error(self):
+        formatter = GcpJsonFormatter()
+        output = json.loads(formatter.format(self._make_record(level=logging.ERROR)))
+        assert "stackTrace" in output
+
+    def test_stack_trace_not_auto_included_for_info(self):
+        formatter = GcpJsonFormatter()
+        output = json.loads(formatter.format(self._make_record(level=logging.INFO)))
+        assert "stackTrace" not in output
+
+    def test_stack_trace_not_auto_included_for_debug(self):
+        formatter = GcpJsonFormatter()
+        output = json.loads(formatter.format(self._make_record(level=logging.DEBUG)))
+        assert "stackTrace" not in output
+
+    def test_stack_trace_explicit_stack_info_overrides(self):
+        formatter = GcpJsonFormatter()
+        record = self._make_record(level=logging.DEBUG)
         record.stack_info = "Stack (most recent call last):\n  File 'test.py', line 1, in <module>"
         output = json.loads(formatter.format(record))
         assert "stackTrace" in output
         assert "test.py" in output["stackTrace"]
-
-    def test_no_stack_trace_field_without_stack_info(self):
-        formatter = GcpJsonFormatter()
-        output = json.loads(formatter.format(self._make_record()))
-        assert "stackTrace" not in output
 
 
 class TestConfigureGcpLogging:
@@ -107,3 +122,12 @@ class TestConfigureGcpLogging:
         parsed = json.loads(captured.err)
         assert parsed["severity"] == "WARNING"
         assert parsed["message"] == "test warning message"
+
+    def test_auto_configured_on_import_when_no_handlers(self):
+        root = logging.getLogger()
+        assert any(isinstance(h.formatter, GcpJsonFormatter) for h in root.handlers)
+
+    def test_does_not_add_handlers_when_already_configured(self):
+        initial_count = len(logging.getLogger().handlers)
+        importlib.reload(lc)
+        assert len(logging.getLogger().handlers) == initial_count
