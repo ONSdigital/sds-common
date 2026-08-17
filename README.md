@@ -58,14 +58,14 @@ The library is configured entirely through environment variables. All variables 
 |---|---|---|
 | `PROJECT_ID` | `ons-sds-sandbox` | GCP project ID |
 | `SDS_URL` | `test_url` | Base URL of the SDS API |
-| `LOADER_URL` | `test_url` | Base URL of the loader service |
-| `PROCESS_TIMEOUT` | `540` | HTTP request timeout in seconds |
-| `SECRET_ID` | `iap-secret` | GCP Secret Manager secret ID for the IAP OAuth credential |
-| `GITHUB_SCHEMA_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for raw schema files on GitHub |
-| `POST_SCHEMA_URL` | `/v1/schema` | SDS endpoint for posting a new schema |
-| `GET_SCHEMA_METADATA_URL` | `/v1/schema_metadata` | SDS endpoint for fetching schema metadata |
-| `GET_ALL_SCHEMA_METADATA_URL` | `/v1/all_schema_metadata` | SDS endpoint for fetching all schema metadata |
-| `GET_DATASET_METADATA_URL` | `/v1/dataset_metadata` | SDS endpoint for fetching dataset metadata |
+| `SDS_LOADER_URL` | `test_url` | Base URL of the loader service |
+| `HTTP_REQUEST_TIMEOUT_SECONDS` | `540` | HTTP request timeout in seconds |
+| `IAP_SECRET_ID` | `iap-secret` | GCP Secret Manager secret ID for the IAP OAuth credential |
+| `GITHUB_SCHEMA_BASE_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for raw schema files on GitHub |
+| `POST_SCHEMA_PATH` | `/v1/schema` | SDS endpoint for posting a new schema |
+| `GET_SCHEMA_METADATA_PATH` | `/v1/schema_metadata` | SDS endpoint for fetching schema metadata |
+| `GET_ALL_SCHEMA_METADATA_PATH` | `/v1/all_schema_metadata` | SDS endpoint for fetching all schema metadata |
+| `GET_DATASET_METADATA_PATH` | `/v1/dataset_metadata` | SDS endpoint for fetching dataset metadata |
 | `DATASET_CREATE_PATH` | `/events/dataset/create` | SDS endpoint for creating a dataset |
 | `DATASET_DELETE_PATH` | `/events/dataset/delete` | SDS endpoint for deleting a dataset |
 | `PUBLISH_SCHEMA_ERROR_TOPIC_ID` | `ons-sds-publish-schema-fail` | Pub/Sub topic for schema publish failures |
@@ -74,7 +74,7 @@ The library is configured entirely through environment variables. All variables 
 | `PUBLISH_DATASET_TOPIC_ID` | `ons-sds-publish-dataset` | Pub/Sub topic for dataset publishing |
 | `FIRESTORE_DB_NAME` | `{PROJECT_ID}-sds` | Firestore database name |
 | `SCHEMA_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema` | GCS bucket for published schemas |
-| `SCHEMA_PUBLISH_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas awaiting publishing |
+| `SCHEMA_STAGING_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas awaiting publishing |
 | `DATASET_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-dataset` | GCS bucket for datasets |
 | `LOG_LEVEL` | `INFO` | Log level for the host application (see `get_log_level()`) |
 

@@ -84,7 +84,7 @@ class TestConfig:
 
     def test_config_bucket_names_derived_from_project_id(self):
         with patch.dict(os.environ, {"PROJECT_ID": "proj-x"}, clear=False):
-            for key in ("SCHEMA_BUCKET_NAME", "SCHEMA_PUBLISH_BUCKET_NAME", "DATASET_BUCKET_NAME"):
+            for key in ("SCHEMA_BUCKET_NAME", "SCHEMA_STAGING_BUCKET_NAME", "DATASET_BUCKET_NAME"):
                 os.environ.pop(key, None)
             cfg = Config()
         assert "proj-x" in cfg.SCHEMA_BUCKET_NAME

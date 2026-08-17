@@ -102,7 +102,7 @@ The secret must be a JSON object with the structure:
 }
 ```
 
-The secret ID is configured via the `SECRET_ID` environment variable (default: `iap-secret`).
+The secret ID is configured via the `IAP_SECRET_ID` environment variable (default: `iap-secret`).
 
 ---
 

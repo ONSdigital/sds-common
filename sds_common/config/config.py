@@ -10,28 +10,28 @@ class Config:
     def __init__(self) -> None:
         self.PROJECT_ID = cast(str, ConfigHelpers.get_value_from_env('PROJECT_ID', 'ons-sds-sandbox'))
         self.SDS_URL = cast(str, ConfigHelpers.get_value_from_env('SDS_URL', 'test_url'))
-        self.LOADER_URL = cast(str, ConfigHelpers.get_value_from_env('LOADER_URL', 'test_url'))
-        self.PROCESS_TIMEOUT = int(ConfigHelpers.get_value_from_env('PROCESS_TIMEOUT', '540'))
-        self.SECRET_ID = cast(str, ConfigHelpers.get_value_from_env('SECRET_ID', 'iap-secret'))
+        self.LOADER_URL = cast(str, ConfigHelpers.get_value_from_env('SDS_LOADER_URL', 'test_url'))
+        self.PROCESS_TIMEOUT = int(ConfigHelpers.get_value_from_env('HTTP_REQUEST_TIMEOUT_SECONDS', '540'))
+        self.SECRET_ID = cast(str, ConfigHelpers.get_value_from_env('IAP_SECRET_ID', 'iap-secret'))
         self.GITHUB_SCHEMA_URL = cast(
             str,
             ConfigHelpers.get_value_from_env(
-                'GITHUB_SCHEMA_URL',
+                'GITHUB_SCHEMA_BASE_URL',
                 'https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/',
             ),
         )
-        self.POST_SCHEMA_ENDPOINT = cast(str, ConfigHelpers.get_value_from_env('POST_SCHEMA_URL', '/v1/schema'))
+        self.POST_SCHEMA_ENDPOINT = cast(str, ConfigHelpers.get_value_from_env('POST_SCHEMA_PATH', '/v1/schema'))
         self.GET_SCHEMA_METADATA_ENDPOINT = cast(
             str,
-            ConfigHelpers.get_value_from_env('GET_SCHEMA_METADATA_URL', '/v1/schema_metadata'),
+            ConfigHelpers.get_value_from_env('GET_SCHEMA_METADATA_PATH', '/v1/schema_metadata'),
         )
         self.GET_ALL_SCHEMA_METADATA_ENDPOINT = cast(
             str,
-            ConfigHelpers.get_value_from_env('GET_ALL_SCHEMA_METADATA_URL', '/v1/all_schema_metadata'),
+            ConfigHelpers.get_value_from_env('GET_ALL_SCHEMA_METADATA_PATH', '/v1/all_schema_metadata'),
         )
         self.GET_DATASET_METADATA_ENDPOINT = cast(
             str,
-            ConfigHelpers.get_value_from_env('GET_DATASET_METADATA_URL', '/v1/dataset_metadata'),
+            ConfigHelpers.get_value_from_env('GET_DATASET_METADATA_PATH', '/v1/dataset_metadata'),
         )
         self.DATASET_CREATE_ENDPOINT = cast(
             str,
@@ -68,7 +68,7 @@ class Config:
         self.SCHEMA_PUBLISH_BUCKET_NAME = cast(
             str,
             ConfigHelpers.get_value_from_env(
-                'SCHEMA_PUBLISH_BUCKET_NAME',
+                'SCHEMA_STAGING_BUCKET_NAME',
                 f'{self.PROJECT_ID}-sds-europe-west2-schema-publish',
             ),
         )

@@ -42,14 +42,14 @@ print(CONFIG.PROJECT_ID)
 |---|---|---|
 | `PROJECT_ID` | `ons-sds-sandbox` | GCP project ID used for all GCP client connections |
 | `SDS_URL` | `test_url` | Base URL of the SDS API (no trailing slash) |
-| `LOADER_URL` | `test_url` | Base URL of the loader service |
-| `PROCESS_TIMEOUT` | `540` | HTTP request timeout in seconds |
-| `SECRET_ID` | `iap-secret` | GCP Secret Manager secret name containing the IAP OAuth credentials |
-| `GITHUB_SCHEMA_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for fetching schema files from GitHub |
-| `POST_SCHEMA_URL` | `/v1/schema` | SDS path for `POST /schema` |
-| `GET_SCHEMA_METADATA_URL` | `/v1/schema_metadata` | SDS path for `GET /schema_metadata` |
-| `GET_ALL_SCHEMA_METADATA_URL` | `/v1/all_schema_metadata` | SDS path for `GET /all_schema_metadata` |
-| `GET_DATASET_METADATA_URL` | `/v1/dataset_metadata` | SDS path for `GET /dataset_metadata` |
+| `SDS_LOADER_URL` | `test_url` | Base URL of the loader service |
+| `HTTP_REQUEST_TIMEOUT_SECONDS` | `540` | HTTP request timeout in seconds |
+| `IAP_SECRET_ID` | `iap-secret` | GCP Secret Manager secret name containing the IAP OAuth credentials |
+| `GITHUB_SCHEMA_BASE_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for fetching schema files from GitHub |
+| `POST_SCHEMA_PATH` | `/v1/schema` | SDS path for `POST /schema` |
+| `GET_SCHEMA_METADATA_PATH` | `/v1/schema_metadata` | SDS path for `GET /schema_metadata` |
+| `GET_ALL_SCHEMA_METADATA_PATH` | `/v1/all_schema_metadata` | SDS path for `GET /all_schema_metadata` |
+| `GET_DATASET_METADATA_PATH` | `/v1/dataset_metadata` | SDS path for `GET /dataset_metadata` |
 | `DATASET_CREATE_PATH` | `/events/dataset/create` | SDS path for the dataset create event |
 | `DATASET_DELETE_PATH` | `/events/dataset/delete` | SDS path for the dataset delete event |
 | `PUBLISH_SCHEMA_ERROR_TOPIC_ID` | `ons-sds-publish-schema-fail` | Pub/Sub topic ID for schema publish failure events |
@@ -58,7 +58,7 @@ print(CONFIG.PROJECT_ID)
 | `PUBLISH_DATASET_TOPIC_ID` | `ons-sds-publish-dataset` | Pub/Sub topic ID for dataset events |
 | `FIRESTORE_DB_NAME` | `{PROJECT_ID}-sds` | Firestore database name |
 | `SCHEMA_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema` | GCS bucket for published schema files |
-| `SCHEMA_PUBLISH_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas staged for publishing |
+| `SCHEMA_STAGING_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas staged for publishing |
 | `DATASET_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-dataset` | GCS bucket for dataset files |
 | `LOG_LEVEL` | `INFO` | Log level string used by `get_log_level()` for host application log configuration |
 
