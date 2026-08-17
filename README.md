@@ -75,10 +75,10 @@ The library is configured entirely through environment variables. All variables 
 | `HTTP_REQUEST_TIMEOUT_SECONDS` | `540` | HTTP request timeout in seconds |
 | `IAP_SECRET_ID` | `iap-secret` | GCP Secret Manager secret ID for the IAP OAuth credential |
 | `GITHUB_SCHEMA_BASE_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for raw schema files on GitHub |
-| `POST_SCHEMA_PATH` | `/v1/schema` | SDS endpoint for posting a new schema |
-| `GET_SCHEMA_METADATA_PATH` | `/v1/schema_metadata` | SDS endpoint for fetching schema metadata |
-| `GET_ALL_SCHEMA_METADATA_PATH` | `/v1/all_schema_metadata` | SDS endpoint for fetching all schema metadata |
-| `GET_DATASET_METADATA_PATH` | `/v1/dataset_metadata` | SDS endpoint for fetching dataset metadata |
+| `POST_SCHEMA_PATH` | `/schemas` | SDS endpoint for posting a new schema |
+| `GET_SCHEMA_METADATA_PATH` | `/schemas/metadata` | SDS endpoint for fetching schema metadata for a survey |
+| `GET_ALL_SCHEMA_METADATA_PATH` | `/schemas/all-metadata` | SDS endpoint for fetching all schema metadata |
+| `GET_DATASET_METADATA_PATH` | `/datasets/metadata` | SDS endpoint for fetching dataset metadata for a survey and period |
 | `DATASET_CREATE_PATH` | `/events/dataset/create` | SDS endpoint for creating a dataset |
 | `DATASET_DELETE_PATH` | `/events/dataset/delete` | SDS endpoint for deleting a dataset |
 | `PUBLISH_SCHEMA_ERROR_TOPIC_ID` | `ons-sds-publish-schema-fail` | Pub/Sub topic for schema publish failures |

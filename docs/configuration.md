@@ -50,10 +50,10 @@ print(CONFIG.PROJECT_ID)
 | `HTTP_REQUEST_TIMEOUT_SECONDS` | `540` | HTTP request timeout in seconds |
 | `IAP_SECRET_ID` | `iap-secret` | GCP Secret Manager secret name containing the IAP OAuth credentials |
 | `GITHUB_SCHEMA_BASE_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for fetching schema files from GitHub |
-| `POST_SCHEMA_PATH` | `/v1/schema` | SDS path for `POST /schema` |
-| `GET_SCHEMA_METADATA_PATH` | `/v1/schema_metadata` | SDS path for `GET /schema_metadata` |
-| `GET_ALL_SCHEMA_METADATA_PATH` | `/v1/all_schema_metadata` | SDS path for `GET /all_schema_metadata` |
-| `GET_DATASET_METADATA_PATH` | `/v1/dataset_metadata` | SDS path for `GET /dataset_metadata` |
+| `POST_SCHEMA_PATH` | `/schemas` | SDS path for `POST /schemas` — posts a schema for processing |
+| `GET_SCHEMA_METADATA_PATH` | `/schemas/metadata` | SDS path for `GET /schemas/metadata` — fetch metadata for a survey |
+| `GET_ALL_SCHEMA_METADATA_PATH` | `/schemas/all-metadata` | SDS path for `GET /schemas/all-metadata` — fetch all schema metadata |
+| `GET_DATASET_METADATA_PATH` | `/datasets/metadata` | SDS path for `GET /datasets/metadata` — fetch dataset metadata for a survey and period |
 | `DATASET_CREATE_PATH` | `/events/dataset/create` | SDS path for the dataset create event |
 | `DATASET_DELETE_PATH` | `/events/dataset/delete` | SDS path for the dataset delete event |
 | `PUBLISH_SCHEMA_ERROR_TOPIC_ID` | `ons-sds-publish-schema-fail` | Pub/Sub topic ID for schema publish failure events |

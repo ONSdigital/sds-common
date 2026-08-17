@@ -21,7 +21,7 @@ def _make_service():
     http = MagicMock()
     cfg = MagicMock()
     cfg.SDS_URL = "https://sds.test"
-    cfg.GET_DATASET_METADATA_ENDPOINT = "/v1/dataset_metadata"
+    cfg.GET_DATASET_METADATA_ENDPOINT = "/datasets/metadata"
     return SdsDatasetRequestService(http_service=http, config=cfg), http
 
 
@@ -45,7 +45,7 @@ class TestSdsDatasetRequestService:
         assert len(result) == 1
         assert result[0].dataset_id == "d1"
         http.make_get_request.assert_called_once_with(
-            "https://sds.test/v1/dataset_metadata",
+            "https://sds.test/datasets/metadata",
             params={"survey_id": "s1", "period_id": "p1"},
         )
 

@@ -89,6 +89,17 @@ The following environment variables have been renamed. Update Cloud Run, Cloud F
 
 All other variable names are unchanged.
 
+In addition, the **default values** for the endpoint path variables have been updated from the deprecated `/v1/` paths to the current SDS API paths:
+
+| Variable | v1 default (deprecated) | v2 default |
+|---|---|---|
+| `POST_SCHEMA_PATH` | `/v1/schema` | `/schemas` |
+| `GET_SCHEMA_METADATA_PATH` | `/v1/schema_metadata` | `/schemas/metadata` |
+| `GET_ALL_SCHEMA_METADATA_PATH` | `/v1/all_schema_metadata` | `/schemas/all-metadata` |
+| `GET_DATASET_METADATA_PATH` | `/v1/dataset_metadata` | `/datasets/metadata` |
+
+If your deployment explicitly set these variables to `/v1/...` values, update them or remove the overrides to use the new defaults.
+
 ---
 
 ## 4. `HttpService` no longer owns authentication

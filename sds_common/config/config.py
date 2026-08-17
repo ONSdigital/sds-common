@@ -20,18 +20,18 @@ class Config:
                 'https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/',
             ),
         )
-        self.POST_SCHEMA_ENDPOINT = cast(str, ConfigHelpers.get_value_from_env('POST_SCHEMA_PATH', '/v1/schema'))
+        self.POST_SCHEMA_ENDPOINT = cast(str, ConfigHelpers.get_value_from_env('POST_SCHEMA_PATH', '/schemas'))
         self.GET_SCHEMA_METADATA_ENDPOINT = cast(
             str,
-            ConfigHelpers.get_value_from_env('GET_SCHEMA_METADATA_PATH', '/v1/schema_metadata'),
+            ConfigHelpers.get_value_from_env('GET_SCHEMA_METADATA_PATH', '/schemas/metadata'),
         )
         self.GET_ALL_SCHEMA_METADATA_ENDPOINT = cast(
             str,
-            ConfigHelpers.get_value_from_env('GET_ALL_SCHEMA_METADATA_PATH', '/v1/all_schema_metadata'),
+            ConfigHelpers.get_value_from_env('GET_ALL_SCHEMA_METADATA_PATH', '/schemas/all-metadata'),
         )
         self.GET_DATASET_METADATA_ENDPOINT = cast(
             str,
-            ConfigHelpers.get_value_from_env('GET_DATASET_METADATA_PATH', '/v1/dataset_metadata'),
+            ConfigHelpers.get_value_from_env('GET_DATASET_METADATA_PATH', '/datasets/metadata'),
         )
         self.DATASET_CREATE_ENDPOINT = cast(
             str,

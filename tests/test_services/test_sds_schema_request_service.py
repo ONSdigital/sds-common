@@ -22,9 +22,9 @@ def _make_service(config=None):
     http = MagicMock()
     cfg = config or MagicMock()
     cfg.SDS_URL = "https://sds.test"
-    cfg.GET_SCHEMA_METADATA_ENDPOINT = "/v1/schema_metadata"
-    cfg.GET_ALL_SCHEMA_METADATA_ENDPOINT = "/v1/all_schema_metadata"
-    cfg.POST_SCHEMA_ENDPOINT = "/v1/schema"
+    cfg.GET_SCHEMA_METADATA_ENDPOINT = "/schemas/metadata"
+    cfg.GET_ALL_SCHEMA_METADATA_ENDPOINT = "/schemas/all-metadata"
+    cfg.POST_SCHEMA_ENDPOINT = "/schemas"
     return SdsSchemaRequestService(http_service=http, config=cfg), http
 
 
@@ -54,7 +54,7 @@ class TestGetSchemaMetadata:
         http.make_get_request.return_value = _make_response(200, [])
         svc.get_schema_metadata("surv1")
         http.make_get_request.assert_called_once_with(
-            "https://sds.test/v1/schema_metadata", params={"survey_id": "surv1"}
+            "https://sds.test/schemas/metadata", params={"survey_id": "surv1"}
         )
 
 
@@ -75,7 +75,7 @@ class TestGetAllSchemaMetadata:
         svc, http = _make_service()
         http.make_get_request.return_value = _make_response(200, [])
         svc.get_all_schema_metadata()
-        http.make_get_request.assert_called_once_with("https://sds.test/v1/all_schema_metadata")
+        http.make_get_request.assert_called_once_with("https://sds.test/schemas/all-metadata")
 
 
 class TestPostSchema:
@@ -92,7 +92,7 @@ class TestPostSchema:
         schema = Schema({"data": 1}, "surv1", "v1", "v1.json")
         svc.post_schema(schema)
         http.make_post_request.assert_called_once_with(
-            "https://sds.test/v1/schema", {"data": 1}, params={"survey_id": "surv1"}
+            "https://sds.test/schemas", {"data": 1}, params={"survey_id": "surv1"}
         )
 
     def test_post_schema_raises_on_non_200(self):
