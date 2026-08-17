@@ -92,14 +92,14 @@ from sds_common import SdsCommon
 
 def test_something():
     client = SdsCommon()
-    client.__dict__["schema_service"] = MagicMock()
+    client.__dict__["schemas"] = MagicMock()
 
-    # client.schema_service now returns the mock
+    # client.schemas now returns the mock
 ```
 
-### Injecting into `authenticated_http_service`
+### Injecting into `authenticated_http`
 
-`authenticated_http_service` is a plain `@property` (not cached), so it cannot be pre-populated via `__dict__`. Inject a mock `iap_auth` instead:
+`authenticated_http` is a plain `@property` (not cached), so it cannot be pre-populated via `__dict__`. Inject a mock `iap_auth` instead:
 
 ```python
 from unittest.mock import MagicMock
@@ -112,7 +112,7 @@ def test_authenticated_http():
     client.__dict__["iap_auth"] = mock_auth
     client.__dict__["_authenticated_session"] = MagicMock()
 
-    http = client.authenticated_http_service
+    http = client.authenticated_http
     # http is constructed with the mock session and headers
 ```
 

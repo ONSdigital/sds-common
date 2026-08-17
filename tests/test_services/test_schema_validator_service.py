@@ -17,31 +17,31 @@ from sds_common.services.schema_validator_service import SchemaValidatorService
 class TestSchemaValidatorService:
     def _svc(self, metadata_return_value):
         schema_req_svc = MagicMock()
-        schema_req_svc.get_schema_metadata.return_value = metadata_return_value
+        schema_req_svc.get_metadata.return_value = metadata_return_value
         return SchemaValidatorService(schema_request_service=schema_req_svc)
 
     def test_validate_passes_when_version_matches_and_no_duplicates(self):
         svc = self._svc([{"schema_version": "v2"}])
         schema = Schema({}, "surv1", "v1", "v1.json")
-        svc.validate_schema(schema)  # should not raise
+        svc.validate(schema)  # should not raise
 
     def test_validate_passes_for_new_survey_none_return(self):
-        """get_schema_metadata returns None (404) for a brand-new survey."""
+        """get_metadata returns None (404) for a brand-new survey."""
         svc = self._svc(None)
         schema = Schema({}, "surv1", "v1", "v1.json")
-        svc.validate_schema(schema)
+        svc.validate(schema)
 
     def test_validate_raises_version_mismatch(self):
         svc = self._svc([])
         schema = Schema({}, "surv1", "v1", "different_name.json")
         with pytest.raises(SchemaVersionMismatchError):
-            svc.validate_schema(schema)
+            svc.validate(schema)
 
     def test_validate_raises_duplication_error(self):
         svc = self._svc([{"schema_version": "v1"}])
         schema = Schema({}, "surv1", "v1", "v1.json")
         with pytest.raises(SchemaDuplicationError):
-            svc.validate_schema(schema)
+            svc.validate(schema)
 
     def test_verify_version_static_happy_path(self):
         schema = Schema({}, "surv1", "v1", "v1.json")
@@ -55,7 +55,7 @@ class TestSchemaValidatorService:
     def test_check_duplicate_versions_raises_format_error_on_non_list(self):
         """When the API returns 200 but body is not a list, SchemaMetadataFormatError is raised."""
         schema_req_svc = MagicMock()
-        schema_req_svc.get_schema_metadata.return_value = {"error": "unexpected"}  # dict not list
+        schema_req_svc.get_metadata.return_value = {"error": "unexpected"}  # dict not list
         svc = SchemaValidatorService(schema_request_service=schema_req_svc)
         schema = Schema({}, "surv1", "v1", "v1.json")
         with pytest.raises(SchemaMetadataFormatError) as exc_info:

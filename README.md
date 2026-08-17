@@ -47,16 +47,16 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Fetch schema metadata for a survey
-metadata = client.schema_service.get_schema_metadata("068")
+metadata = client.schemas.get_metadata("068")
 
 # Publish a schema from GitHub to SDS
-response = client.github_publisher.publish_schema("068_1.json")
+response = client.github_publisher.publish("068_1.json")
 
 # Upload a file to the schema GCS bucket
-client.schema_file_service.upload_file("/path/to/local/schema.json")
+client.schema_files.upload("/path/to/local/schema.json")
 
 # Send a Pub/Sub message
-client.pub_sub_service.send_message('{"event": "schema_published"}', topic_id="my-topic")
+client.pub_sub.publish('{"event": "schema_published"}', topic_id="my-topic")
 ```
 
 Nothing is initialised until first access. If you only need auth headers, only the secret manager and IAP auth provider are created — no GCS clients, no Firestore connections, nothing else.
@@ -116,19 +116,19 @@ client = SdsCommon(config=my_config)
 | Property | Type | Description |
 |---|---|---|
 | `config` | `Config` | Resolved configuration object — see [Configuration reference](docs/configuration.md) |
-| `secret_manager` | `SecretService` | Reads secrets from GCP Secret Manager — see [Authentication](docs/authentication.md#secret-format) |
+| `secrets` | `SecretService` | Reads secrets from GCP Secret Manager — see [Authentication](docs/authentication.md#secret-format) |
 | `iap_auth` | `AuthHeaderProvider` | Generates IAP Bearer-token headers — see [Authentication](docs/authentication.md) |
-| `http_service` | `HttpService` | Unauthenticated HTTP client (e.g. GitHub requests) |
-| `authenticated_http_service` | `HttpService` | Authenticated HTTP client — fresh token on every access |
-| `schema_service` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints — see [Schema operations](docs/schemas.md) |
-| `dataset_service` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints — see [Dataset operations](docs/datasets.md) |
+| `http` | `HttpService` | Unauthenticated HTTP client (e.g. GitHub requests) |
+| `authenticated_http` | `HttpService` | Authenticated HTTP client — fresh token on every access |
+| `schemas` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints — see [Schema operations](docs/schemas.md) |
+| `datasets` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints — see [Dataset operations](docs/datasets.md) |
 | `schema_validator` | `SchemaValidatorService` | Validates a schema before publishing |
 | `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-gcs) |
 | `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-github) |
-| `schema_file_service` | `FileService` | File operations on the schema GCS bucket — see [File storage](docs/file_storage.md) |
-| `schema_staging_file_service` | `FileService` | File operations on the schema-publish staging GCS bucket — see [File storage](docs/file_storage.md) |
-| `dataset_file_service` | `FileService` | File operations on the dataset GCS bucket — see [File storage](docs/file_storage.md) |
-| `pub_sub_service` | `PubSubService` | Publishes messages to GCP Pub/Sub topics — see [Pub/Sub messaging](docs/pub_sub.md) |
+| `schema_files` | `FileService` | File operations on the schema GCS bucket — see [File storage](docs/file_storage.md) |
+| `schema_staging_files` | `FileService` | File operations on the schema-publish staging GCS bucket — see [File storage](docs/file_storage.md) |
+| `dataset_files` | `FileService` | File operations on the dataset GCS bucket — see [File storage](docs/file_storage.md) |
+| `pub_sub` | `PubSubService` | Publishes messages to GCP Pub/Sub topics — see [Pub/Sub messaging](docs/pub_sub.md) |
 | `firestore_client` | `firestore.Client` | Raw Firestore client — see [Firestore](docs/firestore.md#raw-firestore-client) |
 | `firestore` | `FirebaseLoader` | Typed wrapper around Firestore for schema collection access — see [Firestore](docs/firestore.md) |
 

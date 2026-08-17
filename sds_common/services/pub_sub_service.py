@@ -6,9 +6,9 @@ class PubSubService:
         self.publisher = publisher_client
         self.project_id = project_id
 
-    def send_message(self, message: str, topic_id: str) -> None:
+    def publish(self, message: str, topic_id: str) -> None:
         """
-        Sends a Pub/Sub message to the specified topic.
+        Publishes a message to the specified topic.
 
         :param message: The JSON-encoded string message to publish.
         :param topic_id: The ID of the topic to send the message to.

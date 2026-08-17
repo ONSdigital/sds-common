@@ -37,11 +37,11 @@ class SdsCommon:
 
         client = SdsCommon()
 
-        # Only iap_auth + secret_manager are instantiated:
+        # Only iap_auth + secrets are instantiated:
         headers = client.generate_authentication_headers()
 
         # Fully authenticated SDS schema request:
-        client.schema_service.get_schema_metadata("my_survey")
+        client.schemas.get_metadata("my_survey")
     """
 
     def __init__(self, config: Config | None = None) -> None:
@@ -57,7 +57,7 @@ class SdsCommon:
     # ----------------------------------------------------------- core services
 
     @cached_property
-    def secret_manager(self) -> SecretService:
+    def secrets(self) -> SecretService:
         """GCP Secret Manager client — reads IAP OAuth credentials."""
         return SecretService(config=self.config)
 
@@ -65,19 +65,19 @@ class SdsCommon:
     def iap_auth(self) -> AuthHeaderProvider:
         """Generates IAP Bearer-token authentication headers."""
         return AuthHeaderProvider(
-            secret_service=self.secret_manager,
+            secret_service=self.secrets,
             config=self.config,
         )
 
     # ------------------------------------------------------------ http clients
 
     @cached_property
-    def http_service(self) -> HttpService:
+    def http(self) -> HttpService:
         """Unauthenticated HTTP client — for requests that do not require IAP (e.g. GitHub)."""
         return HttpService.create()
 
     @property
-    def authenticated_http_service(self) -> HttpService:
+    def authenticated_http(self) -> HttpService:
         """
         Authenticated HTTP client — generates a fresh IAP token on every access.
 
@@ -97,22 +97,22 @@ class SdsCommon:
     # -------------------------------------------------------- storage / pubsub
 
     @cached_property
-    def schema_file_service(self) -> FileService:
+    def schema_files(self) -> FileService:
         """File operations on the published schema GCS bucket."""
         return self._build_file_service(Bucket.SCHEMA_BUCKET)
 
     @cached_property
-    def schema_staging_file_service(self) -> FileService:
+    def schema_staging_files(self) -> FileService:
         """File operations on the schema staging GCS bucket (schemas awaiting publish)."""
         return self._build_file_service(Bucket.SCHEMA_PUBLISH_BUCKET)
 
     @cached_property
-    def dataset_file_service(self) -> FileService:
+    def dataset_files(self) -> FileService:
         """File operations on the dataset GCS bucket."""
         return self._build_file_service(Bucket.DATASET_BUCKET)
 
     @cached_property
-    def pub_sub_service(self) -> PubSubService:
+    def pub_sub(self) -> PubSubService:
         """GCP Pub/Sub publisher."""
         return PubSubService(
             publisher_client=PublisherClient(),
@@ -122,18 +122,18 @@ class SdsCommon:
     # ----------------------------------------------------- SDS request services
 
     @cached_property
-    def schema_service(self) -> SdsSchemaRequestService:
+    def schemas(self) -> SdsSchemaRequestService:
         """HTTP client for SDS schema endpoints (metadata, post)."""
         return SdsSchemaRequestService(
-            http_service=self.authenticated_http_service,
+            http_service=self.authenticated_http,
             config=self.config,
         )
 
     @cached_property
-    def dataset_service(self) -> SdsDatasetRequestService:
+    def datasets(self) -> SdsDatasetRequestService:
         """HTTP client for SDS dataset endpoints (metadata)."""
         return SdsDatasetRequestService(
-            http_service=self.authenticated_http_service,
+            http_service=self.authenticated_http,
             config=self.config,
         )
 
@@ -142,24 +142,24 @@ class SdsCommon:
     @cached_property
     def schema_validator(self) -> SchemaValidatorService:
         """Validates a schema against existing SDS metadata before publishing."""
-        return SchemaValidatorService(self.schema_service)
+        return SchemaValidatorService(self.schemas)
 
     @cached_property
     def gcs_publisher(self) -> GcsSchemaPublisher:
         """Publishes schemas from the GCS staging bucket to SDS."""
         return GcsSchemaPublisher(
-            schema_request_service=self.schema_service,
-            file_service=self.schema_staging_file_service,
+            schema_request_service=self.schemas,
+            file_service=self.schema_staging_files,
         )
 
     @cached_property
     def github_publisher(self) -> GithubSchemaPublisher:
         """Fetches schemas from GitHub, validates, and publishes to SDS."""
         return GithubSchemaPublisher(
-            schema_request_service=self.schema_service,
+            schema_request_service=self.schemas,
             validator_service=self.schema_validator,
             github_schema_url=self.config.GITHUB_SCHEMA_URL,
-            http_service=self.http_service,
+            http_service=self.http,
         )
 
     # ------------------------------------------------------ firestore

@@ -11,7 +11,7 @@ class SchemaValidatorService:
     def __init__(self, schema_request_service: SdsSchemaRequestService) -> None:
         self.sds_schema_request_service = schema_request_service
 
-    def validate_schema(self, schema: Schema) -> None:
+    def validate(self, schema: Schema) -> None:
         """
         Validate the schema by verifying the version and checking for duplicate versions.
 
@@ -41,7 +41,7 @@ class SchemaValidatorService:
         :raises SchemaDuplicationError: if the schema version already exists in SDS.
         :raises SchemaMetadataFormatError: if the metadata response body is not a list.
         """
-        metadata = self.sds_schema_request_service.get_schema_metadata(schema.survey_id)
+        metadata = self.sds_schema_request_service.get_metadata(schema.survey_id)
 
         if metadata is None:
             return

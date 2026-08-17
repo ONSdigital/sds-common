@@ -1,4 +1,63 @@
-# Migration guide: v1 → v2
+# Migration guide
+
+---
+
+## v2 → v3
+
+Version 3.0.0 renames `SdsCommon` facade properties and service methods for a cleaner, more natural API.
+
+### Facade property renames
+
+| v2 name | v3 name |
+|---|---|
+| `secret_manager` | `secrets` |
+| `http_service` | `http` |
+| `authenticated_http_service` | `authenticated_http` |
+| `schema_service` | `schemas` |
+| `dataset_service` | `datasets` |
+| `schema_file_service` | `schema_files` |
+| `schema_staging_file_service` | `schema_staging_files` |
+| `dataset_file_service` | `dataset_files` |
+| `pub_sub_service` | `pub_sub` |
+
+### Service method renames
+
+| Class | v2 method | v3 method |
+|---|---|---|
+| `SdsSchemaRequestService` | `get_schema_metadata()` | `get_metadata()` |
+| `SdsSchemaRequestService` | `get_all_schema_metadata()` | `get_all_metadata()` |
+| `SdsSchemaRequestService` | `post_schema()` | `publish()` |
+| `SdsDatasetRequestService` | `get_dataset_metadata()` | `get_metadata()` |
+| `SchemaValidatorService` | `validate_schema()` | `validate()` |
+| `GcsSchemaPublisher` | `publish_schema()` | `publish()` |
+| `GithubSchemaPublisher` | `publish_schema()` | `publish()` |
+| `PubSubService` | `send_message()` | `publish()` |
+| `FileService` | `upload_file()` | `upload()` |
+| `FileService` | `retrieve_json_file()` | `get_json()` |
+| `FileService` | `delete_file()` | `delete()` |
+| `FileService` | `check_file_exists()` | `exists()` |
+
+**Before (v2):**
+```python
+client.schema_service.get_schema_metadata("068")
+client.dataset_service.get_dataset_metadata("068", "202301")
+client.pub_sub_service.send_message(msg, topic_id="my-topic")
+client.schema_file_service.upload_file("/path/to/file.json")
+client.github_publisher.publish_schema("068_1.json")
+```
+
+**After (v3):**
+```python
+client.schemas.get_metadata("068")
+client.datasets.get_metadata("068", "202301")
+client.pub_sub.publish(msg, topic_id="my-topic")
+client.schema_files.upload("/path/to/file.json")
+client.github_publisher.publish("068_1.json")
+```
+
+---
+
+## v1 → v2
 
 Version 2.0.0 is a significant rewrite of `sds-common`. The public API, configuration, and exception hierarchy have all changed. This guide covers every breaking change and the steps needed to update consuming code.
 
@@ -14,8 +73,8 @@ Version 2.0.0 is a significant rewrite of `sds-common`. The public API, configur
 | `HttpService` | No longer owns auth logic; use `authenticated_http_service` from `SdsCommon` |
 | `AuthHeaderProvider` | New class — extracted from `HttpService` |
 | Exception hierarchy | Exceptions reorganised into typed, domain-specific files |
-| `get_schema_metadata` | Now returns `list[dict] \| None` instead of a raw `Response` object |
-| `PubSubService.send_message` | Signature changed — no longer accepts a `SchemaPublishError` |
+| `schemas.get_metadata()` | Now returns `list[dict] \| None` instead of a raw `Response` object |
+| `pub_sub.publish()` | Signature changed — no longer accepts a `SchemaPublishError` |
 | Dependencies removed | `cloudevents`, `pydantic_settings`, `python-dotenv` removed from package deps |
 
 ---
@@ -41,7 +100,7 @@ metadata = schema_service.get_schema_metadata("068")
 from sds_common import SdsCommon
 
 client = SdsCommon()
-metadata = client.schema_service.get_schema_metadata("068")
+metadata = client.schemas.get_metadata("068")
 ```
 
 ---
@@ -104,7 +163,7 @@ If your deployment explicitly set these variables to `/v1/...` values, update th
 
 ## 4. `HttpService` no longer owns authentication
 
-In v1, `HttpService` accepted a boolean `authenticated` flag. In v2, it is a pure HTTP client. Authenticated requests go through `SdsCommon.authenticated_http_service`.
+In v1, `HttpService` accepted a boolean `authenticated` flag. In v2, it is a pure HTTP client. Authenticated requests go through `SdsCommon.authenticated_http`.
 
 **Before (v1):**
 ```python
@@ -124,10 +183,10 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Authenticated (IAP Bearer token injected automatically)
-response = client.authenticated_http_service.make_get_request("https://sds.example.com/api")
+response = client.authenticated_http.make_get_request("https://sds.example.com/api")
 
 # Unauthenticated (e.g. GitHub)
-response = client.http_service.make_get_request("https://raw.githubusercontent.com/...")
+response = client.http.make_get_request("https://raw.githubusercontent.com/...")
 ```
 
 If you need an `HttpService` directly (outside of `SdsCommon`), use the factory:
@@ -190,7 +249,7 @@ data = response.json()  # manually decode
 
 **After (v2):**
 ```python
-metadata = client.schema_service.get_schema_metadata("068")
+metadata = client.schemas.get_metadata("068")
 
 if metadata is None:
     # survey does not exist (404)
@@ -290,7 +349,7 @@ def clear_config_cache():
 from sds_common import SdsCommon              # main entry point
 from sds_common import get_config, CONFIG     # config access
 from sds_common import Bucket                 # GCS bucket enum
-from sds_common import DatasetMetadata        # data class returned by dataset_service
+from sds_common import DatasetMetadata        # data class returned by datasets.get_metadata()
 from sds_common import PubSubHelper           # integration test helper
 
 # Errors

@@ -16,7 +16,7 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Returns a list of metadata dicts, or None if the survey does not exist
-metadata = client.schema_service.get_schema_metadata("068")
+metadata = client.schemas.get_metadata("068")
 
 if metadata is None:
     print("No schemas found for this survey")
@@ -28,7 +28,7 @@ else:
 ### All schemas
 
 ```python
-all_metadata = client.schema_service.get_all_schema_metadata()
+all_metadata = client.schemas.get_all_metadata()
 # Returns a list of all schema metadata dicts
 ```
 
@@ -42,7 +42,7 @@ Fetches a schema file from the configured GitHub URL, validates it, and posts it
 from sds_common import SdsCommon
 
 client = SdsCommon()
-response = client.github_publisher.publish_schema("068_1.json")
+response = client.github_publisher.publish("068_1.json")
 print(response.status_code)  # 200 on success
 ```
 
@@ -64,7 +64,7 @@ from sds_common import SdsCommon
 
 client = SdsCommon()
 
-response = client.gcs_publisher.publish_schema("068_1.json")
+response = client.gcs_publisher.publish("068_1.json")
 client.gcs_publisher.cleanup("068_1.json")  # remove the staged file
 ```
 
@@ -95,9 +95,9 @@ from sds_common import SdsCommon, SchemaPublishError
 client = SdsCommon()
 
 try:
-    client.github_publisher.publish_schema("068_1.json")
+    client.github_publisher.publish("068_1.json")
 except SchemaPublishError as e:
-    client.pub_sub_service.send_message(
+    client.pub_sub.publish(
         e.generate_message_content(),
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
     )

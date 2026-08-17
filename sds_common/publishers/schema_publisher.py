@@ -24,7 +24,7 @@ class SchemaPublisher(ABC):
         ...  # pragma: no cover
 
     @abstractmethod
-    def publish_schema(self, file_name: str) -> requests.Response:
+    def publish(self, file_name: str) -> requests.Response:
         """
         Publishes the schema for the given file name.
 

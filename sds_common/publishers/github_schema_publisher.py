@@ -34,9 +34,9 @@ class GithubSchemaPublisher(SchemaPublisher):
         """
         return fetch_raw_schema_from_github(file_name, self.http_service, self.github_schema_url)
 
-    def publish_schema(self, file_name: str) -> requests.Response:
+    def publish(self, file_name: str) -> requests.Response:
         """
-        Publishes the schema to the schema registry after retrieving and validating it.
+        Publishes the schema to SDS after fetching from GitHub and validating.
 
         :param file_name: The name of the schema file to publish.
         :return: The response from SDS.
@@ -44,7 +44,7 @@ class GithubSchemaPublisher(SchemaPublisher):
         schema_json = self._retrieve_schema(file_name)
         schema = Schema.set_schema(schema_json, file_name)
         self._validate(schema)
-        return self.schema_request_service.post_schema(schema)
+        return self.schema_request_service.publish(schema)
 
     def _validate(self, schema: Schema):
         """
@@ -52,4 +52,4 @@ class GithubSchemaPublisher(SchemaPublisher):
 
         :param schema: The Schema object to validate.
         """
-        self.validator.validate_schema(schema)
+        self.validator.validate(schema)

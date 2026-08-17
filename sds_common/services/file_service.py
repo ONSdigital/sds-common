@@ -5,7 +5,7 @@ class FileService:
     def __init__(self, bucket_repository: FileRepositoryInterface) -> None:
         self.bucket_repository = bucket_repository
 
-    def upload_file(self, filepath: str) -> None:
+    def upload(self, filepath: str) -> None:
         """
         Uploads a file to the associated bucket.
 
@@ -13,7 +13,7 @@ class FileService:
         """
         self.bucket_repository.upload_file_from_path(filepath)
 
-    def retrieve_json_file(self, filename: str) -> dict:
+    def get_json(self, filename: str) -> dict:
         """
         Retrieves a JSON file from the associated bucket.
 
@@ -22,7 +22,7 @@ class FileService:
         """
         return self.bucket_repository.get_file_as_json(filename)
 
-    def delete_file(self, filename: str) -> None:
+    def delete(self, filename: str) -> None:
         """
         Deletes a file from the associated bucket.
 
@@ -30,9 +30,9 @@ class FileService:
         """
         self.bucket_repository.delete_file(filename)
 
-    def check_file_exists(self, filename: str) -> bool:
+    def exists(self, filename: str) -> bool:
         """
-        Checks if the file exists in the associated bucket.
+        Returns True if the file exists in the associated bucket.
 
         :param filename: Name of the file to be checked.
         :return bool: True if the file exists, False otherwise.

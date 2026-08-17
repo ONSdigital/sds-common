@@ -15,7 +15,7 @@ from sds_common import SdsCommon
 
 client = SdsCommon()
 
-datasets = client.dataset_service.get_dataset_metadata(
+datasets = client.datasets.get_metadata(
     survey_id="068",
     period_id="202301",
 )
@@ -58,7 +58,7 @@ from sds_common import SdsCommon, DatasetMetadataRetrievalError
 client = SdsCommon()
 
 try:
-    datasets = client.dataset_service.get_dataset_metadata("068", "202301")
+    datasets = client.datasets.get_metadata("068", "202301")
 except DatasetMetadataRetrievalError as e:
     print(e.message)
 ```

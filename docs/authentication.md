@@ -24,8 +24,8 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Use any SDS service — authentication is handled automatically
-metadata = client.schema_service.get_schema_metadata("068")
-datasets = client.dataset_service.get_dataset_metadata("068", "202301")
+metadata = client.schemas.get_metadata("068")
+datasets = client.datasets.get_metadata("068", "202301")
 ```
 
 ---

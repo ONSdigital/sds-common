@@ -26,9 +26,9 @@ class TestSdsCommonLaziness:
     def test_secret_manager_is_lazily_created(self, base_config):
         client = SdsCommon(config=base_config)
         with patch.object(SecretService, "_create_client", return_value=MagicMock()):
-            svc = client.secret_manager
+            svc = client.secrets
         assert svc is not None
-        assert client.secret_manager is svc
+        assert client.secrets is svc
 
     def test_iap_auth_is_lazily_created(self, base_config):
         client = SdsCommon(config=base_config)
@@ -41,20 +41,20 @@ class TestSdsCommonLaziness:
         client = SdsCommon(config=base_config)
         with patch.object(SecretService, "_create_client", return_value=MagicMock()):
             provider = client.iap_auth
-            secret_mgr = client.secret_manager
+            secret_mgr = client.secrets
         assert provider.secret_service is secret_mgr
 
     def test_http_service_has_no_headers(self, base_config):
-        """Unauthenticated http_service has no headers (for GitHub etc.)."""
+        """Unauthenticated http client has no headers (for GitHub etc.)."""
         client = SdsCommon(config=base_config)
-        svc = client.http_service
+        svc = client.http
         assert svc.headers is None
-        assert client.http_service is svc
+        assert client.http is svc
 
     def test_pub_sub_service_is_lazily_created(self, base_config):
         client = SdsCommon(config=base_config)
         with patch("sds_common.sds_common.PublisherClient", return_value=MagicMock()):
-            svc = client.pub_sub_service
+            svc = client.pub_sub
         assert svc is not None
         assert svc.project_id == "test-project"
 
@@ -75,7 +75,7 @@ class TestSdsCommonLaziness:
 
 
 class TestSdsCommonAuthenticatedHttpService:
-    """authenticated_http_service is a plain @property — fresh token every access."""
+    """authenticated_http is a plain @property — fresh token every access."""
 
     def test_authenticated_http_service_has_headers(self, base_config):
         client = SdsCommon(config=base_config)
@@ -83,7 +83,7 @@ class TestSdsCommonAuthenticatedHttpService:
         mock_provider.generate.return_value = {"Authorization": "******", "Content-Type": "application/json"}
         client.__dict__["iap_auth"] = mock_provider
 
-        svc = client.authenticated_http_service
+        svc = client.authenticated_http
 
         mock_provider.generate.assert_called_once()
         assert svc.headers == {"Authorization": "******", "Content-Type": "application/json"}
@@ -95,8 +95,8 @@ class TestSdsCommonAuthenticatedHttpService:
         mock_provider.generate.return_value = {"Authorization": "******", "Content-Type": "application/json"}
         client.__dict__["iap_auth"] = mock_provider
 
-        client.authenticated_http_service
-        client.authenticated_http_service
+        client.authenticated_http
+        client.authenticated_http
 
         assert mock_provider.generate.call_count == 2
 
@@ -107,23 +107,23 @@ class TestSdsCommonDependencyWiring:
     def test_schema_validator_uses_schema_service(self, base_config):
         client = SdsCommon(config=base_config)
         mock_req_svc = MagicMock()
-        client.__dict__["schema_service"] = mock_req_svc
+        client.__dict__["schemas"] = mock_req_svc
         svc = client.schema_validator
         assert svc.sds_schema_request_service is mock_req_svc
 
     def test_gcs_publisher_wired_correctly(self, base_config):
         client = SdsCommon(config=base_config)
-        client.__dict__["schema_service"] = MagicMock()
-        client.__dict__["schema_staging_file_service"] = MagicMock()
+        client.__dict__["schemas"] = MagicMock()
+        client.__dict__["schema_staging_files"] = MagicMock()
         pub = client.gcs_publisher
-        assert pub.schema_request_service is client.schema_service
-        assert pub.bucket_service is client.schema_staging_file_service
+        assert pub.schema_request_service is client.schemas
+        assert pub.bucket_service is client.schema_staging_files
 
     def test_github_publisher_uses_correct_github_url(self, base_config):
         client = SdsCommon(config=base_config)
-        client.__dict__["schema_service"] = MagicMock()
+        client.__dict__["schemas"] = MagicMock()
         client.__dict__["schema_validator"] = MagicMock()
-        client.__dict__["http_service"] = MagicMock()
+        client.__dict__["http"] = MagicMock()
         pub = client.github_publisher
         assert pub.github_schema_url == base_config.GITHUB_SCHEMA_URL
 
@@ -133,7 +133,7 @@ class TestSdsCommonDependencyWiring:
         mock_provider.generate.return_value = {"Authorization": "******"}
         client.__dict__["iap_auth"] = mock_provider
         client.__dict__["_authenticated_session"] = MagicMock()
-        svc = client.schema_service
+        svc = client.schemas
         assert svc.http_service.headers == {"Authorization": "******"}
 
     def test_dataset_service_uses_authenticated_http(self, base_config):
@@ -142,7 +142,7 @@ class TestSdsCommonDependencyWiring:
         mock_provider.generate.return_value = {"Authorization": "******"}
         client.__dict__["iap_auth"] = mock_provider
         client.__dict__["_authenticated_session"] = MagicMock()
-        svc = client.dataset_service
+        svc = client.datasets
         assert svc.http_service.headers == {"Authorization": "******"}
 
 
@@ -158,22 +158,22 @@ class TestSdsCommonFileServices:
                 mock_loader.fetch_bucket.return_value = MagicMock()
                 mock_loader_cls.return_value = mock_loader
                 # touch each service to pre-populate
-                _ = client.schema_file_service
-                _ = client.schema_staging_file_service
-                _ = client.dataset_file_service
+                _ = client.schema_files
+                _ = client.schema_staging_files
+                _ = client.dataset_files
         return client
 
     def test_schema_file_service_is_lazily_created(self, base_config):
         client = self._client_with_mock_storage(base_config)
-        assert client.schema_file_service is not None
+        assert client.schema_files is not None
 
     def test_schema_staging_file_service_is_lazily_created(self, base_config):
         client = self._client_with_mock_storage(base_config)
-        assert client.schema_staging_file_service is not None
+        assert client.schema_staging_files is not None
 
     def test_dataset_file_service_is_lazily_created(self, base_config):
         client = self._client_with_mock_storage(base_config)
-        assert client.dataset_file_service is not None
+        assert client.dataset_files is not None
 
 
 class TestSdsCommonConvenienceMethods:

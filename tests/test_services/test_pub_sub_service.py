@@ -16,13 +16,13 @@ class TestPubSubService:
 
     def test_send_message_publishes_to_correct_topic(self):
         svc, publisher = self._make_service()
-        svc.send_message('{"error_type": "E", "message": "M", "filepath": "/f"}', "my-topic")
+        svc.publish('{"error_type": "E", "message": "M", "filepath": "/f"}', "my-topic")
         publisher.topic_path.assert_called_once_with("proj", "my-topic")
         publisher.publish.assert_called_once()
 
     def test_send_message_encodes_as_utf8_bytes(self):
         svc, publisher = self._make_service()
-        svc.send_message('{"key": "value"}', "my-topic")
+        svc.publish('{"key": "value"}', "my-topic")
         call_args = publisher.publish.call_args
         published_data = call_args[1].get("data") or call_args[0][1]
         assert isinstance(published_data, bytes)
@@ -30,13 +30,13 @@ class TestPubSubService:
 
     def test_send_message_uses_project_id(self):
         svc, publisher = self._make_service()
-        svc.send_message("msg", "topic-id")
+        svc.publish("msg", "topic-id")
         publisher.topic_path.assert_called_with("proj", "topic-id")
 
     def test_send_message_accepts_plain_string(self):
         """PubSubService is decoupled from SchemaPublishError — accepts any str."""
         svc, publisher = self._make_service()
-        svc.send_message("plain string message", "topic-id")
+        svc.publish("plain string message", "topic-id")
         publisher.publish.assert_called_once()
 
     def test_schema_publish_error_can_be_serialised_for_send_message(self):
@@ -44,5 +44,5 @@ class TestPubSubService:
         from sds_common.models.schema_publish_errors import SchemaPublishError
         error = SchemaPublishError("EType", "A message", "/path.json")
         svc, publisher = self._make_service()
-        svc.send_message(error.generate_message_content(), "my-topic")
+        svc.publish(error.generate_message_content(), "my-topic")
         publisher.publish.assert_called_once()

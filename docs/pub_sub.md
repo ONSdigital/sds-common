@@ -15,7 +15,7 @@ from sds_common import SdsCommon
 
 client = SdsCommon()
 
-client.pub_sub_service.send_message(
+client.pub_sub.publish(
     message='{"survey_id": "068", "schema_version": "1"}',
     topic_id="my-topic-id",
 )
@@ -33,25 +33,25 @@ The config provides topic IDs for the standard SDS topics so you do not need to 
 config = client.config
 
 # Publish a schema error event
-client.pub_sub_service.send_message(
+client.pub_sub.publish(
     message=error.generate_message_content(),
     topic_id=config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
 )
 
 # Publish a schema success event
-client.pub_sub_service.send_message(
+client.pub_sub.publish(
     message='{"filepath": "068_1.json"}',
     topic_id=config.PUBLISH_SCHEMA_SUCCESS_TOPIC_ID,
 )
 
 # Enqueue a schema for publishing
-client.pub_sub_service.send_message(
+client.pub_sub.publish(
     message='{"filepath": "068_1.json"}',
     topic_id=config.PUBLISH_SCHEMA_QUEUE_TOPIC_ID,
 )
 
 # Publish a dataset event
-client.pub_sub_service.send_message(
+client.pub_sub.publish(
     message='{"dataset_id": "abc123"}',
     topic_id=config.PUBLISH_DATASET_TOPIC_ID,
 )
@@ -69,9 +69,9 @@ from sds_common import SdsCommon, SchemaPublishError
 client = SdsCommon()
 
 try:
-    client.github_publisher.publish_schema("068_1.json")
+    client.github_publisher.publish("068_1.json")
 except SchemaPublishError as e:
-    client.pub_sub_service.send_message(
+    client.pub_sub.publish(
         e.generate_message_content(),
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
     )

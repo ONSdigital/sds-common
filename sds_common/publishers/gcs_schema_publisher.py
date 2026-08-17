@@ -22,9 +22,9 @@ class GcsSchemaPublisher(SchemaPublisher):
         :param file_name: The name of the schema file to retrieve.
         :return: The schema as a dictionary.
         """
-        return self.bucket_service.retrieve_json_file(file_name)
+        return self.bucket_service.get_json(file_name)
 
-    def publish_schema(self, file_name: str) -> requests.Response:
+    def publish(self, file_name: str) -> requests.Response:
         """
         Publish the schema retrieved from the GCS bucket.
 
@@ -33,7 +33,7 @@ class GcsSchemaPublisher(SchemaPublisher):
         """
         schema_json = self._retrieve_schema(file_name)
         schema = Schema.set_schema(schema_json, file_name)
-        return self.schema_request_service.post_schema(schema)
+        return self.schema_request_service.publish(schema)
 
     def cleanup(self, schema_file_name: str) -> None:
         """
@@ -41,4 +41,4 @@ class GcsSchemaPublisher(SchemaPublisher):
 
         :param schema_file_name: The name of the schema file to delete.
         """
-        self.bucket_service.delete_file(schema_file_name)
+        self.bucket_service.delete(schema_file_name)

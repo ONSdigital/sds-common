@@ -18,9 +18,9 @@ class SdsSchemaRequestService:
         self.http_service = http_service
         self.config = config or get_config()
 
-    def get_schema_metadata(self, survey_id: str) -> list[dict] | None:
+    def get_metadata(self, survey_id: str) -> list[dict] | None:
         """
-        Call the GET schema_metadata SDS endpoint and return parsed metadata.
+        Call the GET /schemas/metadata SDS endpoint and return parsed metadata.
 
         :param survey_id: the survey_id of the schema.
         :return: list of schema metadata dicts, or ``None`` if the survey does not exist (404).
@@ -38,9 +38,9 @@ class SdsSchemaRequestService:
             raise SchemaMetadataError(survey_id, response.status_code)
         return response.json()
 
-    def get_all_schema_metadata(self) -> list[dict]:
+    def get_all_metadata(self) -> list[dict]:
         """
-        Call the GET schema_metadata endpoint and return all schema metadata.
+        Call the GET /schemas/all-metadata endpoint and return all schema metadata.
 
         :return: list of all schema metadata dicts.
         :raises SchemaMetadataError: if the response status code is not 200.
@@ -55,15 +55,15 @@ class SdsSchemaRequestService:
             raise SchemaMetadataError(str(response.json()), response.status_code)
         return response.json()
 
-    def post_schema(self, schema: Schema) -> requests.Response:
+    def publish(self, schema: Schema) -> requests.Response:
         """
-        Post the schema to SDS.
+        Publish the schema to SDS.
 
-        :param schema: the schema to be posted.
+        :param schema: the schema to be published.
         :return response: the response from the POST request.
-        :raises SchemaPostError: if the response status code is not 200.
+        :raises SchemaPostError: if SDS returns a non-200 response.
         """
-        logger.info(f'Posting schema for survey {schema.survey_id}')
+        logger.info(f'Publishing schema for survey {schema.survey_id}')
         url = f'{self.config.SDS_URL}{self.config.POST_SCHEMA_ENDPOINT}'
         response = self.http_service.make_post_request(url, schema.json, params={'survey_id': schema.survey_id})
         if response.status_code != 200:
@@ -72,5 +72,5 @@ class SdsSchemaRequestService:
                 schema.filepath, schema.survey_id, response.status_code,
             )
             raise SchemaPostError(schema.filepath, response.status_code)
-        logger.info(f'Schema {schema.filepath} posted for survey {schema.survey_id}')
+        logger.info(f'Schema {schema.filepath} published for survey {schema.survey_id}')
         return response
