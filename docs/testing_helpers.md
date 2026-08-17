@@ -109,7 +109,7 @@ def test_authenticated_http():
     client = SdsCommon()
     mock_auth = MagicMock()
     mock_auth.generate.return_value = {"Authorization": "Bearer test-token"}
-    client.__dict__["_iap_auth"] = mock_auth
+    client.__dict__["iap_auth"] = mock_auth
     client.__dict__["_authenticated_session"] = MagicMock()
 
     http = client._authenticated_http

@@ -33,14 +33,14 @@ class TestSdsCommonLaziness:
     def test_iap_auth_is_lazily_created(self, base_config):
         client = SdsCommon(config=base_config)
         with patch.object(SecretService, "_create_client", return_value=MagicMock()):
-            provider = client._iap_auth
+            provider = client.iap_auth
         assert isinstance(provider, AuthHeaderProvider)
-        assert client._iap_auth is provider
+        assert client.iap_auth is provider
 
     def test_iap_auth_shares_secret_manager(self, base_config):
         client = SdsCommon(config=base_config)
         with patch.object(SecretService, "_create_client", return_value=MagicMock()):
-            provider = client._iap_auth
+            provider = client.iap_auth
             secret_mgr = client._secrets
         assert provider.secret_service is secret_mgr
 
@@ -81,7 +81,7 @@ class TestSdsCommonAuthenticatedHttpService:
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******", "Content-Type": "application/json"}
-        client.__dict__["_iap_auth"] = mock_provider
+        client.__dict__["iap_auth"] = mock_provider
 
         svc = client._authenticated_http
 
@@ -93,7 +93,7 @@ class TestSdsCommonAuthenticatedHttpService:
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******", "Content-Type": "application/json"}
-        client.__dict__["_iap_auth"] = mock_provider
+        client.__dict__["iap_auth"] = mock_provider
 
         client._authenticated_http
         client._authenticated_http
@@ -131,7 +131,7 @@ class TestSdsCommonDependencyWiring:
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******"}
-        client.__dict__["_iap_auth"] = mock_provider
+        client.__dict__["iap_auth"] = mock_provider
         client.__dict__["_authenticated_session"] = MagicMock()
         svc = client.schemas
         assert svc.http_service.headers == {"Authorization": "******"}
@@ -140,7 +140,7 @@ class TestSdsCommonDependencyWiring:
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******"}
-        client.__dict__["_iap_auth"] = mock_provider
+        client.__dict__["iap_auth"] = mock_provider
         client.__dict__["_authenticated_session"] = MagicMock()
         svc = client.datasets
         assert svc.http_service.headers == {"Authorization": "******"}
@@ -179,24 +179,24 @@ class TestSdsCommonFileServices:
 class TestSdsCommonConvenienceMethods:
     """generate_* convenience methods delegate to iap_auth."""
 
-    def test_generate_authentication_headers_delegates(self, base_config):
+    def test_iap_auth_generate_delegates(self, base_config):
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******"}
-        client.__dict__["_iap_auth"] = mock_provider
+        client.__dict__["iap_auth"] = mock_provider
 
-        headers = client.generate_authentication_headers()
+        headers = client.iap_auth.generate()
 
         mock_provider.generate.assert_called_once()
         assert headers == {"Authorization": "******"}
 
-    def test_generate_authentication_headers_by_impersonation_delegates(self, base_config):
+    def test_iap_auth_generate_by_impersonation_delegates(self, base_config):
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate_by_impersonation.return_value = {"Authorization": "******"}
-        client.__dict__["_iap_auth"] = mock_provider
+        client.__dict__["iap_auth"] = mock_provider
 
-        headers = client.generate_authentication_headers_by_impersonation()
+        headers = client.iap_auth.generate_by_impersonation()
 
         mock_provider.generate_by_impersonation.assert_called_once()
         assert headers == {"Authorization": "******"}

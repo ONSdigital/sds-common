@@ -82,7 +82,7 @@ from sds_common import SdsCommon, SdsAuthError, SecretAccessError
 client = SdsCommon()
 
 try:
-    headers = client.generate_authentication_headers()
+    headers = client.iap_auth.generate()
 except SecretAccessError as e:
     print(f"Secret Manager error: {e.error_detail}")
 except SdsAuthError:

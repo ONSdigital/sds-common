@@ -41,10 +41,10 @@ client = SdsCommon()
 
 # Strategy 1: GCP metadata server — use when running inside GCP
 # (Cloud Run, Cloud Functions, GCE, etc.)
-headers = client.generate_authentication_headers()
+headers = client.iap_auth.generate()
 
 # Strategy 2: IAM impersonation — use for local development
-headers = client.generate_authentication_headers_by_impersonation()
+headers = client.iap_auth.generate_by_impersonation()
 ```
 
 Both return: `{"Authorization": "Bearer <token>", "Content-Type": "application/json"}`
@@ -96,7 +96,7 @@ from sds_common import SdsCommon, SecretAccessError, SecretKeyError
 
 client = SdsCommon()
 try:
-    headers = client.generate_authentication_headers()
+    headers = client.iap_auth.generate()
 except SecretAccessError as e:
     print(f"Could not read secret: {e.error_detail}")
 except SecretKeyError:

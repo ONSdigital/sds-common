@@ -37,8 +37,8 @@ class SdsCommon:
 
         client = SdsCommon()
 
-        # Only _iap_auth + _secrets are instantiated:
-        headers = client.generate_authentication_headers()
+        # Only iap_auth + _secrets are instantiated:
+        headers = client.iap_auth.generate()
 
         # Fully authenticated SDS schema request:
         client.schemas.get_metadata("my_survey")
@@ -62,7 +62,7 @@ class SdsCommon:
         return SecretService(config=self.config)
 
     @cached_property
-    def _iap_auth(self) -> AuthHeaderProvider:
+    def iap_auth(self) -> AuthHeaderProvider:
         """Generates IAP Bearer-token authentication headers."""
         return AuthHeaderProvider(
             secret_service=self._secrets,
@@ -86,7 +86,7 @@ class SdsCommon:
         session (with its retry adapter) is still reused via the cached
         ``_authenticated_session``.
         """
-        headers = self._iap_auth.generate()
+        headers = self.iap_auth.generate()
         return HttpService(session=self._authenticated_session, headers=headers)
 
     @cached_property
@@ -177,15 +177,6 @@ class SdsCommon:
         """Typed Firestore wrapper with pre-loaded schema collection."""
         return FirebaseLoader(self._firestore_client)
 
-    # ----------------------------------------- convenience auth header methods
-
-    def generate_authentication_headers(self) -> dict[str, str]:
-        """Generate IAP Bearer-token headers using the GCP metadata server."""
-        return self._iap_auth.generate()
-
-    def generate_authentication_headers_by_impersonation(self) -> dict[str, str]:
-        """Generate IAP Bearer-token headers via IAM service account impersonation."""
-        return self._iap_auth.generate_by_impersonation()
 
     # ---------------------------------------------------------------- internal
 

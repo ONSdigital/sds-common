@@ -162,10 +162,10 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Metadata server (for GCP-hosted services)
-headers = client.generate_authentication_headers()
+headers = client.iap_auth.generate()
 
 # IAM impersonation (for local development)
-headers = client.generate_authentication_headers_by_impersonation()
+headers = client.iap_auth.generate_by_impersonation()
 ```
 
 Or if you only need headers without the full facade:
@@ -298,7 +298,7 @@ The following packages are no longer installed as transitive dependencies of `sd
 - `python-dotenv`
 - `firebase-admin` (replaced internally by `google-cloud-firestore` directly)
 
-`google-cloud-iam` is now an **optional** dependency rather than a hard requirement. It is only needed for `generate_authentication_headers_by_impersonation()` (local development). Install it explicitly if you use that method:
+`google-cloud-iam` is now an **optional** dependency rather than a hard requirement. It is only needed for `iap_auth.generate_by_impersonation()` (local development). Install it explicitly if you use that method:
 
 ```bash
 uv add "sds-common[impersonation]" --index https://<ARTIFACT_REGISTRY_URL>/simple/

@@ -116,18 +116,12 @@ client = SdsCommon(config=my_config)
 | Property | Type | Description |
 |---|---|---|
 | `config` | `Config` | Resolved configuration object — see [Configuration reference](docs/configuration.md) |
+| `iap_auth` | `AuthHeaderProvider` | Generates IAP auth headers — see [Authentication](docs/authentication.md) |
 | `schemas` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints — see [Schema operations](docs/schemas.md) |
 | `datasets` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints — see [Dataset operations](docs/datasets.md) |
 | `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-gcs) |
 | `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-github) |
 | `firestore` | `FirebaseLoader` | Typed Firestore wrapper for schema collection access — see [Firestore](docs/firestore.md) |
-
-### Convenience methods
-
-| Method | Returns | Description |
-|---|---|---|
-| `generate_authentication_headers()` | `dict[str, str]` | IAP headers via GCP metadata server — see [Authentication](docs/authentication.md#strategy-1--metadata-server-gcp-hosted) |
-| `generate_authentication_headers_by_impersonation()` | `dict[str, str]` | IAP headers via IAM service account impersonation — see [Authentication](docs/authentication.md#strategy-2--iam-impersonation-local-development) |
 
 ---
 
