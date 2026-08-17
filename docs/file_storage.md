@@ -24,7 +24,7 @@ Three GCS file services are available via `SdsCommon`, one per bucket.
 from sds_common import SdsCommon
 
 client = SdsCommon()
-client.schema_staging_files.upload("/local/path/to/068_1.json")
+client._schema_staging_files.upload("/local/path/to/068_1.json")
 ```
 
 The local filename is used as the GCS object name.
@@ -34,7 +34,7 @@ The local filename is used as the GCS object name.
 ## Retrieving a JSON file
 
 ```python
-data = client.schema_files.get_json("068_1.json")
+data = client._schema_files.get_json("068_1.json")
 # Returns the file contents as a Python dict
 ```
 
@@ -43,7 +43,7 @@ data = client.schema_files.get_json("068_1.json")
 ## Checking a file exists
 
 ```python
-exists = client.schema_files.exists("068_1.json")
+exists = client._schema_files.exists("068_1.json")
 # Returns True or False
 ```
 
@@ -52,7 +52,7 @@ exists = client.schema_files.exists("068_1.json")
 ## Deleting a file
 
 ```python
-client.schema_staging_files.delete("068_1.json")
+client._schema_staging_files.delete("068_1.json")
 ```
 
 ---
@@ -71,7 +71,7 @@ from sds_common import SdsCommon, BucketNotFoundError
 client = SdsCommon()
 
 try:
-    client.schema_files.upload("my_schema.json")
+    client._schema_files.upload("my_schema.json")
 except BucketNotFoundError as e:
     print(f"Bucket not found: {e.bucket_name}")
 ```

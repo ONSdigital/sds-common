@@ -34,7 +34,7 @@ if doc.exists:
 If you need to query a collection outside of `schemas`, use the raw client:
 
 ```python
-client.firestore_client.collection("my_collection").stream()
+client._firestore_client.collection("my_collection").stream()
 ```
 
 The client connects to the database configured by [`FIRESTORE_DB_NAME`](configuration.md#all-environment-variables) (default: `{PROJECT_ID}-sds`).

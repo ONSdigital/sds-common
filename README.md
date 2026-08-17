@@ -116,21 +116,11 @@ client = SdsCommon(config=my_config)
 | Property | Type | Description |
 |---|---|---|
 | `config` | `Config` | Resolved configuration object — see [Configuration reference](docs/configuration.md) |
-| `secrets` | `SecretService` | Reads secrets from GCP Secret Manager — see [Authentication](docs/authentication.md#secret-format) |
-| `iap_auth` | `AuthHeaderProvider` | Generates IAP Bearer-token headers — see [Authentication](docs/authentication.md) |
-| `http` | `HttpService` | Unauthenticated HTTP client (e.g. GitHub requests) |
-| `authenticated_http` | `HttpService` | Authenticated HTTP client — fresh token on every access |
 | `schemas` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints — see [Schema operations](docs/schemas.md) |
 | `datasets` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints — see [Dataset operations](docs/datasets.md) |
-| `schema_validator` | `SchemaValidatorService` | Validates a schema before publishing |
 | `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-gcs) |
 | `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-github) |
-| `schema_files` | `FileService` | File operations on the schema GCS bucket — see [File storage](docs/file_storage.md) |
-| `schema_staging_files` | `FileService` | File operations on the schema-publish staging GCS bucket — see [File storage](docs/file_storage.md) |
-| `dataset_files` | `FileService` | File operations on the dataset GCS bucket — see [File storage](docs/file_storage.md) |
-| `pub_sub` | `PubSubService` | Publishes messages to GCP Pub/Sub topics — see [Pub/Sub messaging](docs/pub_sub.md) |
-| `firestore_client` | `firestore.Client` | Raw Firestore client — see [Firestore](docs/firestore.md#raw-firestore-client) |
-| `firestore` | `FirebaseLoader` | Typed wrapper around Firestore for schema collection access — see [Firestore](docs/firestore.md) |
+| `firestore` | `FirebaseLoader` | Typed Firestore wrapper for schema collection access — see [Firestore](docs/firestore.md) |
 
 ### Convenience methods
 

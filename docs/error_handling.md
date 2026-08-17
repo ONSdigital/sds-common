@@ -68,7 +68,7 @@ try:
 except SchemaPublishError as e:
     # All schema errors include generate_message_content() for Pub/Sub publishing
     # See: Pub/Sub messaging → Publishing schema errors on failure
-    client.pub_sub.publish(
+    client._pub_sub.publish(
         e.generate_message_content(),
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
     )
