@@ -13,6 +13,7 @@
 - [Configuration](#configuration)
 - [The `SdsCommon` facade](#the-sdscommon-facade)
 - [Documentation by topic](#documentation-by-topic)
+- [Migrating from v1](MIGRATION.md)
 
 ---
 
