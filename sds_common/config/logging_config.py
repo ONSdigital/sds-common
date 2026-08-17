@@ -20,6 +20,7 @@ class GcpJsonFormatter(logging.Formatter):
     GCP parses the ``severity`` field to set the log level in Cloud Logging,
     enabling correct colouring, filtering, and alerting in the console.
     Exception tracebacks are included under ``traceback`` when present.
+    Stack traces (from ``stack_info=True``) are included under ``stackTrace``.
     """
 
     def format(self, record: logging.LogRecord) -> str:
@@ -30,6 +31,8 @@ class GcpJsonFormatter(logging.Formatter):
         }
         if record.exc_info:
             entry["traceback"] = self.formatException(record.exc_info)
+        if record.stack_info:
+            entry["stackTrace"] = self.formatStack(record.stack_info)
         return json.dumps(entry)
 
 

@@ -71,6 +71,19 @@ class TestGcpJsonFormatter:
         output = json.loads(formatter.format(self._make_record()))
         assert "traceback" not in output
 
+    def test_stack_trace_included_when_stack_info_present(self):
+        formatter = GcpJsonFormatter()
+        record = self._make_record()
+        record.stack_info = "Stack (most recent call last):\n  File 'test.py', line 1, in <module>"
+        output = json.loads(formatter.format(record))
+        assert "stackTrace" in output
+        assert "test.py" in output["stackTrace"]
+
+    def test_no_stack_trace_field_without_stack_info(self):
+        formatter = GcpJsonFormatter()
+        output = json.loads(formatter.format(self._make_record()))
+        assert "stackTrace" not in output
+
 
 class TestConfigureGcpLogging:
     def test_sets_json_formatter_on_root_logger(self):
