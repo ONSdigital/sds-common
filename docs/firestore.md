@@ -1,44 +1,36 @@
 # Firestore
 
-The library exposes the Firestore client and a typed `FirebaseLoader` helper for accessing the SDS schemas collection.
+Access to Firestore is available via `SdsCommon`.
 
 ---
 
-## Accessing the Firestore client
+## Accessing the schemas collection
 
 ```python
 from sds_common import SdsCommon
 
 client = SdsCommon()
 
-# Raw Firestore client — use for any arbitrary collection
-firestore_client = client.firestore_client
-```
+schemas = client.firestore.get_schemas_collection()
 
-The client is connected to the database configured by `FIRESTORE_DB_NAME` (default: `{PROJECT_ID}-sds`).
-
----
-
-## Using `FirebaseLoader`
-
-`FirebaseLoader` is a thin wrapper that pre-loads the `schemas` Firestore collection:
-
-```python
-from sds_common import SdsCommon
-
-client = SdsCommon()
-loader = client.firestore
-
-# Get the raw Firestore client
-firestore_client = loader.get_client()
-
-# Get the pre-loaded schemas collection reference
-schemas_collection = loader.get_schemas_collection()
-
-# Query the schemas collection directly
-docs = schemas_collection.stream()
-for doc in docs:
+# Stream all documents
+for doc in schemas.stream():
     print(doc.id, doc.to_dict())
+
+# Get a specific document
+doc = schemas.document("068").get()
+if doc.exists:
+    print(doc.to_dict())
 ```
 
-`FirebaseLoader` is primarily intended for integration test helpers that need to inspect Firestore state after SDS operations.
+---
+
+## Raw Firestore client
+
+If you need to query a collection outside of `schemas`, use the raw client:
+
+```python
+client.firestore_client.collection("my_collection").stream()
+```
+
+The client connects to the database configured by `FIRESTORE_DB_NAME` (default: `{PROJECT_ID}-sds`).

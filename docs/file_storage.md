@@ -1,6 +1,6 @@
 # File storage (GCS)
 
-The library provides a `FileService` for each of the three GCS buckets used by SDS. All three are accessible via `SdsCommon` and expose the same interface.
+Three GCS file services are available via `SdsCommon`, one per bucket.
 
 ---
 
@@ -9,7 +9,7 @@ The library provides a `FileService` for each of the three GCS buckets used by S
 | Property | Bucket | Configured by |
 |---|---|---|
 | `schema_file_service` | Published schemas | `SCHEMA_BUCKET_NAME` |
-| `schema_staging_file_service` | Schemas staged for publishing | `SCHEMA_STAGING_BUCKET_NAME` |
+| `schema_staging_file_service` | Schemas awaiting publishing | `SCHEMA_STAGING_BUCKET_NAME` |
 | `dataset_file_service` | Datasets | `DATASET_BUCKET_NAME` |
 
 ---
@@ -23,7 +23,7 @@ client = SdsCommon()
 client.schema_staging_file_service.upload_file("/local/path/to/068_1.json")
 ```
 
-The file is uploaded using the local filename as the GCS object name.
+The local filename is used as the GCS object name.
 
 ---
 
@@ -51,8 +51,6 @@ exists = client.schema_file_service.check_file_exists("068_1.json")
 client.schema_staging_file_service.delete_file("068_1.json")
 ```
 
-This is used by `GcsSchemaPublisher.cleanup()` to remove staged schema files after a successful publish.
-
 ---
 
 ## Errors
@@ -60,6 +58,8 @@ This is used by `GcsSchemaPublisher.cleanup()` to remove staged schema files aft
 | Exception | When raised |
 |---|---|
 | `BucketNotFoundError` | The GCS bucket named in config does not exist |
+
+`BucketNotFoundError` is raised when a file service is first accessed — if the bucket name in config is wrong, it will fail at that point rather than at the file operation.
 
 ```python
 from sds_common import SdsCommon, BucketNotFoundError
@@ -71,29 +71,3 @@ try:
 except BucketNotFoundError as e:
     print(f"Bucket not found: {e.bucket_name}")
 ```
-
-`BucketNotFoundError` is raised when the `FileService` is first accessed (i.e. when `SdsCommon` tries to load the bucket from GCS). If the bucket name is wrong it will fail at that point, not at the file operation.
-
----
-
-## Using `BucketLoader` directly
-
-If you need to load a bucket yourself:
-
-```python
-from google.cloud import storage
-from sds_common import BucketLoader, Bucket, get_config
-
-config = get_config()
-loader = BucketLoader(storage_client=storage.Client(project=config.PROJECT_ID), config=config)
-
-schema_bucket = loader.fetch_bucket(Bucket.SCHEMA_BUCKET)
-```
-
-Available `Bucket` enum values:
-
-| Value | Bucket |
-|---|---|
-| `Bucket.SCHEMA_BUCKET` | Published schema bucket |
-| `Bucket.SCHEMA_PUBLISH_BUCKET` | Schema staging bucket |
-| `Bucket.DATASET_BUCKET` | Dataset bucket |

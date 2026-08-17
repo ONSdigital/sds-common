@@ -1,7 +1,5 @@
 # sds-common
 
-# sds-common
-
 `sds-common` is a Python library that provides a single, easy-to-use client for interacting with the Supplementary Data Service (SDS) and common GCP infrastructure. It handles authentication, schema publishing, dataset retrieval, file storage, Pub/Sub messaging, and Firestore access — all behind a single facade class that lazily initialises only what you need.
 
 ---
@@ -47,7 +45,7 @@ client.schema_file_service.upload_file("/path/to/local/schema.json")
 client.pub_sub_service.send_message('{"event": "schema_published"}', topic_id="my-topic")
 ```
 
-Nothing is initialised until first access. If you only need auth headers, only `SecretService` and `AuthHeaderProvider` are created — no GCS clients, no Firestore connections, nothing else.
+Nothing is initialised until first access. If you only need auth headers, only the secret manager and IAP auth provider are created — no GCS clients, no Firestore connections, nothing else.
 
 ---
 

@@ -1,12 +1,12 @@
 # Testing helpers
 
-`sds-common` includes helpers specifically designed for integration tests that need to interact with real GCP infrastructure (Pub/Sub, Firestore).
+`sds-common` includes `PubSubHelper` for integration tests that need to interact with real GCP Pub/Sub infrastructure.
 
 ---
 
 ## `PubSubHelper`
 
-`PubSubHelper` manages the lifecycle of a Pub/Sub subscriber for a test, and provides methods to read and assert on messages published during the test.
+`PubSubHelper` manages the lifecycle of a Pub/Sub subscriber in a test, and provides methods to read and assert on messages published during the test.
 
 ### Setup
 
@@ -51,46 +51,25 @@ helper.try_delete_subscriber(SUBSCRIBER_ID)
 | `try_delete_subscriber(subscriber_id)` | Deletes the subscription if it exists; polls until confirmed gone. Raises `RuntimeError` if it cannot be confirmed deleted after retries. |
 | `publish_message(message)` | Publishes a raw string message to the topic. |
 | `pull_and_acknowledge_messages(subscriber_id)` | Pulls up to 5 messages, acknowledges them, and returns them as `list[dict]`. Returns `None` if no messages were available. |
-| `purge_messages(subscriber_id)` | Seeks the subscription to a far-future timestamp, effectively discarding all pending messages. |
+| `purge_messages(subscriber_id)` | Seeks the subscription to a far-future timestamp, discarding all pending messages. |
 | `format_received_message_data(received_message)` | Decodes a raw Pub/Sub message into a `dict`. |
 
 ### Notes
 
-- `try_create_subscriber` skips creation if the subscription already exists (idempotent).
-- The retry loop for create/delete uses exponential backoff starting at 0.5 s with 5 attempts.
-- An unexpected error during subscription existence checks is logged as a warning with the full stack trace rather than being swallowed silently.
-
----
-
-## `FirebaseLoader`
-
-`FirebaseLoader` provides typed access to Firestore for test assertions. It is available via `SdsCommon` or can be instantiated directly.
-
-```python
-from sds_common import SdsCommon
-
-client = SdsCommon()
-loader = client.firestore
-
-# Check a document exists in the schemas collection
-schemas = loader.get_schemas_collection()
-doc = schemas.document("068").get()
-assert doc.exists
-```
-
-See [Firestore](firestore.md) for more detail.
+- `try_create_subscriber` is idempotent — skips creation if the subscription already exists.
+- Retry loops use exponential backoff starting at 0.5 s with 5 attempts.
 
 ---
 
 ## Writing unit tests for code that uses `sds-common`
 
-### Clearing config cache between tests
+### Clearing the config cache between tests
 
-`get_config()` uses `@lru_cache`. If you are patching environment variables in unit tests, clear the cache before each test to avoid cross-test pollution:
+`get_config()` is cached with `@lru_cache`. Patch environment variables in unit tests and always clear the cache to prevent cross-test pollution:
 
 ```python
 import pytest
-from sds_common.config.config import get_config
+from sds_common import get_config
 
 @pytest.fixture(autouse=True)
 def clear_config_cache():
@@ -99,9 +78,9 @@ def clear_config_cache():
     get_config.cache_clear()
 ```
 
-### Pre-populating `@cached_property` in tests
+### Injecting mocks into the facade
 
-`SdsCommon` properties are `@cached_property`. The simplest way to inject a mock is to write it directly into the instance's `__dict__`, which bypasses the descriptor:
+`SdsCommon` properties are `@cached_property`. Inject mocks directly into the instance's `__dict__` to bypass the descriptor:
 
 ```python
 from unittest.mock import MagicMock
@@ -109,27 +88,26 @@ from sds_common import SdsCommon
 
 def test_something():
     client = SdsCommon()
-    mock_service = MagicMock()
-    client.__dict__["schema_service"] = mock_service
+    client.__dict__["schema_service"] = MagicMock()
 
-    # Now client.schema_service returns mock_service
+    # client.schema_service now returns the mock
 ```
 
-### `authenticated_http_service` is a plain `@property`
+### Injecting into `authenticated_http_service`
 
-Because `authenticated_http_service` generates a fresh token on every access it is a `@property`, not `@cached_property`. You cannot pre-populate it via `__dict__`. Instead, inject a mock `iap_auth` and `_authenticated_session`:
+`authenticated_http_service` is a plain `@property` (not cached), so it cannot be pre-populated via `__dict__`. Inject a mock `iap_auth` instead:
 
 ```python
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from sds_common import SdsCommon
 
 def test_authenticated_http():
     client = SdsCommon()
-    mock_provider = MagicMock()
-    mock_provider.generate.return_value = {"Authorization": "Bearer test-token"}
-    client.__dict__["iap_auth"] = mock_provider
+    mock_auth = MagicMock()
+    mock_auth.generate.return_value = {"Authorization": "Bearer test-token"}
+    client.__dict__["iap_auth"] = mock_auth
     client.__dict__["_authenticated_session"] = MagicMock()
 
     http = client.authenticated_http_service
-    # http is now constructed with the mock session and headers
+    # http is constructed with the mock session and headers
 ```

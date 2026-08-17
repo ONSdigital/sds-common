@@ -269,17 +269,9 @@ def clear_config_cache():
 ```python
 from sds_common import SdsCommon              # main entry point
 from sds_common import get_config, CONFIG     # config access
-from sds_common import AuthHeaderProvider     # IAP auth headers
-from sds_common import HttpService            # raw HTTP client
-from sds_common import FileService            # GCS file operations
-from sds_common import PubSubService          # Pub/Sub messaging
-from sds_common import SecretService          # Secret Manager
-from sds_common import GcsSchemaPublisher     # publish schema from GCS
-from sds_common import GithubSchemaPublisher  # publish schema from GitHub
-from sds_common import SdsSchemaRequestService
-from sds_common import SdsDatasetRequestService
-from sds_common import DatasetMetadata
 from sds_common import Bucket                 # GCS bucket enum
+from sds_common import DatasetMetadata        # data class returned by dataset_service
+from sds_common import PubSubHelper           # integration test helper
 
 # Errors
 from sds_common import (

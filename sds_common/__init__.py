@@ -39,43 +39,45 @@ from sds_common.test_helpers.firebase_loader import FirebaseLoader
 from sds_common.test_helpers.pub_sub_helper import PubSubHelper
 
 __all__ = [
-    'AuthHeaderProvider',
-    'Bucket',
-    'BucketFileRepository',
-    'BucketLoader',
-    'BucketNotFoundError',
-    'CONFIG',
+    # Entry point
+    'SdsCommon',
+
+    # Configuration
     'Config',
-    'DatasetCreateError',
-    'DatasetMetadata',
-    'DatasetMetadataRetrievalError',
-    'DatasetPublishError',
-    'EnvironmentVariableError',
-    'FileService',
-    'FilepathError',
-    'FirebaseLoader',
-    'GcsSchemaPublisher',
+    'CONFIG',
     'get_config',
-    'GithubSchemaPublisher',
-    'HttpService',
-    'PubSubHelper',
-    'PubSubService',
+
+    # Data models
+    'Bucket',
+    'DatasetMetadata',
+
+    # Errors — authentication
+    'SdsAuthError',
+    'SecretAccessError',
+    'SecretKeyError',
+
+    # Errors — schema publishing
+    'SchemaPublishError',
+    'FilepathError',
     'SchemaDuplicationError',
     'SchemaFetchError',
     'SchemaJSONDecodeError',
     'SchemaMetadataError',
     'SchemaMetadataFormatError',
     'SchemaPostError',
-    'SchemaPublishError',
-    'SchemaValidatorService',
     'SchemaVersionError',
     'SchemaVersionMismatchError',
-    'SdsAuthError',
-    'SdsCommon',
-    'SdsDatasetRequestService',
-    'SdsSchemaRequestService',
-    'SecretAccessError',
-    'SecretKeyError',
-    'SecretService',
     'SurveyIDError',
+
+    # Errors — dataset publishing
+    'DatasetPublishError',
+    'DatasetCreateError',
+    'DatasetMetadataRetrievalError',
+
+    # Errors — infrastructure
+    'BucketNotFoundError',
+    'EnvironmentVariableError',
+
+    # Test helpers (intentionally standalone)
+    'PubSubHelper',
 ]

@@ -1,7 +1,5 @@
 # Schema operations
 
-The library provides two ways to publish schemas to SDS and several methods for querying existing schema metadata.
-
 ---
 
 ## Fetching schema metadata
@@ -34,7 +32,7 @@ all_metadata = client.schema_service.get_all_schema_metadata()
 
 ## Publishing a schema from GitHub
 
-`GithubSchemaPublisher` fetches a schema file from the configured GitHub URL, validates it, and posts it to SDS.
+Fetches a schema file from the configured GitHub URL, validates it, and posts it to SDS.
 
 ```python
 from sds_common import SdsCommon
@@ -44,9 +42,9 @@ response = client.github_publisher.publish_schema("068_1.json")
 print(response.status_code)  # 200 on success
 ```
 
-The file is fetched from `GITHUB_SCHEMA_URL + file_name` using an **unauthenticated** HTTP client (GitHub raw content is public). The schema is then validated against existing SDS metadata before being posted.
+The file is fetched from `GITHUB_SCHEMA_BASE_URL + file_name` using an unauthenticated HTTP client (GitHub raw content is public). The schema is validated before being posted.
 
-**What validation checks:**
+**Validation checks:**
 - The schema JSON contains a `survey_id` and `schema_version`
 - The `schema_version` matches the version number in the filename
 - The version does not already exist in SDS (duplicate prevention)
@@ -55,37 +53,18 @@ The file is fetched from `GITHUB_SCHEMA_URL + file_name` using an **unauthentica
 
 ## Publishing a schema from GCS
 
-`GcsSchemaPublisher` reads a schema file from the GCS staging bucket (`SCHEMA_PUBLISH_BUCKET_NAME`), posts it to SDS, and optionally cleans up the staged file afterwards.
+Reads a schema file from the GCS staging bucket, posts it to SDS, and optionally cleans up the staged file.
 
 ```python
 from sds_common import SdsCommon
 
 client = SdsCommon()
 
-# Publish and then remove the staged file
 response = client.gcs_publisher.publish_schema("068_1.json")
-client.gcs_publisher.cleanup("068_1.json")
+client.gcs_publisher.cleanup("068_1.json")  # remove the staged file
 ```
 
-Unlike `GithubSchemaPublisher`, `GcsSchemaPublisher` does **not** run the version duplication check — it is assumed the file has already been validated before staging.
-
----
-
-## Posting a schema directly
-
-If you have already built a `Schema` object and want to post it without going through a publisher:
-
-```python
-from sds_common import SdsCommon
-from sds_common.schema.schema import Schema
-
-client = SdsCommon()
-
-schema_json = {"properties": {"survey_id": {"enum": ["068"]}, "schema_version": {"const": "1"}}, ...}
-schema = Schema.set_schema(schema_json, filepath="068_1.json")
-
-response = client.schema_service.post_schema(schema)
-```
+> `gcs_publisher` does not run the version duplication check — it is assumed files have been validated before staging.
 
 ---
 
@@ -104,7 +83,7 @@ response = client.schema_service.post_schema(schema)
 | `SchemaPostError` | SDS returned a non-200 response when posting the schema |
 | `FilepathError` | The filepath could not be parsed to extract a filename |
 
-All of these are subclasses of `SchemaPublishError` and include a `generate_message_content()` method that serialises the error as JSON — useful for publishing failure events to Pub/Sub:
+All of the above are subclasses of `SchemaPublishError` and include `generate_message_content()`, which serialises the error as JSON — useful for publishing failure events to Pub/Sub:
 
 ```python
 from sds_common import SdsCommon, SchemaPublishError
@@ -114,7 +93,6 @@ client = SdsCommon()
 try:
     client.github_publisher.publish_schema("068_1.json")
 except SchemaPublishError as e:
-    # Publish the error details to the failure topic
     client.pub_sub_service.send_message(
         e.generate_message_content(),
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
