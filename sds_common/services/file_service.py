@@ -1,14 +1,11 @@
-from sds_common.enums.buckets import Bucket
-from sds_common.repositories.bucket_loader import BucketLoader
-from sds_common.repositories.bucket_file_repository import BucketFileRepository
+from sds_common.interfaces.file_repository_interface import FileRepositoryInterface
 
 
-class FileService():
-    def __init__(self, bucket: Bucket, loader: BucketLoader, repository_cls=BucketFileRepository):
-        self.bucket = loader.fetch_bucket(bucket)
-        self.bucket_repository = repository_cls(self.bucket)
+class FileService:
+    def __init__(self, bucket_repository: FileRepositoryInterface) -> None:
+        self.bucket_repository = bucket_repository
 
-    def upload_file(self, filepath: str):
+    def upload_file(self, filepath: str) -> None:
         """
         Uploads a file to the associated bucket.
 
@@ -25,7 +22,7 @@ class FileService():
         """
         return self.bucket_repository.get_file_as_json(filename)
 
-    def delete_file(self, filename: str):
+    def delete_file(self, filename: str) -> None:
         """
         Deletes a file from the associated bucket.
 

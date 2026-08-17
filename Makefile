@@ -21,6 +21,13 @@ test:
 	@echo "Running Unit Tests..."
 	uv run --dev pytest -v --disable-warnings tests/
 
+.PHONY: test-coverage
+test-coverage:
+	@echo "Running UV sync..."
+	uv sync
+	@echo "Running Unit Tests with coverage..."
+	uv run --dev pytest -v --disable-warnings --cov=sds_common --cov-report=term-missing --cov-report=html:htmlcov tests/
+
 .PHONY: test-parallel
 test-parallel:
 	@echo "Running Unit Tests in parallel..."
