@@ -21,7 +21,13 @@
 pip install sds-common
 ```
 
-All GCP client libraries are included as dependencies. The optional IAM impersonation feature requires `google-cloud-iam` to be installed separately (see [Authentication](docs/authentication.md)).
+All GCP client libraries are included as dependencies. The optional IAM impersonation feature (for local development) requires the `impersonation` extra:
+
+```bash
+pip install sds-common[impersonation]
+```
+
+See [Authentication](docs/authentication.md) for details.
 
 ---
 

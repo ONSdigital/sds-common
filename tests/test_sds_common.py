@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-from sds_common.enums.buckets import Bucket
 from sds_common.sds_common import SdsCommon
 from sds_common.services.auth_header_provider import AuthHeaderProvider
 from sds_common.services.secret_service import SecretService

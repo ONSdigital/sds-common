@@ -237,13 +237,22 @@ from sds_common import (
 
 ---
 
-## 9. Removed dependencies
+## 9. Removed/changed dependencies
 
 The following packages are no longer installed as transitive dependencies of `sds-common`. If your project relied on them being pulled in transitively, add them to your own `pyproject.toml`:
 
 - `cloudevents`
 - `pydantic_settings`
 - `python-dotenv`
+- `firebase-admin` (replaced internally by `google-cloud-firestore` directly)
+
+`google-cloud-iam` is now an **optional** dependency rather than a hard requirement. It is only needed for `generate_authentication_headers_by_impersonation()` (local development). Install it explicitly if you use that method:
+
+```bash
+pip install sds-common[impersonation]
+# or
+uv add sds-common[impersonation]
+```
 
 ---
 

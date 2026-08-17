@@ -3,14 +3,20 @@ name = "sds-common"
 version = "2.0.0"
 description = "A Python library for common functionality used to interact with SDS."
 requires-python = "==3.13.*"
+classifiers = [
+    "Typing :: Typed",
+]
 dependencies = [
     "google-auth>=2.38.0",
     "google-cloud-secret-manager>=2.26.0",
     "google-cloud-pubsub>=2.36.0",
     "google-cloud-storage>=3.9.0",
     "google-cloud-firestore>=2.21.0",
-    "firebase-admin>=7.3.0",
     "requests>=2.32.3",
+]
+
+[project.optional-dependencies]
+impersonation = [
     "google-cloud-iam>=2.21.0",
 ]
 
@@ -37,11 +43,14 @@ version-check = [
     "tomlkit>=0.13.3",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--disable-warnings"
+
 [tool.ruff]
 line-length = 121
 exclude = [ "lib", "__pycache__", ".venv",]
 
 [tool.ruff.lint]
-extend-select = [ "E303", "W391", "W292", "E302"]
-preview = true
+extend-select = ["W292"]
 

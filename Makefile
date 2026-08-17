@@ -24,20 +24,20 @@ test:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests..."
-	uv run --only-group test pytest -v --disable-warnings tests/
+	uv run --only-group test pytest -v tests/
 
 .PHONY: test-coverage
 test-coverage:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests with coverage..."
-	uv run --only-group test pytest -v --disable-warnings --cov=sds_common --cov-report=term-missing tests/
+	uv run --only-group test pytest -v --cov=sds_common --cov-report=term-missing tests/
 
 .PHONY: test-parallel
 test-parallel:
 	@echo "Running Unit Tests in parallel..."
 	uv sync --group test
-	uv run --only-group test pytest -n auto -v --disable-warnings tests/
+	uv run --only-group test pytest -n auto -v tests/
 
 
 .PHONY: bump

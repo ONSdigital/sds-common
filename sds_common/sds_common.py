@@ -51,6 +51,7 @@ class SdsCommon:
 
     @cached_property
     def config(self) -> Config:
+        """Resolved configuration — uses injected config or the global cached singleton."""
         return self._config or get_config()
 
     # ----------------------------------------------------------- core services

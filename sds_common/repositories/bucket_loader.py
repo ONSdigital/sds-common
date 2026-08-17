@@ -21,6 +21,13 @@ class BucketLoader:
         self._bucket_cache: dict[Bucket, storage.Bucket] = {}
 
     def resolve_bucket_name(self, bucket: Bucket) -> str:
+        """
+        Returns the GCS bucket name for the given Bucket enum value.
+
+        :param bucket: The Bucket enum value.
+        :return str: The configured bucket name.
+        :raises TypeError: If the provided value is not a Bucket enum instance.
+        """
         if not isinstance(bucket, Bucket):
             raise TypeError(f'Expected bucket to be an instance of Bucket enum, got {type(bucket)}')
         return getattr(self.config, _BUCKET_CONFIG_MAP[bucket])

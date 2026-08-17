@@ -60,7 +60,7 @@ Impersonates the App Engine default service account via IAM.
 **Requirements:**
 - Application Default Credentials (ADC) configured: `gcloud auth application-default login`
 - Your ADC account must hold the `Service Account Token Creator` IAM role on `{PROJECT_ID}@appspot.gserviceaccount.com`
-- `google-cloud-iam` installed: `pip install google-cloud-iam`
+- `google-cloud-iam` installed: `pip install sds-common[impersonation]`
 
 ---
 

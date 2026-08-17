@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-import pytest
 import requests
 
 from sds_common.services.http_service import HttpService

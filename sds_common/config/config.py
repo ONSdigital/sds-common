@@ -80,6 +80,11 @@ class Config:
 
 @lru_cache(maxsize=1)
 def get_config() -> Config:
+    """
+    Return the cached singleton Config instance, constructing it on first call.
+
+    :return Config: The application configuration.
+    """
     return Config()
 
 

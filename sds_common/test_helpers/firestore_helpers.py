@@ -1,4 +1,4 @@
-from firebase_admin import firestore
+from google.cloud import firestore
 
 
 def perform_delete_on_collection_with_test_survey_id(

@@ -1,0 +1,22 @@
+name: Unit tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    name: Python
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up UV
+        uses: astral-sh/setup-uv@v6
+
+      - name: Run unit tests
+        run: |
+          uv run --only-group test pytest
