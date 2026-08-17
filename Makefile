@@ -31,7 +31,7 @@ test-coverage:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests with coverage..."
-	uv run --only-group test pytest -v --disable-warnings --cov=sds_common --cov-report=term-missing --cov-report=html:htmlcov tests/
+	uv run --only-group test pytest -v --disable-warnings --cov=sds_common --cov-report=term-missing tests/
 
 .PHONY: test-parallel
 test-parallel:
