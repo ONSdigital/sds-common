@@ -45,7 +45,7 @@ from sds_common import SdsCommon, SchemaFetchError, SchemaDuplicationError
 client = SdsCommon()
 
 try:
-    client.github_schema_publisher.publish_schema("068_1.json")
+    client.github_publisher.publish_schema("068_1.json")
 except SchemaFetchError as e:
     print(f"Could not fetch schema from GitHub: {e.message}")
 except SchemaDuplicationError as e:
@@ -60,7 +60,7 @@ from sds_common import SdsCommon, SchemaPublishError
 client = SdsCommon()
 
 try:
-    client.github_schema_publisher.publish_schema("068_1.json")
+    client.github_publisher.publish_schema("068_1.json")
 except SchemaPublishError as e:
     # All schema errors include generate_message_content() for Pub/Sub publishing
     client.pub_sub_service.send_message(

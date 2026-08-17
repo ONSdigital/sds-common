@@ -9,7 +9,7 @@ The library provides a `FileService` for each of the three GCS buckets used by S
 | Property | Bucket | Configured by |
 |---|---|---|
 | `schema_file_service` | Published schemas | `SCHEMA_BUCKET_NAME` |
-| `schema_publish_file_service` | Schemas staged for publishing | `SCHEMA_PUBLISH_BUCKET_NAME` |
+| `schema_staging_file_service` | Schemas staged for publishing | `SCHEMA_STAGING_BUCKET_NAME` |
 | `dataset_file_service` | Datasets | `DATASET_BUCKET_NAME` |
 
 ---
@@ -20,7 +20,7 @@ The library provides a `FileService` for each of the three GCS buckets used by S
 from sds_common import SdsCommon
 
 client = SdsCommon()
-client.schema_publish_file_service.upload_file("/local/path/to/068_1.json")
+client.schema_staging_file_service.upload_file("/local/path/to/068_1.json")
 ```
 
 The file is uploaded using the local filename as the GCS object name.
@@ -48,7 +48,7 @@ exists = client.schema_file_service.check_file_exists("068_1.json")
 ## Deleting a file
 
 ```python
-client.schema_publish_file_service.delete_file("068_1.json")
+client.schema_staging_file_service.delete_file("068_1.json")
 ```
 
 This is used by `GcsSchemaPublisher.cleanup()` to remove staged schema files after a successful publish.

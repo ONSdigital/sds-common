@@ -70,7 +70,7 @@ helper.try_delete_subscriber(SUBSCRIBER_ID)
 from sds_common import SdsCommon
 
 client = SdsCommon()
-loader = client.firebase_loader
+loader = client.firestore
 
 # Check a document exists in the schemas collection
 schemas = loader.get_schemas_collection()
@@ -110,14 +110,14 @@ from sds_common import SdsCommon
 def test_something():
     client = SdsCommon()
     mock_service = MagicMock()
-    client.__dict__["sds_schema_request_service"] = mock_service
+    client.__dict__["schema_service"] = mock_service
 
-    # Now client.sds_schema_request_service returns mock_service
+    # Now client.schema_service returns mock_service
 ```
 
 ### `authenticated_http_service` is a plain `@property`
 
-Because `authenticated_http_service` generates a fresh token on every access it is a `@property`, not `@cached_property`. You cannot pre-populate it via `__dict__`. Instead, inject a mock `auth_header_provider` and `_authenticated_session`:
+Because `authenticated_http_service` generates a fresh token on every access it is a `@property`, not `@cached_property`. You cannot pre-populate it via `__dict__`. Instead, inject a mock `iap_auth` and `_authenticated_session`:
 
 ```python
 from unittest.mock import MagicMock, patch
@@ -127,7 +127,7 @@ def test_authenticated_http():
     client = SdsCommon()
     mock_provider = MagicMock()
     mock_provider.generate.return_value = {"Authorization": "Bearer test-token"}
-    client.__dict__["auth_header_provider"] = mock_provider
+    client.__dict__["iap_auth"] = mock_provider
     client.__dict__["_authenticated_session"] = MagicMock()
 
     http = client.authenticated_http_service

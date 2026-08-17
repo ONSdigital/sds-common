@@ -14,7 +14,7 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Returns a list of metadata dicts, or None if the survey does not exist
-metadata = client.sds_schema_request_service.get_schema_metadata("068")
+metadata = client.schema_service.get_schema_metadata("068")
 
 if metadata is None:
     print("No schemas found for this survey")
@@ -26,7 +26,7 @@ else:
 ### All schemas
 
 ```python
-all_metadata = client.sds_schema_request_service.get_all_schema_metadata()
+all_metadata = client.schema_service.get_all_schema_metadata()
 # Returns a list of all schema metadata dicts
 ```
 
@@ -40,7 +40,7 @@ all_metadata = client.sds_schema_request_service.get_all_schema_metadata()
 from sds_common import SdsCommon
 
 client = SdsCommon()
-response = client.github_schema_publisher.publish_schema("068_1.json")
+response = client.github_publisher.publish_schema("068_1.json")
 print(response.status_code)  # 200 on success
 ```
 
@@ -63,8 +63,8 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Publish and then remove the staged file
-response = client.gcs_schema_publisher.publish_schema("068_1.json")
-client.gcs_schema_publisher.cleanup("068_1.json")
+response = client.gcs_publisher.publish_schema("068_1.json")
+client.gcs_publisher.cleanup("068_1.json")
 ```
 
 Unlike `GithubSchemaPublisher`, `GcsSchemaPublisher` does **not** run the version duplication check — it is assumed the file has already been validated before staging.
@@ -84,7 +84,7 @@ client = SdsCommon()
 schema_json = {"properties": {"survey_id": {"enum": ["068"]}, "schema_version": {"const": "1"}}, ...}
 schema = Schema.set_schema(schema_json, filepath="068_1.json")
 
-response = client.sds_schema_request_service.post_schema(schema)
+response = client.schema_service.post_schema(schema)
 ```
 
 ---
@@ -112,7 +112,7 @@ from sds_common import SdsCommon, SchemaPublishError
 client = SdsCommon()
 
 try:
-    client.github_schema_publisher.publish_schema("068_1.json")
+    client.github_publisher.publish_schema("068_1.json")
 except SchemaPublishError as e:
     # Publish the error details to the failure topic
     client.pub_sub_service.send_message(

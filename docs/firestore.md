@@ -27,7 +27,7 @@ The client is connected to the database configured by `FIRESTORE_DB_NAME` (defau
 from sds_common import SdsCommon
 
 client = SdsCommon()
-loader = client.firebase_loader
+loader = client.firestore
 
 # Get the raw Firestore client
 firestore_client = loader.get_client()

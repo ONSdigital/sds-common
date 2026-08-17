@@ -37,11 +37,11 @@ class SdsCommon:
 
         client = SdsCommon()
 
-        # Only AuthHeaderProvider + SecretService are instantiated:
+        # Only iap_auth + secret_manager are instantiated:
         headers = client.generate_authentication_headers()
 
         # Fully authenticated SDS schema request:
-        client.sds_schema_request_service.get_schema_metadata("my_survey")
+        client.schema_service.get_schema_metadata("my_survey")
     """
 
     def __init__(self, config: Config | None = None) -> None:
@@ -56,13 +56,15 @@ class SdsCommon:
     # ----------------------------------------------------------- core services
 
     @cached_property
-    def secret_service(self) -> SecretService:
+    def secret_manager(self) -> SecretService:
+        """GCP Secret Manager client — reads IAP OAuth credentials."""
         return SecretService(config=self.config)
 
     @cached_property
-    def auth_header_provider(self) -> AuthHeaderProvider:
+    def iap_auth(self) -> AuthHeaderProvider:
+        """Generates IAP Bearer-token authentication headers."""
         return AuthHeaderProvider(
-            secret_service=self.secret_service,
+            secret_service=self.secret_manager,
             config=self.config,
         )
 
@@ -83,7 +85,7 @@ class SdsCommon:
         session (with its retry adapter) is still reused via the cached
         ``_authenticated_session``.
         """
-        headers = self.auth_header_provider.generate()
+        headers = self.iap_auth.generate()
         return HttpService(session=self._authenticated_session, headers=headers)
 
     @cached_property
@@ -94,26 +96,23 @@ class SdsCommon:
     # -------------------------------------------------------- storage / pubsub
 
     @cached_property
-    def bucket_loader(self) -> BucketLoader:
-        return BucketLoader(
-            storage_client=storage.Client(project=self.config.PROJECT_ID),
-            config=self.config,
-        )
-
-    @cached_property
     def schema_file_service(self) -> FileService:
+        """File operations on the published schema GCS bucket."""
         return self._build_file_service(Bucket.SCHEMA_BUCKET)
 
     @cached_property
-    def schema_publish_file_service(self) -> FileService:
+    def schema_staging_file_service(self) -> FileService:
+        """File operations on the schema staging GCS bucket (schemas awaiting publish)."""
         return self._build_file_service(Bucket.SCHEMA_PUBLISH_BUCKET)
 
     @cached_property
     def dataset_file_service(self) -> FileService:
+        """File operations on the dataset GCS bucket."""
         return self._build_file_service(Bucket.DATASET_BUCKET)
 
     @cached_property
     def pub_sub_service(self) -> PubSubService:
+        """GCP Pub/Sub publisher."""
         return PubSubService(
             publisher_client=PublisherClient(),
             project_id=self.config.PROJECT_ID,
@@ -122,14 +121,16 @@ class SdsCommon:
     # ----------------------------------------------------- SDS request services
 
     @cached_property
-    def sds_schema_request_service(self) -> SdsSchemaRequestService:
+    def schema_service(self) -> SdsSchemaRequestService:
+        """HTTP client for SDS schema endpoints (metadata, post)."""
         return SdsSchemaRequestService(
             http_service=self.authenticated_http_service,
             config=self.config,
         )
 
     @cached_property
-    def sds_dataset_request_service(self) -> SdsDatasetRequestService:
+    def dataset_service(self) -> SdsDatasetRequestService:
+        """HTTP client for SDS dataset endpoints (metadata)."""
         return SdsDatasetRequestService(
             http_service=self.authenticated_http_service,
             config=self.config,
@@ -138,50 +139,59 @@ class SdsCommon:
     # ------------------------------------------------------------ publishers
 
     @cached_property
-    def schema_validator_service(self) -> SchemaValidatorService:
-        return SchemaValidatorService(self.sds_schema_request_service)
+    def schema_validator(self) -> SchemaValidatorService:
+        """Validates a schema against existing SDS metadata before publishing."""
+        return SchemaValidatorService(self.schema_service)
 
     @cached_property
-    def gcs_schema_publisher(self) -> GcsSchemaPublisher:
+    def gcs_publisher(self) -> GcsSchemaPublisher:
+        """Publishes schemas from the GCS staging bucket to SDS."""
         return GcsSchemaPublisher(
-            schema_request_service=self.sds_schema_request_service,
-            file_service=self.schema_publish_file_service,
+            schema_request_service=self.schema_service,
+            file_service=self.schema_staging_file_service,
         )
 
     @cached_property
-    def github_schema_publisher(self) -> GithubSchemaPublisher:
+    def github_publisher(self) -> GithubSchemaPublisher:
+        """Fetches schemas from GitHub, validates, and publishes to SDS."""
         return GithubSchemaPublisher(
-            schema_request_service=self.sds_schema_request_service,
-            validator_service=self.schema_validator_service,
+            schema_request_service=self.schema_service,
+            validator_service=self.schema_validator,
             github_schema_url=self.config.GITHUB_SCHEMA_URL,
             http_service=self.http_service,
         )
 
-    # ------------------------------------------------------ firestore / firebase
+    # ------------------------------------------------------ firestore
 
     @cached_property
     def firestore_client(self) -> firestore.Client:
+        """Raw Firestore client."""
         return firestore.Client(
             project=self.config.PROJECT_ID,
             database=self.config.FIRESTORE_DB_NAME,
         )
 
     @cached_property
-    def firebase_loader(self) -> FirebaseLoader:
+    def firestore(self) -> FirebaseLoader:
+        """Typed Firestore wrapper with pre-loaded schema collection."""
         return FirebaseLoader(self.firestore_client)
 
     # ----------------------------------------- convenience auth header methods
 
     def generate_authentication_headers(self) -> dict[str, str]:
         """Generate IAP Bearer-token headers using the GCP metadata server."""
-        return self.auth_header_provider.generate()
+        return self.iap_auth.generate()
 
     def generate_authentication_headers_by_impersonation(self) -> dict[str, str]:
         """Generate IAP Bearer-token headers via IAM service account impersonation."""
-        return self.auth_header_provider.generate_by_impersonation()
+        return self.iap_auth.generate_by_impersonation()
 
     # ---------------------------------------------------------------- internal
 
     def _build_file_service(self, bucket: Bucket) -> FileService:
-        bucket_instance = self.bucket_loader.fetch_bucket(bucket)
+        bucket_loader = BucketLoader(
+            storage_client=storage.Client(project=self.config.PROJECT_ID),
+            config=self.config,
+        )
+        bucket_instance = bucket_loader.fetch_bucket(bucket)
         return FileService(BucketFileRepository(bucket_instance))

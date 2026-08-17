@@ -41,7 +41,7 @@ metadata = schema_service.get_schema_metadata("068")
 from sds_common import SdsCommon
 
 client = SdsCommon()
-metadata = client.sds_schema_request_service.get_schema_metadata("068")
+metadata = client.schema_service.get_schema_metadata("068")
 ```
 
 ---
@@ -179,7 +179,7 @@ data = response.json()  # manually decode
 
 **After (v2):**
 ```python
-metadata = client.sds_schema_request_service.get_schema_metadata("068")
+metadata = client.schema_service.get_schema_metadata("068")
 
 if metadata is None:
     # survey does not exist (404)

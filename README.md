@@ -35,10 +35,10 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Fetch schema metadata for a survey
-metadata = client.sds_schema_request_service.get_schema_metadata("068")
+metadata = client.schema_service.get_schema_metadata("068")
 
 # Publish a schema from GitHub to SDS
-response = client.github_schema_publisher.publish_schema("068_1.json")
+response = client.github_publisher.publish_schema("068_1.json")
 
 # Upload a file to the schema GCS bucket
 client.schema_file_service.upload_file("/path/to/local/schema.json")
@@ -104,22 +104,21 @@ client = SdsCommon(config=my_config)
 | Property | Type | Description |
 |---|---|---|
 | `config` | `Config` | Resolved configuration object |
-| `secret_service` | `SecretService` | Reads secrets from GCP Secret Manager |
-| `auth_header_provider` | `AuthHeaderProvider` | Generates IAP Bearer-token headers |
+| `secret_manager` | `SecretService` | Reads secrets from GCP Secret Manager |
+| `iap_auth` | `AuthHeaderProvider` | Generates IAP Bearer-token headers |
 | `http_service` | `HttpService` | Unauthenticated HTTP client (e.g. GitHub requests) |
 | `authenticated_http_service` | `HttpService` | Authenticated HTTP client — fresh token on every access |
-| `sds_schema_request_service` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints |
-| `sds_dataset_request_service` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints |
-| `schema_validator_service` | `SchemaValidatorService` | Validates a schema before publishing |
-| `gcs_schema_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS |
-| `github_schema_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS |
+| `schema_service` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints |
+| `dataset_service` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints |
+| `schema_validator` | `SchemaValidatorService` | Validates a schema before publishing |
+| `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS |
+| `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS |
 | `schema_file_service` | `FileService` | File operations on the schema GCS bucket |
-| `schema_publish_file_service` | `FileService` | File operations on the schema-publish staging GCS bucket |
+| `schema_staging_file_service` | `FileService` | File operations on the schema-publish staging GCS bucket |
 | `dataset_file_service` | `FileService` | File operations on the dataset GCS bucket |
 | `pub_sub_service` | `PubSubService` | Publishes messages to GCP Pub/Sub topics |
 | `firestore_client` | `firestore.Client` | Raw Firestore client |
-| `firebase_loader` | `FirebaseLoader` | Typed wrapper around Firestore for schema collection access |
-| `bucket_loader` | `BucketLoader` | Loads GCS `Bucket` objects by `Bucket` enum value |
+| `firestore` | `FirebaseLoader` | Typed wrapper around Firestore for schema collection access |
 
 ### Convenience methods
 

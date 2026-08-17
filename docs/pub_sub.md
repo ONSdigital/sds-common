@@ -65,7 +65,7 @@ from sds_common import SdsCommon, SchemaPublishError
 client = SdsCommon()
 
 try:
-    client.github_schema_publisher.publish_schema("068_1.json")
+    client.github_publisher.publish_schema("068_1.json")
 except SchemaPublishError as e:
     client.pub_sub_service.send_message(
         e.generate_message_content(),
