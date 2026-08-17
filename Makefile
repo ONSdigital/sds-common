@@ -16,8 +16,7 @@ format:
 
 .PHONY: audit
 audit:
-	@echo "Running dependency audit..."
-	uv run --only-group audit pip-audit
+	uv audit
 
 
 .PHONY: test

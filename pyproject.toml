@@ -26,10 +26,6 @@ lint = [
     "ruff>=0.11.7",
 ]
 
-audit = [
-    "pip-audit>=2.10.0",
-]
-
 publish = [
     "twine>=6.1.0",
     "keyring>=25.6.0",
