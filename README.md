@@ -17,17 +17,25 @@
 
 ## Installation
 
-```bash
-pip install sds-common
-```
-
-All GCP client libraries are included as dependencies. The optional IAM impersonation feature (for local development) requires the `impersonation` extra:
+`sds-common` is hosted on a private GCP Artifact Registry and is not available on PyPI.
 
 ```bash
-pip install sds-common[impersonation]
+uv add sds-common --index https://<ARTIFACT_REGISTRY_URL>/simple/
 ```
 
-See [Authentication](docs/authentication.md) for details.
+Or with pip:
+
+```bash
+pip install sds-common --index-url https://<ARTIFACT_REGISTRY_URL>/simple/
+```
+
+The optional IAM impersonation extra is needed for local development authentication:
+
+```bash
+uv add "sds-common[impersonation]" --index https://<ARTIFACT_REGISTRY_URL>/simple/
+```
+
+See [Authentication → Strategy 2 (local development)](docs/authentication.md#strategy-2--iam-impersonation-local-development) for when this is needed.
 
 ---
 

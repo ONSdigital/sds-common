@@ -249,7 +249,7 @@ The following packages are no longer installed as transitive dependencies of `sd
 `google-cloud-iam` is now an **optional** dependency rather than a hard requirement. It is only needed for `generate_authentication_headers_by_impersonation()` (local development). Install it explicitly if you use that method:
 
 ```bash
-pip install sds-common[impersonation]
+uv add "sds-common[impersonation]" --index https://<ARTIFACT_REGISTRY_URL>/simple/
 # or
 uv add sds-common[impersonation]
 ```
