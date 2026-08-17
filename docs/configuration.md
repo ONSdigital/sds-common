@@ -116,6 +116,45 @@ client = SdsCommon(config=mock_config)
 
 ---
 
+## Logging for GCP (Cloud Logging)
+
+By default, Python's logging emits plain text which GCP cannot parse — logs appear as unstructured entries with no severity in Cloud Logging.
+
+Call `configure_gcp_logging()` once at startup to emit structured JSON that GCP parses natively, giving you proper severity levels, filtering, and alerting:
+
+```python
+from sds_common import configure_gcp_logging
+
+configure_gcp_logging()
+```
+
+That's it. All subsequent log calls — from `sds-common` internally and from your own code — will emit JSON like:
+
+```json
+{"severity": "WARNING", "message": "Failed to post schema. Status code: 500", "logger": "sds_common.services.sds_schema_request_service"}
+```
+
+You can also pass an explicit level:
+
+```python
+import logging
+configure_gcp_logging(level=logging.DEBUG)
+```
+
+Otherwise the level is read from the `LOG_LEVEL` environment variable (default: `INFO`).
+
+If you need the formatter directly (e.g. to attach to a specific handler):
+
+```python
+from sds_common import GcpJsonFormatter
+import logging
+
+handler = logging.StreamHandler()
+handler.setFormatter(GcpJsonFormatter())
+```
+
+---
+
 ## `get_log_level()`
 
 `get_log_level()` is a utility for **host applications** to configure their own logging. It reads the `LOG_LEVEL` environment variable and returns the corresponding `logging` integer constant:

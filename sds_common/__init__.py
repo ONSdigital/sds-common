@@ -1,4 +1,5 @@
 from sds_common.config.config import CONFIG, Config, get_config
+from sds_common.config.logging_config import GcpJsonFormatter, configure_gcp_logging
 from sds_common.enums.buckets import Bucket
 from sds_common.models.auth_errors import SdsAuthError, SecretAccessError, SecretKeyError
 from sds_common.models.config_errors import EnvironmentVariableError
@@ -33,6 +34,10 @@ __all__ = [
     'Config',
     'CONFIG',
     'get_config',
+
+    # Logging
+    'configure_gcp_logging',
+    'GcpJsonFormatter',
 
     # Data models
     'Bucket',
