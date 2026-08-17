@@ -1,4 +1,4 @@
-← [Pub/Sub messaging](pub_sub.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)
+← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)
 
 ---
 
@@ -29,16 +29,4 @@ if doc.exists:
 
 ---
 
-## Raw Firestore client
-
-If you need to query a collection outside of `schemas`, use the raw client:
-
-```python
-client._firestore_client.collection("my_collection").stream()
-```
-
-The client connects to the database configured by [`FIRESTORE_DB_NAME`](configuration.md#all-environment-variables) (default: `{PROJECT_ID}-sds`).
-
----
-
-← [Pub/Sub messaging](pub_sub.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)
+← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)

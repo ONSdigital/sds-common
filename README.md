@@ -135,11 +135,10 @@ Read these in order for a complete tour, or jump directly to what you need:
 | [Schema operations](docs/schemas.md) | Fetching metadata, posting schemas directly to SDS |
 | [Schema publishers](docs/publishers.md) | Publishing schemas from GitHub or GCS with validation |
 | [Dataset operations](docs/datasets.md) | Fetching dataset metadata |
-| [File storage (GCS)](docs/file_storage.md) | Uploading, downloading, and deleting files across GCS buckets |
-| [Pub/Sub messaging](docs/pub_sub.md) | Sending messages to Pub/Sub topics |
 | [Firestore](docs/firestore.md) | Accessing the Firestore database and schema collection |
 | [Error handling](docs/error_handling.md) | Full exception hierarchy and how to catch specific errors |
 | [Testing helpers](docs/testing_helpers.md) | `PubSubHelper` for integration tests; unit test patterns |
 | [Configuration reference](docs/configuration.md) | All environment variables, overriding config in tests, GCP logging |
+| [Developer guide](docs/dev/README.md) | Architecture, internals, contributing |
 
 

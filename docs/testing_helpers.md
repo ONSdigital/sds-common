@@ -97,25 +97,6 @@ def test_something():
     # client.schemas now returns the mock
 ```
 
-### Injecting into `_authenticated_http`
-
-`_authenticated_http` is a plain `@property` (not cached), so it cannot be pre-populated via `__dict__`. Inject a mock `_iap_auth` instead:
-
-```python
-from unittest.mock import MagicMock
-from sds_common import SdsCommon
-
-def test_authenticated_http():
-    client = SdsCommon()
-    mock_auth = MagicMock()
-    mock_auth.generate.return_value = {"Authorization": "Bearer test-token"}
-    client.__dict__["iap_auth"] = mock_auth
-    client.__dict__["_authenticated_session"] = MagicMock()
-
-    http = client._authenticated_http
-    # http is constructed with the mock session and headers
-```
-
 ---
 
 ← [Error handling](error_handling.md) | [Back to README](../README.md) | **Next →** [Configuration reference](configuration.md)

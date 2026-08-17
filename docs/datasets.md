@@ -1,4 +1,4 @@
-← [Schema publishers](publishers.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)
+← [Schema publishers](publishers.md) | [Back to README](../README.md) | **Next →** [Firestore](firestore.md)
 
 ---
 
@@ -67,4 +67,4 @@ except DatasetMetadataRetrievalError as e:
 
 ---
 
-← [Schema publishers](publishers.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)
+← [Schema publishers](publishers.md) | [Back to README](../README.md) | **Next →** [Firestore](firestore.md)

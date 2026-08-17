@@ -86,7 +86,7 @@ except SchemaPublishError as e:
     )
 ```
 
-See [Pub/Sub messaging](pub_sub.md) for more on publishing messages and [Error handling](error_handling.md) for catching specific error types.
+See [Error handling](error_handling.md) for catching specific error types.
 
 ---
 
