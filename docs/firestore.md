@@ -1,3 +1,7 @@
+← [Pub/Sub messaging](pub_sub.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)
+
+---
+
 # Firestore
 
 Access to Firestore is available via `SdsCommon`.
@@ -33,4 +37,8 @@ If you need to query a collection outside of `schemas`, use the raw client:
 client.firestore_client.collection("my_collection").stream()
 ```
 
-The client connects to the database configured by `FIRESTORE_DB_NAME` (default: `{PROJECT_ID}-sds`).
+The client connects to the database configured by [`FIRESTORE_DB_NAME`](configuration.md#all-environment-variables) (default: `{PROJECT_ID}-sds`).
+
+---
+
+← [Pub/Sub messaging](pub_sub.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)

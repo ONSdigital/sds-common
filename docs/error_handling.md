@@ -1,3 +1,7 @@
+← [Firestore](firestore.md) | [Back to README](../README.md) | **Next →** [Testing helpers](testing_helpers.md)
+
+---
+
 # Error handling
 
 All exceptions raised by `sds-common` are importable directly from the package root and fit into a clear hierarchy so you can catch at the right level of specificity.
@@ -63,6 +67,7 @@ try:
     client.github_publisher.publish_schema("068_1.json")
 except SchemaPublishError as e:
     # All schema errors include generate_message_content() for Pub/Sub publishing
+    # See: Pub/Sub messaging → Publishing schema errors on failure
     client.pub_sub_service.send_message(
         e.generate_message_content(),
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
@@ -83,6 +88,8 @@ except SecretAccessError as e:
 except SdsAuthError:
     print("Authentication failed")
 ```
+
+See [Authentication](authentication.md) for full context on how IAP authentication works.
 
 ---
 
@@ -164,3 +171,7 @@ The named GCS bucket does not exist.
 ### `EnvironmentVariableError`
 A required environment variable was not set and has no default.
 - Attribute: `variable_name: str`
+
+---
+
+← [Firestore](firestore.md) | [Back to README](../README.md) | **Next →** [Testing helpers](testing_helpers.md)

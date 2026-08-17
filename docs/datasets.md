@@ -1,3 +1,7 @@
+← [Schema operations](schemas.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)
+
+---
+
 # Dataset operations
 
 The library provides typed access to SDS dataset metadata.
@@ -59,4 +63,8 @@ except DatasetMetadataRetrievalError as e:
     print(e.message)
 ```
 
-`DatasetMetadataRetrievalError` is a subclass of `DatasetPublishError`.
+`DatasetMetadataRetrievalError` is a subclass of `DatasetPublishError`. See [Error handling](error_handling.md#datasetpublisherror-base) for the full dataset error hierarchy.
+
+---
+
+← [Schema operations](schemas.md) | [Back to README](../README.md) | **Next →** [File storage (GCS)](file_storage.md)

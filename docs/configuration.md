@@ -1,3 +1,7 @@
+← [Testing helpers](testing_helpers.md) | [Back to README](../README.md)
+
+---
+
 # Configuration reference
 
 All configuration is read from environment variables at the time `Config` is first instantiated. Every variable has a default so the library works out of the box for the `ons-sds-sandbox` project.
@@ -65,6 +69,8 @@ print(CONFIG.PROJECT_ID)
 ---
 
 ## Overriding config in tests
+
+> See also: [Testing helpers → Clearing the config cache](testing_helpers.md#clearing-the-config-cache-between-tests) and [Testing helpers → Injecting mocks](testing_helpers.md#injecting-mocks-into-the-facade) for the full testing guide.
 
 ### Option 1 — Patch environment variables
 
@@ -165,3 +171,7 @@ handler = logging.StreamHandler()
 handler.setFormatter(GcpJsonFormatter())
 logging.getLogger("my.logger").addHandler(handler)
 ```
+
+---
+
+← [Testing helpers](testing_helpers.md) | [Back to README](../README.md)

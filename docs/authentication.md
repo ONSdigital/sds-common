@@ -1,3 +1,7 @@
+← [Back to README](../README.md) | **Next →** [Schema operations](schemas.md)
+
+---
+
 # Authentication
 
 SDS endpoints are protected by Google Cloud IAP (Identity-Aware Proxy). `sds-common` handles all authentication automatically — you never manage tokens yourself.
@@ -76,7 +80,7 @@ The IAP OAuth client ID is read from GCP Secret Manager. The secret must be a JS
 }
 ```
 
-The secret name is configured via `IAP_SECRET_ID` (default: `iap-secret`).
+The secret name is configured via `IAP_SECRET_ID` (default: `iap-secret`). See the [configuration reference](configuration.md#all-environment-variables) for all available options.
 
 ---
 
@@ -98,3 +102,7 @@ except SecretAccessError as e:
 except SecretKeyError:
     print("Secret payload is missing the OAuth client ID key")
 ```
+
+---
+
+← [Back to README](../README.md) | **Next →** [Schema operations](schemas.md)

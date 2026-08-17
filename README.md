@@ -107,46 +107,46 @@ client = SdsCommon(config=my_config)
 
 | Property | Type | Description |
 |---|---|---|
-| `config` | `Config` | Resolved configuration object |
-| `secret_manager` | `SecretService` | Reads secrets from GCP Secret Manager |
-| `iap_auth` | `AuthHeaderProvider` | Generates IAP Bearer-token headers |
+| `config` | `Config` | Resolved configuration object — see [Configuration reference](docs/configuration.md) |
+| `secret_manager` | `SecretService` | Reads secrets from GCP Secret Manager — see [Authentication](docs/authentication.md#secret-format) |
+| `iap_auth` | `AuthHeaderProvider` | Generates IAP Bearer-token headers — see [Authentication](docs/authentication.md) |
 | `http_service` | `HttpService` | Unauthenticated HTTP client (e.g. GitHub requests) |
 | `authenticated_http_service` | `HttpService` | Authenticated HTTP client — fresh token on every access |
-| `schema_service` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints |
-| `dataset_service` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints |
+| `schema_service` | `SdsSchemaRequestService` | HTTP calls to SDS schema endpoints — see [Schema operations](docs/schemas.md) |
+| `dataset_service` | `SdsDatasetRequestService` | HTTP calls to SDS dataset endpoints — see [Dataset operations](docs/datasets.md) |
 | `schema_validator` | `SchemaValidatorService` | Validates a schema before publishing |
-| `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS |
-| `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS |
-| `schema_file_service` | `FileService` | File operations on the schema GCS bucket |
-| `schema_staging_file_service` | `FileService` | File operations on the schema-publish staging GCS bucket |
-| `dataset_file_service` | `FileService` | File operations on the dataset GCS bucket |
-| `pub_sub_service` | `PubSubService` | Publishes messages to GCP Pub/Sub topics |
-| `firestore_client` | `firestore.Client` | Raw Firestore client |
-| `firestore` | `FirebaseLoader` | Typed wrapper around Firestore for schema collection access |
+| `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-gcs) |
+| `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema operations](docs/schemas.md#publishing-a-schema-from-github) |
+| `schema_file_service` | `FileService` | File operations on the schema GCS bucket — see [File storage](docs/file_storage.md) |
+| `schema_staging_file_service` | `FileService` | File operations on the schema-publish staging GCS bucket — see [File storage](docs/file_storage.md) |
+| `dataset_file_service` | `FileService` | File operations on the dataset GCS bucket — see [File storage](docs/file_storage.md) |
+| `pub_sub_service` | `PubSubService` | Publishes messages to GCP Pub/Sub topics — see [Pub/Sub messaging](docs/pub_sub.md) |
+| `firestore_client` | `firestore.Client` | Raw Firestore client — see [Firestore](docs/firestore.md#raw-firestore-client) |
+| `firestore` | `FirebaseLoader` | Typed wrapper around Firestore for schema collection access — see [Firestore](docs/firestore.md) |
 
 ### Convenience methods
 
 | Method | Returns | Description |
 |---|---|---|
-| `generate_authentication_headers()` | `dict[str, str]` | IAP headers via GCP metadata server |
-| `generate_authentication_headers_by_impersonation()` | `dict[str, str]` | IAP headers via IAM service account impersonation |
+| `generate_authentication_headers()` | `dict[str, str]` | IAP headers via GCP metadata server — see [Authentication](docs/authentication.md#strategy-1--metadata-server-gcp-hosted) |
+| `generate_authentication_headers_by_impersonation()` | `dict[str, str]` | IAP headers via IAM service account impersonation — see [Authentication](docs/authentication.md#strategy-2--iam-impersonation-local-development) |
 
 ---
 
 ## Documentation by topic
 
-Detailed guides for each area of the library:
+Read these in order for a complete tour, or jump directly to what you need:
 
 | Guide | What it covers |
 |---|---|
-| [Authentication](docs/authentication.md) | Generating IAP headers, metadata server vs impersonation, `SecretService` |
+| [Authentication](docs/authentication.md) | Generating IAP headers, metadata server vs impersonation, secret format |
 | [Schema operations](docs/schemas.md) | Fetching metadata, posting schemas, publishing from GitHub or GCS |
 | [Dataset operations](docs/datasets.md) | Fetching dataset metadata |
 | [File storage (GCS)](docs/file_storage.md) | Uploading, downloading, and deleting files across GCS buckets |
 | [Pub/Sub messaging](docs/pub_sub.md) | Sending messages to Pub/Sub topics |
 | [Firestore](docs/firestore.md) | Accessing the Firestore database and schema collection |
 | [Error handling](docs/error_handling.md) | Full exception hierarchy and how to catch specific errors |
-| [Testing helpers](docs/testing_helpers.md) | `PubSubHelper` and `FirebaseLoader` for integration tests |
-| [Configuration reference](docs/configuration.md) | All environment variables, overriding config in tests |
+| [Testing helpers](docs/testing_helpers.md) | `PubSubHelper` for integration tests; unit test patterns |
+| [Configuration reference](docs/configuration.md) | All environment variables, overriding config in tests, GCP logging |
 
 

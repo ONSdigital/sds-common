@@ -1,3 +1,7 @@
+← [Authentication](authentication.md) | [Back to README](../README.md) | **Next →** [Dataset operations](datasets.md)
+
+---
+
 # Schema operations
 
 ---
@@ -42,7 +46,7 @@ response = client.github_publisher.publish_schema("068_1.json")
 print(response.status_code)  # 200 on success
 ```
 
-The file is fetched from `GITHUB_SCHEMA_BASE_URL + file_name` using an unauthenticated HTTP client (GitHub raw content is public). The schema is validated before being posted.
+The file is fetched from `GITHUB_SCHEMA_BASE_URL + file_name` using an unauthenticated HTTP client (GitHub raw content is public). The schema is validated before being posted. See the [configuration reference](configuration.md#all-environment-variables) for `GITHUB_SCHEMA_BASE_URL`.
 
 **Validation checks:**
 - The schema JSON contains a `survey_id` and `schema_version`
@@ -83,7 +87,7 @@ client.gcs_publisher.cleanup("068_1.json")  # remove the staged file
 | `SchemaPostError` | SDS returned a non-200 response when posting the schema |
 | `FilepathError` | The filepath could not be parsed to extract a filename |
 
-All of the above are subclasses of `SchemaPublishError` and include `generate_message_content()`, which serialises the error as JSON — useful for publishing failure events to Pub/Sub:
+All of the above are subclasses of `SchemaPublishError` and include `generate_message_content()`, which serialises the error as JSON — useful for publishing failure events to Pub/Sub. See [Error handling](error_handling.md) for the full exception hierarchy and [Pub/Sub messaging](pub_sub.md#publishing-schema-errors-on-failure) for the failure pattern.
 
 ```python
 from sds_common import SdsCommon, SchemaPublishError
@@ -98,3 +102,7 @@ except SchemaPublishError as e:
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
     )
 ```
+
+---
+
+← [Authentication](authentication.md) | [Back to README](../README.md) | **Next →** [Dataset operations](datasets.md)

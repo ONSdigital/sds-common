@@ -1,3 +1,7 @@
+← [Error handling](error_handling.md) | [Back to README](../README.md) | **Next →** [Configuration reference](configuration.md)
+
+---
+
 # Testing helpers
 
 `sds-common` includes `PubSubHelper` for integration tests that need to interact with real GCP Pub/Sub infrastructure.
@@ -65,7 +69,7 @@ helper.try_delete_subscriber(SUBSCRIBER_ID)
 
 ### Clearing the config cache between tests
 
-`get_config()` is cached with `@lru_cache`. Patch environment variables in unit tests and always clear the cache to prevent cross-test pollution:
+`get_config()` is cached with `@lru_cache`. Patch environment variables in unit tests and always clear the cache to prevent cross-test pollution. See the [configuration reference](configuration.md#overriding-config-in-tests) for other config override options.
 
 ```python
 import pytest
@@ -111,3 +115,7 @@ def test_authenticated_http():
     http = client.authenticated_http_service
     # http is constructed with the mock session and headers
 ```
+
+---
+
+← [Error handling](error_handling.md) | [Back to README](../README.md) | **Next →** [Configuration reference](configuration.md)

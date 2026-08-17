@@ -1,3 +1,7 @@
+← [File storage (GCS)](file_storage.md) | [Back to README](../README.md) | **Next →** [Firestore](firestore.md)
+
+---
+
 # Pub/Sub messaging
 
 `PubSubService` provides a simple interface for publishing messages to GCP Pub/Sub topics.
@@ -23,7 +27,7 @@ Messages must be JSON-encoded strings. The message is published to `projects/{PR
 
 ## Using the pre-configured topic IDs
 
-The config provides topic IDs for the standard SDS topics so you do not need to hardcode them:
+The config provides topic IDs for the standard SDS topics so you do not need to hardcode them. See the [configuration reference](configuration.md#all-environment-variables) for all available topic ID variables.
 
 ```python
 config = client.config
@@ -57,7 +61,7 @@ client.pub_sub_service.send_message(
 
 ## Publishing schema errors on failure
 
-A common pattern is to catch `SchemaPublishError` and publish the error details to the failure topic so they can be monitored:
+A common pattern is to catch `SchemaPublishError` and publish the error details to the failure topic so they can be monitored. See [Schema operations → Errors](schemas.md#errors) for the full list of schema exceptions.
 
 ```python
 from sds_common import SdsCommon, SchemaPublishError
@@ -75,3 +79,7 @@ except SchemaPublishError as e:
 ```
 
 `generate_message_content()` returns a JSON string with `error_type`, `message`, and `filepath` fields.
+
+---
+
+← [File storage (GCS)](file_storage.md) | [Back to README](../README.md) | **Next →** [Firestore](firestore.md)

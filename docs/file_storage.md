@@ -1,3 +1,7 @@
+← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Pub/Sub messaging](pub_sub.md)
+
+---
+
 # File storage (GCS)
 
 Three GCS file services are available via `SdsCommon`, one per bucket.
@@ -8,9 +12,9 @@ Three GCS file services are available via `SdsCommon`, one per bucket.
 
 | Property | Bucket | Configured by |
 |---|---|---|
-| `schema_file_service` | Published schemas | `SCHEMA_BUCKET_NAME` |
-| `schema_staging_file_service` | Schemas awaiting publishing | `SCHEMA_STAGING_BUCKET_NAME` |
-| `dataset_file_service` | Datasets | `DATASET_BUCKET_NAME` |
+| `schema_file_service` | Published schemas | [`SCHEMA_BUCKET_NAME`](configuration.md#all-environment-variables) |
+| `schema_staging_file_service` | Schemas awaiting publishing | [`SCHEMA_STAGING_BUCKET_NAME`](configuration.md#all-environment-variables) |
+| `dataset_file_service` | Datasets | [`DATASET_BUCKET_NAME`](configuration.md#all-environment-variables) |
 
 ---
 
@@ -59,7 +63,7 @@ client.schema_staging_file_service.delete_file("068_1.json")
 |---|---|
 | `BucketNotFoundError` | The GCS bucket named in config does not exist |
 
-`BucketNotFoundError` is raised when a file service is first accessed — if the bucket name in config is wrong, it will fail at that point rather than at the file operation.
+`BucketNotFoundError` is raised when a file service is first accessed — if the bucket name in config is wrong, it will fail at that point rather than at the file operation. See [Error handling](error_handling.md#bucketnotfounderror) for full details.
 
 ```python
 from sds_common import SdsCommon, BucketNotFoundError
@@ -71,3 +75,7 @@ try:
 except BucketNotFoundError as e:
     print(f"Bucket not found: {e.bucket_name}")
 ```
+
+---
+
+← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Pub/Sub messaging](pub_sub.md)
