@@ -1,63 +1,4 @@
-# Migration guide
-
----
-
-## v2 → v3
-
-Version 3.0.0 renames `SdsCommon` facade properties and service methods for a cleaner, more natural API.
-
-### Facade property renames
-
-| v2 name | v3 name |
-|---|---|
-| `secret_manager` | `secrets` |
-| `http_service` | `http` |
-| `authenticated_http_service` | `authenticated_http` |
-| `schema_service` | `schemas` |
-| `dataset_service` | `datasets` |
-| `schema_file_service` | `schema_files` |
-| `schema_staging_file_service` | `schema_staging_files` |
-| `dataset_file_service` | `dataset_files` |
-| `pub_sub_service` | `pub_sub` |
-
-### Service method renames
-
-| Class | v2 method | v3 method |
-|---|---|---|
-| `SdsSchemaRequestService` | `get_schema_metadata()` | `get_metadata()` |
-| `SdsSchemaRequestService` | `get_all_schema_metadata()` | `get_all_metadata()` |
-| `SdsSchemaRequestService` | `post_schema()` | `publish()` |
-| `SdsDatasetRequestService` | `get_dataset_metadata()` | `get_metadata()` |
-| `SchemaValidatorService` | `validate_schema()` | `validate()` |
-| `GcsSchemaPublisher` | `publish_schema()` | `publish()` |
-| `GithubSchemaPublisher` | `publish_schema()` | `publish()` |
-| `PubSubService` | `send_message()` | `publish()` |
-| `FileService` | `upload_file()` | `upload()` |
-| `FileService` | `retrieve_json_file()` | `get_json()` |
-| `FileService` | `delete_file()` | `delete()` |
-| `FileService` | `check_file_exists()` | `exists()` |
-
-**Before (v2):**
-```python
-client.schema_service.get_schema_metadata("068")
-client.dataset_service.get_dataset_metadata("068", "202301")
-client.pub_sub_service.send_message(msg, topic_id="my-topic")
-client.schema_file_service.upload_file("/path/to/file.json")
-client.github_publisher.publish_schema("068_1.json")
-```
-
-**After (v3):**
-```python
-client.schemas.get_metadata("068")
-client.datasets.get_metadata("068", "202301")
-client.pub_sub.publish(msg, topic_id="my-topic")
-client.schema_files.upload("/path/to/file.json")
-client.github_publisher.publish("068_1.json")
-```
-
----
-
-## v1 → v2
+# Migration guide: v1 → v2
 
 Version 2.0.0 is a significant rewrite of `sds-common`. The public API, configuration, and exception hierarchy have all changed. This guide covers every breaking change and the steps needed to update consuming code.
 
@@ -70,11 +11,13 @@ Version 2.0.0 is a significant rewrite of `sds-common`. The public API, configur
 | Entry point | A new `SdsCommon` facade replaces direct service instantiation |
 | `Config` | No longer a class with module-level attributes — must be instantiated |
 | Environment variables | Several keys renamed (see [below](#environment-variable-renames)) |
-| `HttpService` | No longer owns auth logic; use `authenticated_http_service` from `SdsCommon` |
+| `HttpService` | No longer owns auth logic; use `authenticated_http` from `SdsCommon` |
 | `AuthHeaderProvider` | New class — extracted from `HttpService` |
+| Facade properties | Clean noun-based names (see [below](#facade-property-names)) |
+| Service methods | Intent-based names (see [below](#service-method-names)) |
 | Exception hierarchy | Exceptions reorganised into typed, domain-specific files |
 | `schemas.get_metadata()` | Now returns `list[dict] \| None` instead of a raw `Response` object |
-| `pub_sub.publish()` | Signature changed — no longer accepts a `SchemaPublishError` |
+| `pub_sub.publish()` | Renamed from `send_message()`; no longer accepts a `SchemaPublishError` |
 | Dependencies removed | `cloudevents`, `pydantic_settings`, `python-dotenv` removed from package deps |
 
 ---
@@ -237,9 +180,9 @@ headers = provider.generate()
 
 ---
 
-## 6. `get_schema_metadata` return type changed
+## 6. `schemas.get_metadata()` return type changed
 
-In v1, `get_schema_metadata` returned a raw `requests.Response` object. In v2, it returns `list[dict] | None`.
+In v1, `get_schema_metadata` returned a raw `requests.Response` object. In v2, the method is `get_metadata()` and returns `list[dict] | None`.
 
 **Before (v1):**
 ```python
@@ -261,25 +204,64 @@ else:
 
 ---
 
-## 7. `PubSubService.send_message` signature changed
+## 7. `pub_sub.publish()` replaces `send_message()`
 
-In v1, `send_message` accepted a `SchemaPublishError` object. In v2, it accepts a plain `str` (JSON-encoded message) and a `topic_id`.
+In v1, `send_message` accepted a `SchemaPublishError` object. In v2, the method is `publish()` and accepts a plain `str` (JSON-encoded message) and a `topic_id`.
 
 **Before (v1):**
 ```python
-pub_sub_service.send_message(error, topic_id="my-topic")
+pub_sub_service.send_message(error, topic_id="my-topic")  # v1: error object passed directly
 ```
 
 **After (v2):**
 ```python
-pub_sub_service.send_message(error.generate_message_content(), topic_id="my-topic")
+client.pub_sub.publish(error.generate_message_content(), topic_id="my-topic")
 ```
 
 `generate_message_content()` is available on all `SchemaPublishError` subclasses and returns a JSON string.
 
 ---
 
-## 8. Exception imports have moved
+## 8. Facade property names
+
+`SdsCommon` uses clean, noun-based property names rather than `_service` suffixes.
+
+| v2 name |
+|---|
+| `secrets` |
+| `http` |
+| `authenticated_http` |
+| `schemas` |
+| `datasets` |
+| `schema_files` |
+| `schema_staging_files` |
+| `dataset_files` |
+| `pub_sub` |
+
+---
+
+## 9. Service method names
+
+Methods are named for their intent, not their HTTP verb or implementation detail.
+
+| Class | Method |
+|---|---|
+| `SdsSchemaRequestService` | `get_metadata(survey_id)` |
+| `SdsSchemaRequestService` | `get_all_metadata()` |
+| `SdsSchemaRequestService` | `publish(schema)` |
+| `SdsDatasetRequestService` | `get_metadata(survey_id, period_id)` |
+| `SchemaValidatorService` | `validate(schema)` |
+| `GcsSchemaPublisher` | `publish(file_name)` |
+| `GithubSchemaPublisher` | `publish(file_name)` |
+| `PubSubService` | `publish(message, topic_id)` |
+| `FileService` | `upload(filepath)` |
+| `FileService` | `get_json(filename)` |
+| `FileService` | `delete(filename)` |
+| `FileService` | `exists(filename)` |
+
+---
+
+## 10. Exception imports have moved
 
 Exceptions are now organised into domain-specific modules. All are still importable from the package root (`from sds_common import ...`), but direct module imports will need updating.
 
@@ -307,7 +289,7 @@ from sds_common import (
 
 ---
 
-## 9. Removed/changed dependencies
+## 11. Removed/changed dependencies
 
 The following packages are no longer installed as transitive dependencies of `sds-common`. If your project relied on them being pulled in transitively, add them to your own `pyproject.toml`:
 
@@ -326,7 +308,7 @@ uv add sds-common[impersonation]
 
 ---
 
-## 10. Test isolation — config cache
+## 12. Test isolation — config cache
 
 If you use `get_config()` in tests, the `@lru_cache` will cause the same `Config` instance to be reused across tests. Add this fixture to your `conftest.py`:
 
