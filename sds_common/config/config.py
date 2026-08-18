@@ -9,8 +9,8 @@ from sds_common.config.config_helpers import ConfigHelpers
 class Config:
     def __init__(self) -> None:
         self.PROJECT_ID = cast(str, ConfigHelpers.get_value_from_env('PROJECT_ID', 'ons-sds-sandbox'))
-        self.SDS_URL = cast(str, ConfigHelpers.get_value_from_env('SDS_URL', 'test_url'))
-        self.LOADER_URL = cast(str, ConfigHelpers.get_value_from_env('SDS_LOADER_URL', 'test_url'))
+        self.SDS_URL = cast(str, ConfigHelpers.get_value_from_env('SDS_URL'))
+        self.LOADER_URL = cast(str, ConfigHelpers.get_value_from_env('SDS_LOADER_URL'))
         self.PROCESS_TIMEOUT = int(ConfigHelpers.get_value_from_env('HTTP_REQUEST_TIMEOUT_SECONDS', '540'))
         self.SECRET_ID = cast(str, ConfigHelpers.get_value_from_env('IAP_SECRET_ID', 'iap-secret'))
         self.GITHUB_SCHEMA_URL = cast(

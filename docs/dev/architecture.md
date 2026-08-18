@@ -43,6 +43,14 @@ SdsCommon
 
 IAP tokens expire after ~1 hour. If `_authenticated_http` were a `@cached_property`, the same stale token would be reused indefinitely. Making it a plain `@property` constructs a fresh `HttpService` (with a new token) on each access. The underlying `requests.Session` (connection pooling, retry adapter) is still cached separately via `_authenticated_session`.
 
+> **Caution:** Do not cache the object returned by `client._authenticated_http` in your own code. The value is intentionally short-lived — caching it means requests will eventually fail with a 401 when the token expires. Always access it via the facade so the token is refreshed automatically.
+
+---
+
+## Bucket cache
+
+`BucketLoader.fetch_bucket()` caches `google.cloud.storage.Bucket` references in a dictionary keyed by the `Bucket` enum. This means GCS bucket objects are resolved once per `SdsCommon` instance and reused. If a bucket is deleted or permissions are revoked after first access, the stale reference will remain until the `SdsCommon` instance is recreated (e.g. on the next Cloud Function invocation). This is an intentional trade-off — for long-running services experiencing bucket access errors mid-flight, recreating the `SdsCommon` instance resolves the issue.
+
 ---
 
 ## Directory structure

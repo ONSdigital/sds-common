@@ -45,8 +45,8 @@ print(CONFIG.PROJECT_ID)
 | Variable | Default | Description |
 |---|---|---|
 | `PROJECT_ID` | `ons-sds-sandbox` | GCP project ID used for all GCP client connections |
-| `SDS_URL` | `test_url` | Base URL of the SDS API (no trailing slash) |
-| `SDS_LOADER_URL` | `test_url` | Base URL of the loader service |
+| `SDS_URL` | **required** | Base URL of the SDS API (no trailing slash). Raises `EnvironmentVariableError` if not set. |
+| `SDS_LOADER_URL` | **required** | Base URL of the loader service. Raises `EnvironmentVariableError` if not set. |
 | `HTTP_REQUEST_TIMEOUT_SECONDS` | `540` | HTTP request timeout in seconds |
 | `IAP_SECRET_ID` | `iap-secret` | GCP Secret Manager secret name containing the IAP OAuth credentials |
 | `GITHUB_SCHEMA_BASE_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for fetching schema files from GitHub |
@@ -125,6 +125,8 @@ client = SdsCommon(config=mock_config)
 ## Logging for GCP (Cloud Logging)
 
 `sds-common` automatically configures GCP-structured JSON logging when it is imported, provided no logging handlers have been set up yet. For most applications — Cloud Run services, Cloud Functions, GKE workloads — **no setup is required**. Just import `sds-common` and all logs from both `sds-common` and your own code will be structured JSON that GCP Cloud Logging parses natively.
+
+> **Note:** This is a deliberate import-time side effect. If you are using `sds-common` as a dependency in a larger application that manages its own logging configuration, set up your handlers **before** importing `sds-common` — the auto-configuration only runs when no handlers are present, so your setup will not be touched.
 
 ### What you get out of the box
 

@@ -19,7 +19,7 @@ class TestSdsCommonLaziness:
         client = SdsCommon(config=base_config)
         assert client.config is base_config
 
-    def test_config_property_returns_default_config_when_none_given(self):
+    def test_config_property_returns_default_config_when_none_given(self, base_config):
         client = SdsCommon()
         assert client.config.PROJECT_ID is not None
 

@@ -20,13 +20,26 @@ datasets = client.datasets.get_metadata(
     period_id="202301",
 )
 
-for dataset in datasets:
-    print(dataset.dataset_id)
-    print(dataset.filename)
-    print(dataset.total_reporting_units)
+if datasets is None:
+    print("No datasets found for this survey/period")
+else:
+    for dataset in datasets:
+        print(dataset.dataset_id)
+        print(dataset.filename)
+        print(dataset.total_reporting_units)
 ```
 
-The method returns a list of `DatasetMetadata` objects.
+The method returns a list of `DatasetMetadata` objects, or `None` if no datasets exist for that survey and period (404). This matches the behaviour of `client.schemas.get_metadata()` — check for `None` before iterating.
+
+```python
+datasets = client.datasets.get_metadata(survey_id="068", period_id="202301")
+
+if datasets is None:
+    print("No datasets found")
+else:
+    for dataset in datasets:
+        print(dataset.dataset_id)
+```
 
 ---
 
@@ -50,7 +63,7 @@ The method returns a list of `DatasetMetadata` objects.
 
 | Exception | When raised |
 |---|---|
-| `DatasetMetadataRetrievalError` | SDS returned a non-200 response for the dataset metadata request |
+| `DatasetMetadataRetrievalError` | SDS returned a non-200/non-404 response for the dataset metadata request |
 
 ```python
 from sds_common import SdsCommon, DatasetMetadataRetrievalError

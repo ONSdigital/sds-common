@@ -17,6 +17,7 @@ Version 2.0.0 is a significant rewrite of `sds-common`. The public API, configur
 | Service methods | Intent-based names (see [below](#service-method-names)) |
 | Exception hierarchy | Exceptions reorganised into typed, domain-specific files |
 | `schemas.get_metadata()` | Now returns `list[dict] \| None` instead of a raw `Response` object |
+| `datasets.get_metadata()` | Now returns `list[DatasetMetadata] \| None` (404 → `None`); previously raised on 404 |
 | `pub_sub.publish()` | Renamed from `send_message()`; no longer accepts a `SchemaPublishError` |
 | Dependencies removed | `cloudevents`, `pydantic_settings`, `python-dotenv` removed from package deps |
 

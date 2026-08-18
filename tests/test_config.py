@@ -8,6 +8,7 @@ import pytest
 
 from sds_common.config.config import Config, _LazyConfigProxy, get_config
 from sds_common.config.config_helpers import ConfigHelpers
+from sds_common.models.config_errors import EnvironmentVariableError
 
 
 class TestConfigHelpers:
@@ -63,10 +64,17 @@ class TestConfigHelpers:
 
 class TestConfig:
     def test_config_reads_env_on_instantiation(self):
-        with patch.dict(os.environ, {"PROJECT_ID": "my-project", "SDS_URL": "https://example.com"}):
+        with patch.dict(os.environ, {"PROJECT_ID": "my-project", "SDS_URL": "https://example.com", "SDS_LOADER_URL": "https://loader.test"}):
             cfg = Config()
         assert cfg.PROJECT_ID == "my-project"
         assert cfg.SDS_URL == "https://example.com"
+
+    def test_config_raises_when_sds_url_not_set(self):
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("SDS_URL", None)
+            os.environ.pop("SDS_LOADER_URL", None)
+            with pytest.raises(EnvironmentVariableError):
+                Config()
 
     def test_config_uses_defaults_when_env_not_set(self, base_config):
         assert base_config.PROJECT_ID == "test-project"
@@ -77,13 +85,13 @@ class TestConfig:
         assert base_config.PROCESS_TIMEOUT == 60
 
     def test_config_firestore_db_name_derived_from_project_id(self):
-        with patch.dict(os.environ, {"PROJECT_ID": "proj-x"}, clear=False):
+        with patch.dict(os.environ, {"PROJECT_ID": "proj-x", "SDS_URL": "https://sds.test", "SDS_LOADER_URL": "https://loader.test"}, clear=False):
             os.environ.pop("FIRESTORE_DB_NAME", None)
             cfg = Config()
         assert cfg.FIRESTORE_DB_NAME == "proj-x-sds"
 
     def test_config_bucket_names_derived_from_project_id(self):
-        with patch.dict(os.environ, {"PROJECT_ID": "proj-x"}, clear=False):
+        with patch.dict(os.environ, {"PROJECT_ID": "proj-x", "SDS_URL": "https://sds.test", "SDS_LOADER_URL": "https://loader.test"}, clear=False):
             for key in ("SCHEMA_BUCKET_NAME", "SCHEMA_STAGING_BUCKET_NAME", "DATASET_BUCKET_NAME"):
                 os.environ.pop(key, None)
             cfg = Config()
@@ -91,7 +99,7 @@ class TestConfig:
         assert "proj-x" in cfg.SCHEMA_PUBLISH_BUCKET_NAME
         assert "proj-x" in cfg.DATASET_BUCKET_NAME
 
-    def test_get_config_is_cached(self):
+    def test_get_config_is_cached(self, base_config):
         get_config.cache_clear()
         c1 = get_config()
         c2 = get_config()
@@ -102,13 +110,13 @@ class TestConfig:
         # The proxy delegates to get_config(); just verify it has PROJECT_ID
         assert hasattr(proxy, "PROJECT_ID")
 
-    def test_lazy_proxy_repr(self):
+    def test_lazy_proxy_repr(self, base_config):
         proxy = _LazyConfigProxy()
         assert "Config" in repr(proxy)
 
 
 class TestLazyConfigProxyDir:
-    def test_dir_includes_config_attributes(self):
+    def test_dir_includes_config_attributes(self, base_config):
         proxy = _LazyConfigProxy()
         attrs = dir(proxy)
         assert "PROJECT_ID" in attrs

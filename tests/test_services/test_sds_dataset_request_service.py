@@ -1,7 +1,7 @@
 """Tests for SdsDatasetRequestService."""
 from __future__ import annotations
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
@@ -26,7 +26,7 @@ def _make_service():
 
 
 class TestSdsDatasetRequestService:
-    def test_get_dataset_metadata_200(self):
+    def test_get_metadata_200(self):
         svc, http = _make_service()
         body = [
             {
@@ -41,7 +41,7 @@ class TestSdsDatasetRequestService:
             }
         ]
         http.make_get_request.return_value = _make_response(200, body)
-        result = svc.get_dataset_metadata("s1", "p1")
+        result = svc.get_metadata("s1", "p1")
         assert len(result) == 1
         assert result[0].dataset_id == "d1"
         http.make_get_request.assert_called_once_with(
@@ -49,17 +49,22 @@ class TestSdsDatasetRequestService:
             params={"survey_id": "s1", "period_id": "p1"},
         )
 
-    def test_get_dataset_metadata_raises_on_non_200(self):
-        from unittest.mock import patch
+    def test_get_metadata_returns_none_on_404(self):
         svc, http = _make_service()
         http.make_get_request.return_value = _make_response(404)
+        result = svc.get_metadata("s1", "p1")
+        assert result is None
+
+    def test_get_metadata_raises_on_non_200(self):
+        svc, http = _make_service()
+        http.make_get_request.return_value = _make_response(500)
         with patch("sds_common.services.sds_dataset_request_service.logger") as mock_logger:
             with pytest.raises(DatasetMetadataRetrievalError):
-                svc.get_dataset_metadata("s1", "p1")
+                svc.get_metadata("s1", "p1")
         mock_logger.warning.assert_called_once()
 
-    def test_get_dataset_metadata_returns_empty_list(self):
+    def test_get_metadata_returns_empty_list(self):
         svc, http = _make_service()
         http.make_get_request.return_value = _make_response(200, [])
-        result = svc.get_dataset_metadata("s1", "p1")
+        result = svc.get_metadata("s1", "p1")
         assert result == []
