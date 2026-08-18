@@ -1,3 +1,4 @@
+from __future__ import annotations
 import time
 
 from sds_common.test_helpers.common_test_data import test_survey_id
@@ -8,7 +9,7 @@ from sds_common.test_helpers.pub_sub_helper import PubSubHelper
 
 def cleanup(firebase_loader: FirebaseLoader):
     """
-    Method to clean up all schema test data created in buckets/FireStore.
+    Cleans up all schema test data created in buckets/FireStore.
     Should be run before and after test to account for test failures.
     """
     client = firebase_loader.get_client()
@@ -36,7 +37,7 @@ def pubsub_purge_messages(pubsub_helper: PubSubHelper, subscriber_id: str):
 
 def inject_wait_time(seconds: int):
     """
-    Method to inject a wait time into the test to allow resources properly spin up and tear down.
+    Injects a wait time to allow GCP resources to spin up and tear down.
 
     :param seconds: the number of seconds to wait
     """

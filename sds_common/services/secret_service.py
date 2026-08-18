@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import json
+import logging
 from typing import Any
 
 from google.api_core.exceptions import GoogleAPICallError, RetryError
 
 from sds_common.config.config import Config, get_config
-import logging
 from sds_common.models.auth_errors import SecretAccessError, SecretKeyError
 
 logger = logging.getLogger(__name__)
@@ -33,9 +35,9 @@ class SecretService:
             secret_json = json.loads(secret)
             return secret_json['web']['client_id']
         except KeyError as error:
-            logger.error(
+            logger.warning(
                 "OAuth client ID key not found in secret '%s'. Missing key: %s",
-                self.secret_id, error,
+                self.secret_id, error, exc_info=True,
             )
             raise SecretKeyError() from error
 
@@ -51,9 +53,9 @@ class SecretService:
             response = self.client.access_secret_version(name=name)
             return response.payload.data.decode('UTF-8')
         except (GoogleAPICallError, RetryError) as error:
-            logger.error(
+            logger.warning(
                 "Failed to access secret '%s' in project '%s': %s",
-                self.secret_id, self.project_id, error,
+                self.secret_id, self.project_id, error, exc_info=True,
             )
             raise SecretAccessError(str(error)) from error
 

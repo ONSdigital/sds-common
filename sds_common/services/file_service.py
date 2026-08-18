@@ -1,3 +1,4 @@
+from __future__ import annotations
 from sds_common.interfaces.file_repository_interface import FileRepositoryInterface
 
 

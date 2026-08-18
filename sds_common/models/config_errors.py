@@ -1,3 +1,4 @@
+from __future__ import annotations
 class EnvironmentVariableError(Exception):
     """Raised when a required environment variable is not set and no default is provided."""
 

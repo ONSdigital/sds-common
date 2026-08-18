@@ -41,7 +41,7 @@ class ConfigHelpers:
         env_value: str, default_value: str | None = None
     ) -> str | bool:
         """
-        Method to determine if a desired environment variable has been set and return it.
+        Returns the value of the specified environment variable, or the default if provided.
         If an environment variable or default value are not set an exception is raised.
 
         :param env_value: value to check environment for

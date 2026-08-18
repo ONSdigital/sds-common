@@ -117,7 +117,7 @@ class TestSdsCommonDependencyWiring:
         client.__dict__["_schema_staging_files"] = MagicMock()
         pub = client.gcs_publisher
         assert pub.schema_request_service is client.schemas
-        assert pub.bucket_service is client._schema_staging_files
+        assert pub.file_service is client._schema_staging_files
 
     def test_github_publisher_uses_correct_github_url(self, base_config):
         client = SdsCommon(config=base_config)

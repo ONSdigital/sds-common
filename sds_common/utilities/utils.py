@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import json
+import logging
 from pathlib import Path
 
 import requests
 
-import logging
 from sds_common.models.schema_publish_errors import FilepathError, SchemaFetchError, SchemaJSONDecodeError
 from sds_common.services.http_service import HttpService
 
@@ -48,7 +50,7 @@ def fetch_raw_schema_from_github(path: str, http_service: HttpService, github_sc
     :raises SchemaFetchError: if the schema cannot be fetched.
     """
     url = github_schema_url + path
-    logger.info(f'Fetching schema from {url}')
+    logger.info('Fetching schema from %s', url)
     response = http_service.make_get_request(url)
 
     if response.status_code != 200:

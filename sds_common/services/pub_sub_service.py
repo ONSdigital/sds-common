@@ -1,3 +1,4 @@
+from __future__ import annotations
 from google.cloud.pubsub_v1 import PublisherClient
 
 

@@ -1,7 +1,10 @@
+from __future__ import annotations
+
+import logging
+
 import requests
 
 from sds_common.config.config import Config, get_config
-import logging
 from sds_common.models.schema_publish_errors import SchemaMetadataError, SchemaPostError
 from sds_common.schema.schema import Schema
 from sds_common.services.http_service import HttpService
@@ -63,7 +66,7 @@ class SdsSchemaRequestService:
         :return response: the response from the POST request.
         :raises SchemaPostError: if SDS returns a non-200 response.
         """
-        logger.info(f'Publishing schema for survey {schema.survey_id}')
+        logger.info('Publishing schema for survey %s', schema.survey_id)
         url = f'{self.config.SDS_URL}{self.config.POST_SCHEMA_ENDPOINT}'
         response = self.http_service.make_post_request(url, schema.json, params={'survey_id': schema.survey_id})
         if response.status_code != 200:
@@ -72,5 +75,5 @@ class SdsSchemaRequestService:
                 schema.filepath, schema.survey_id, response.status_code,
             )
             raise SchemaPostError(schema.filepath, response.status_code)
-        logger.info(f'Schema {schema.filepath} published for survey {schema.survey_id}')
+        logger.info('Schema %s published for survey %s', schema.filepath, schema.survey_id)
         return response

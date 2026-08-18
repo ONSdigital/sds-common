@@ -68,7 +68,7 @@ class TestSecretService:
         with patch("sds_common.services.secret_service.logger") as mock_logger:
             with pytest.raises(SecretKeyError):
                 svc.get_oauth_client_id()
-        mock_logger.error.assert_called_once()
+        mock_logger.warning.assert_called_once()
 
     def test_secret_access_error_is_logged(self, base_config):
         from unittest.mock import patch
@@ -78,7 +78,7 @@ class TestSecretService:
         with patch("sds_common.services.secret_service.logger") as mock_logger:
             with pytest.raises(SecretAccessError):
                 svc._get_secret_version()
-        mock_logger.error.assert_called_once()
+        mock_logger.warning.assert_called_once()
         from sds_common.models.auth_errors import SdsAuthError
         from sds_common.models.schema_publish_errors import SchemaPublishError
         err = SecretAccessError("gcp boom")

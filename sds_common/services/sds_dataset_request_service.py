@@ -1,3 +1,4 @@
+from __future__ import annotations
 from sds_common.config.config import Config, get_config
 import logging
 from sds_common.models.dataset_models import DatasetMetadata

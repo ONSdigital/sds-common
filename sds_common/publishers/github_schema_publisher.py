@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import requests
 
 from sds_common.publishers.schema_publisher import SchemaPublisher
@@ -25,24 +27,24 @@ class GithubSchemaPublisher(SchemaPublisher):
         self.github_schema_url = github_schema_url
         self.http_service = http_service
 
-    def _retrieve_schema(self, file_name: str) -> dict:
+    def _retrieve_schema(self, filename: str) -> dict:
         """
         Retrieves the schema JSON from a GitHub repository.
 
-        :param file_name: The name of the schema file to retrieve.
+        :param filename: The name of the schema file to retrieve.
         :return: The schema JSON as a dictionary.
         """
-        return fetch_raw_schema_from_github(file_name, self.http_service, self.github_schema_url)
+        return fetch_raw_schema_from_github(filename, self.http_service, self.github_schema_url)
 
-    def publish(self, file_name: str) -> requests.Response:
+    def publish(self, filename: str) -> requests.Response:
         """
         Publishes the schema to SDS after fetching from GitHub and validating.
 
-        :param file_name: The name of the schema file to publish.
+        :param filename: The name of the schema file to publish.
         :return: The response from SDS.
         """
-        schema_json = self._retrieve_schema(file_name)
-        schema = Schema.set_schema(schema_json, file_name)
+        schema_json = self._retrieve_schema(filename)
+        schema = Schema.set_schema(schema_json, filename)
         self._validate(schema)
         return self.schema_request_service.publish(schema)
 

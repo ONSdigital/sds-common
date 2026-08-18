@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import logging
+
 from sds_common.models.schema_publish_errors import SchemaDuplicationError, SchemaMetadataFormatError, SchemaVersionMismatchError
 from sds_common.schema.schema import Schema
 from sds_common.services.sds_schema_request_service import SdsSchemaRequestService
@@ -17,14 +20,14 @@ class SchemaValidatorService:
 
         :param schema: The schema object to validate.
         """
-        logger.info(f'Validating schema {schema.filepath}')
+        logger.info('Validating schema %s', schema.filepath)
         self._verify_version(schema)
         self._check_duplicate_versions(schema)
 
     @staticmethod
     def _verify_version(schema: Schema) -> None:
         """
-        Method to verify the schema version in the JSON matches the filename.
+        Verifies that the schema version in the JSON matches the filename.
 
         :param schema: the schema object to be posted.
         :raises SchemaVersionMismatchError: if the schema version does not match the filename.

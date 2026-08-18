@@ -1,3 +1,4 @@
+from __future__ import annotations
 class DatasetPublishError(Exception):
     """Base class for dataset publishing errors."""
 

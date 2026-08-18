@@ -1,3 +1,4 @@
+from __future__ import annotations
 class BucketNotFoundError(Exception):
     """Raised when a named GCS bucket cannot be found in Google Cloud Storage."""
 

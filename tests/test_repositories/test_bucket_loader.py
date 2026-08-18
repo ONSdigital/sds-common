@@ -46,7 +46,7 @@ class TestBucketLoader:
             with pytest.raises(BucketNotFoundError) as exc_info:
                 loader.fetch_bucket(Bucket.SCHEMA_BUCKET)
         assert "proj-schema" in str(exc_info.value)
-        mock_logger.error.assert_called_once()  # error is logged before raising
+        mock_logger.warning.assert_called_once()  # error is logged before raising
         assert isinstance(exc_info.value.__cause__, exceptions.NotFound)
 
     def test_fetch_bucket_raises_on_wrong_type(self):

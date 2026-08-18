@@ -1,3 +1,4 @@
+from __future__ import annotations
 class SdsAuthError(Exception):
     """Base class for authentication and secret-management errors."""
 

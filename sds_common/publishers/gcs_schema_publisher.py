@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import requests
 
 from sds_common.publishers.schema_publisher import SchemaPublisher
@@ -13,18 +15,18 @@ class GcsSchemaPublisher(SchemaPublisher):
 
     def __init__(self, schema_request_service: SdsSchemaRequestService, file_service: FileService) -> None:
         super().__init__(schema_request_service)
-        self.bucket_service = file_service
+        self.file_service = file_service
 
-    def _retrieve_schema(self, file_name: str) -> dict:
+    def _retrieve_schema(self, filename: str) -> dict:
         """
         Retrieve the schema JSON file from the GCS bucket.
 
-        :param file_name: The name of the schema file to retrieve.
+        :param filename: The name of the schema file to retrieve.
         :return: The schema as a dictionary.
         """
-        return self.bucket_service.get_json(file_name)
+        return self.file_service.get_json(filename)
 
-    def publish(self, file_name: str) -> requests.Response:
+    def publish(self, filename: str) -> requests.Response:
         """
         Publish the schema retrieved from the GCS bucket.
 
@@ -36,12 +38,11 @@ class GcsSchemaPublisher(SchemaPublisher):
             a persistently failing file will block newer files from being published.
             See the publisher documentation for guidance on handling stuck files.
 
-        :param file_name: The name of the schema file to publish.
+        :param filename: The name of the schema file to publish.
         :return: The response from the schema publishing service.
         """
-        schema_json = self._retrieve_schema(file_name)
-        schema = Schema.set_schema(schema_json, file_name)
+        schema_json = self._retrieve_schema(filename)
+        schema = Schema.set_schema(schema_json, filename)
         response = self.schema_request_service.publish(schema)
-        self.bucket_service.delete(file_name)
+        self.file_service.delete(filename)
         return response
-

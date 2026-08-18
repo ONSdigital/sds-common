@@ -1,7 +1,10 @@
+from __future__ import annotations
+
+import logging
+
 from google.cloud import exceptions, storage
 
 from sds_common.config.config import Config, get_config
-import logging
 from sds_common.enums.buckets import Bucket
 from sds_common.models.storage_errors import BucketNotFoundError
 
@@ -46,6 +49,6 @@ class BucketLoader:
             try:
                 self._bucket_cache[bucket] = self._client.get_bucket(bucket_name)
             except exceptions.NotFound as exc:
-                logger.error("Bucket '%s' not found in Google Cloud Storage.", bucket_name, exc_info=True)
+                logger.warning("Bucket '%s' not found in Google Cloud Storage.", bucket_name, exc_info=True)
                 raise BucketNotFoundError(bucket_name) from exc
         return self._bucket_cache[bucket]
