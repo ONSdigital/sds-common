@@ -1,12 +1,14 @@
 """Tests for GcsSchemaPublisher."""
 from __future__ import annotations
 
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock
 
 import pytest
 import requests
 
 from sds_common.publishers.gcs_schema_publisher import GcsSchemaPublisher
+from sds_common.services.file_service import FileService
+from tests.fakes import FakeBucketFileRepository
 
 
 VALID_SCHEMA_JSON = {
@@ -17,44 +19,49 @@ VALID_SCHEMA_JSON = {
 }
 
 
-def _make_publisher():
-    schema_req_svc = MagicMock()
-    file_service = MagicMock()
-    file_service.get_json.return_value = VALID_SCHEMA_JSON
+@pytest.fixture
+def repo():
+    repo = FakeBucketFileRepository()
+    repo.add("v1.json", VALID_SCHEMA_JSON)
+    return repo
+
+
+@pytest.fixture
+def schema_request_service():
+    svc = MagicMock()
     resp = MagicMock(spec=requests.Response)
     resp.status_code = 200
-    schema_req_svc.publish.return_value = resp
+    svc.publish.return_value = resp
+    return svc
+
+
+@pytest.fixture
+def publisher(schema_request_service, repo):
     return GcsSchemaPublisher(
-        schema_request_service=schema_req_svc,
-        file_service=file_service,
-    ), schema_req_svc, file_service
+        schema_request_service=schema_request_service,
+        file_service=FileService(bucket_repository=repo),
+    )
 
 
 class TestGcsSchemaPublisher:
-    def test_publish_retrieves_and_posts(self):
-        pub, schema_svc, file_svc = _make_publisher()
-        pub.publish("v1.json")
-        file_svc.get_json.assert_called_once_with("v1.json")
-        schema_svc.publish.assert_called_once()
+    def test_publish_retrieves_and_posts(self, publisher, schema_request_service):
+        publisher.publish("v1.json")
+        schema_request_service.publish.assert_called_once()
 
-    def test_publish_returns_response(self):
-        pub, _, _ = _make_publisher()
-        resp = pub.publish("v1.json")
+    def test_publish_returns_response(self, publisher):
+        resp = publisher.publish("v1.json")
         assert resp.status_code == 200
 
-    def test_publish_deletes_staged_file_on_success(self):
-        pub, _, file_svc = _make_publisher()
-        pub.publish("v1.json")
-        file_svc.delete.assert_called_once_with("v1.json")
+    def test_publish_deletes_staged_file_on_success(self, publisher, repo):
+        publisher.publish("v1.json")
+        assert not repo.check_file_exists("v1.json")
 
-    def test_publish_does_not_delete_on_failure(self):
-        pub, schema_svc, file_svc = _make_publisher()
-        schema_svc.publish.side_effect = RuntimeError("SDS error")
+    def test_publish_does_not_delete_on_failure(self, publisher, schema_request_service, repo):
+        schema_request_service.publish.side_effect = RuntimeError("SDS error")
         with pytest.raises(RuntimeError):
-            pub.publish("v1.json")
-        file_svc.delete.assert_not_called()
+            publisher.publish("v1.json")
+        assert repo.check_file_exists("v1.json")
 
-    def test_retrieve_schema_calls_file_service(self):
-        pub, _, file_svc = _make_publisher()
-        result = pub._retrieve_schema("v1.json")
-        assert result is VALID_SCHEMA_JSON
+    def test_retrieve_schema_returns_content(self, publisher):
+        result = publisher._retrieve_schema("v1.json")
+        assert result == VALID_SCHEMA_JSON
