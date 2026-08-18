@@ -158,14 +158,9 @@ class TestSdsCommonFileServices:
                 mock_loader.fetch_bucket.return_value = MagicMock()
                 mock_loader_cls.return_value = mock_loader
                 # touch each service to pre-populate
-                _ = client._schema_files
                 _ = client._schema_staging_files
                 _ = client._dataset_files
         return client
-
-    def test_schema_file_service_is_lazily_created(self, base_config):
-        client = self._client_with_mock_storage(base_config)
-        assert client._schema_files is not None
 
     def test_schema_staging_file_service_is_lazily_created(self, base_config):
         client = self._client_with_mock_storage(base_config)

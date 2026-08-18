@@ -11,7 +11,6 @@ from sds_common.models.storage_errors import BucketNotFoundError
 logger = logging.getLogger(__name__)
 
 _BUCKET_CONFIG_MAP = {
-    Bucket.SCHEMA_BUCKET: 'SCHEMA_BUCKET_NAME',
     Bucket.SCHEMA_PUBLISH_BUCKET: 'SCHEMA_PUBLISH_BUCKET_NAME',
     Bucket.DATASET_BUCKET: 'DATASET_BUCKET_NAME',
 }

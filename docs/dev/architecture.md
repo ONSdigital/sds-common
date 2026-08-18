@@ -26,7 +26,6 @@ SdsCommon
 ├── _http                   @cached_property → HttpService (unauthenticated)
 ├── _authenticated_http     @property        → HttpService (fresh IAP token each access)
 ├── _authenticated_session  @cached_property → requests.Session (shared retry adapter)
-├── _schema_files           @cached_property → FileService (SCHEMA_BUCKET)
 ├── _schema_staging_files   @cached_property → FileService (SCHEMA_PUBLISH_BUCKET)
 ├── _dataset_files          @cached_property → FileService (DATASET_BUCKET)
 ├── _pub_sub                @cached_property → PubSubService
@@ -61,7 +60,7 @@ sds_common/
 │   ├── config.py               # Config dataclass + get_config() singleton
 │   └── logging_config.py       # GCP structured JSON logging
 ├── enums/
-│   └── buckets.py              # Bucket enum (SCHEMA_BUCKET, etc.)
+│   └── buckets.py              # Bucket enum (SCHEMA_PUBLISH_BUCKET, DATASET_BUCKET)
 ├── errors/
 │   ├── auth_errors.py
 │   ├── config_errors.py

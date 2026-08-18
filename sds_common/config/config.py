@@ -61,10 +61,6 @@ class Config:
             str,
             ConfigHelpers.get_value_from_env('FIRESTORE_DB_NAME', f'{self.PROJECT_ID}-sds'),
         )
-        self.SCHEMA_BUCKET_NAME = cast(
-            str,
-            ConfigHelpers.get_value_from_env('SCHEMA_BUCKET_NAME', f'{self.PROJECT_ID}-sds-europe-west2-schema'),
-        )
         self.SCHEMA_PUBLISH_BUCKET_NAME = cast(
             str,
             ConfigHelpers.get_value_from_env(

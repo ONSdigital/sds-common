@@ -28,7 +28,6 @@ def base_config() -> Config:
             "HTTP_REQUEST_TIMEOUT_SECONDS": "60",
             "IAP_SECRET_ID": "test-secret",
             "FIRESTORE_DB_NAME": "test-project-sds",
-            "SCHEMA_BUCKET_NAME": "test-project-schema",
             "SCHEMA_STAGING_BUCKET_NAME": "test-project-schema-publish",
             "DATASET_BUCKET_NAME": "test-project-dataset",
         },

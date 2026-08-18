@@ -61,7 +61,6 @@ print(CONFIG.PROJECT_ID)
 | `PUBLISH_SCHEMA_QUEUE_TOPIC_ID` | `schema-publish-queue` | Pub/Sub topic ID for the schema publish queue |
 | `PUBLISH_DATASET_TOPIC_ID` | `ons-sds-publish-dataset` | Pub/Sub topic ID for dataset events |
 | `FIRESTORE_DB_NAME` | `{PROJECT_ID}-sds` | Firestore database name |
-| `SCHEMA_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema` | GCS bucket for published schema files |
 | `SCHEMA_STAGING_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas staged for publishing |
 | `DATASET_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-dataset` | GCS bucket for dataset files |
 | `LOG_LEVEL` | `INFO` | Log level for GCP structured logging (see [Logging for GCP](#logging-for-gcp-cloud-logging)) |

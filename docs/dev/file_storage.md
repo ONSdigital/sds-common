@@ -12,7 +12,6 @@
 
 | Facade property | Bucket | Config variable |
 |---|---|---|
-| `_schema_files` | Published schemas | `SCHEMA_BUCKET_NAME` |
 | `_schema_staging_files` | Schemas awaiting publishing | `SCHEMA_STAGING_BUCKET_NAME` |
 | `_dataset_files` | Datasets | `DATASET_BUCKET_NAME` |
 

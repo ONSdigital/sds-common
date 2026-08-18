@@ -234,7 +234,6 @@ client.pub_sub.publish(error.generate_message_content(), topic_id="my-topic")
 | `authenticated_http` |
 | `schemas` |
 | `datasets` |
-| `schema_files` |
 | `schema_staging_files` |
 | `dataset_files` |
 | `pub_sub` |

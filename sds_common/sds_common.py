@@ -97,11 +97,6 @@ class SdsCommon:
     # -------------------------------------------------------- storage / pubsub
 
     @cached_property
-    def _schema_files(self) -> FileService:
-        """File operations on the published schema GCS bucket."""
-        return self._build_file_service(Bucket.SCHEMA_BUCKET)
-
-    @cached_property
     def _schema_staging_files(self) -> FileService:
         """File operations on the schema staging GCS bucket (schemas awaiting publish)."""
         return self._build_file_service(Bucket.SCHEMA_PUBLISH_BUCKET)

@@ -95,7 +95,6 @@ class TestConfig:
             for key in ("SCHEMA_BUCKET_NAME", "SCHEMA_STAGING_BUCKET_NAME", "DATASET_BUCKET_NAME"):
                 os.environ.pop(key, None)
             cfg = Config()
-        assert "proj-x" in cfg.SCHEMA_BUCKET_NAME
         assert "proj-x" in cfg.SCHEMA_PUBLISH_BUCKET_NAME
         assert "proj-x" in cfg.DATASET_BUCKET_NAME
 

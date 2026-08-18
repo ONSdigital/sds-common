@@ -13,7 +13,7 @@ from sds_common.repositories.bucket_loader import BucketLoader
 def _make_loader(config=None):
     storage_client = MagicMock()
     cfg = config or MagicMock()
-    cfg.SCHEMA_BUCKET_NAME = "proj-schema"
+    cfg.SCHEMA_PUBLISH_BUCKET_NAME = "proj-schema-publish"
     cfg.SCHEMA_PUBLISH_BUCKET_NAME = "proj-schema-publish"
     cfg.DATASET_BUCKET_NAME = "proj-dataset"
     return BucketLoader(storage_client=storage_client, config=cfg), storage_client
@@ -24,16 +24,16 @@ class TestBucketLoader:
         loader, client = _make_loader()
         mock_bucket = MagicMock()
         client.get_bucket.return_value = mock_bucket
-        result = loader.fetch_bucket(Bucket.SCHEMA_BUCKET)
+        result = loader.fetch_bucket(Bucket.SCHEMA_PUBLISH_BUCKET)
         assert result is mock_bucket
-        client.get_bucket.assert_called_once_with("proj-schema")
+        client.get_bucket.assert_called_once_with("proj-schema-publish")
 
     def test_fetch_bucket_caches_result(self):
         loader, client = _make_loader()
         mock_bucket = MagicMock()
         client.get_bucket.return_value = mock_bucket
-        r1 = loader.fetch_bucket(Bucket.SCHEMA_BUCKET)
-        r2 = loader.fetch_bucket(Bucket.SCHEMA_BUCKET)
+        r1 = loader.fetch_bucket(Bucket.SCHEMA_PUBLISH_BUCKET)
+        r2 = loader.fetch_bucket(Bucket.SCHEMA_PUBLISH_BUCKET)
         assert r1 is r2
         assert client.get_bucket.call_count == 1
 
@@ -44,8 +44,8 @@ class TestBucketLoader:
         client.get_bucket.side_effect = exceptions.NotFound("not found")
         with patch("sds_common.repositories.bucket_loader.logger") as mock_logger:
             with pytest.raises(BucketNotFoundError) as exc_info:
-                loader.fetch_bucket(Bucket.SCHEMA_BUCKET)
-        assert "proj-schema" in str(exc_info.value)
+                loader.fetch_bucket(Bucket.SCHEMA_PUBLISH_BUCKET)
+        assert "proj-schema-publish" in str(exc_info.value)
         mock_logger.warning.assert_called_once()  # error is logged before raising
         assert isinstance(exc_info.value.__cause__, exceptions.NotFound)
 
@@ -56,7 +56,7 @@ class TestBucketLoader:
 
     def test_resolve_bucket_name_schema(self):
         loader, _ = _make_loader()
-        assert loader.resolve_bucket_name(Bucket.SCHEMA_BUCKET) == "proj-schema"
+        assert loader.resolve_bucket_name(Bucket.SCHEMA_PUBLISH_BUCKET) == "proj-schema-publish"
 
     def test_resolve_bucket_name_dataset(self):
         loader, _ = _make_loader()

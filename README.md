@@ -53,7 +53,6 @@ metadata = client.schemas.get_metadata("068")
 response = client.github_publisher.publish("068_1.json")
 
 # Upload a file to the schema GCS bucket
-client.schema_files.upload("/path/to/local/schema.json")
 
 # Send a Pub/Sub message
 client.pub_sub.publish('{"event": "schema_published"}', topic_id="my-topic")
@@ -86,7 +85,6 @@ The library is configured entirely through environment variables. All variables 
 | `PUBLISH_SCHEMA_QUEUE_TOPIC_ID` | `schema-publish-queue` | Pub/Sub topic for the schema publish queue |
 | `PUBLISH_DATASET_TOPIC_ID` | `ons-sds-publish-dataset` | Pub/Sub topic for dataset publishing |
 | `FIRESTORE_DB_NAME` | `{PROJECT_ID}-sds` | Firestore database name |
-| `SCHEMA_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema` | GCS bucket for published schemas |
 | `SCHEMA_STAGING_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-schema-publish` | GCS bucket for schemas awaiting publishing |
 | `DATASET_BUCKET_NAME` | `{PROJECT_ID}-sds-europe-west2-dataset` | GCS bucket for datasets |
 | `LOG_LEVEL` | `INFO` | Log level for GCP structured logging (see [Logging for GCP](docs/configuration.md#logging-for-gcp-cloud-logging)) |
