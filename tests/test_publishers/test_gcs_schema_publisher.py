@@ -1,8 +1,9 @@
 """Tests for GcsSchemaPublisher."""
 from __future__ import annotations
 
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
+import pytest
 import requests
 
 from sds_common.publishers.gcs_schema_publisher import GcsSchemaPublisher
@@ -30,21 +31,28 @@ def _make_publisher():
 
 
 class TestGcsSchemaPublisher:
-    def test_publish_schema_retrieves_and_posts(self):
+    def test_publish_retrieves_and_posts(self):
         pub, schema_svc, file_svc = _make_publisher()
         pub.publish("v1.json")
         file_svc.get_json.assert_called_once_with("v1.json")
         schema_svc.publish.assert_called_once()
 
-    def test_publish_schema_returns_response(self):
-        pub, schema_svc, file_svc = _make_publisher()
+    def test_publish_returns_response(self):
+        pub, _, _ = _make_publisher()
         resp = pub.publish("v1.json")
         assert resp.status_code == 200
 
-    def test_cleanup_deletes_file(self):
+    def test_publish_deletes_staged_file_on_success(self):
         pub, _, file_svc = _make_publisher()
-        pub.cleanup("v1.json")
+        pub.publish("v1.json")
         file_svc.delete.assert_called_once_with("v1.json")
+
+    def test_publish_does_not_delete_on_failure(self):
+        pub, schema_svc, file_svc = _make_publisher()
+        schema_svc.publish.side_effect = RuntimeError("SDS error")
+        with pytest.raises(RuntimeError):
+            pub.publish("v1.json")
+        file_svc.delete.assert_not_called()
 
     def test_retrieve_schema_calls_file_service(self):
         pub, _, file_svc = _make_publisher()

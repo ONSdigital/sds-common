@@ -35,19 +35,16 @@ The file is fetched from `GITHUB_SCHEMA_BASE_URL + file_name` using an unauthent
 
 ## Publishing a schema from GCS
 
-Reads a schema file from the GCS staging bucket, posts it to SDS, and optionally cleans up the staged file.
+Reads a schema file from the GCS staging bucket, posts it to SDS, and automatically deletes the staged file on success. If publishing fails for any reason, the file is left in place for inspection or retry.
 
 ```python
 from sds_common import SdsCommon
 
 client = SdsCommon()
 response = client.gcs_publisher.publish("068_1.json")
-client.gcs_publisher.cleanup("068_1.json")  # remove the staged file
 ```
 
 > `gcs_publisher` does **not** run the version duplication check — files in the staging bucket are assumed to have been validated before staging.
-
----
 
 ## Errors
 

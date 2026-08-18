@@ -28,17 +28,15 @@ class GcsSchemaPublisher(SchemaPublisher):
         """
         Publish the schema retrieved from the GCS bucket.
 
+        On success, the staged file is automatically deleted from the bucket.
+        On failure (any exception), the file is left in place for inspection/retry.
+
         :param file_name: The name of the schema file to publish.
         :return: The response from the schema publishing service.
         """
         schema_json = self._retrieve_schema(file_name)
         schema = Schema.set_schema(schema_json, file_name)
-        return self.schema_request_service.publish(schema)
+        response = self.schema_request_service.publish(schema)
+        self.bucket_service.delete(file_name)
+        return response
 
-    def cleanup(self, schema_file_name: str) -> None:
-        """
-        Clean up the schema file from the GCS bucket after publishing.
-
-        :param schema_file_name: The name of the schema file to delete.
-        """
-        self.bucket_service.delete(schema_file_name)
