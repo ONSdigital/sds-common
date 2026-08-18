@@ -31,6 +31,11 @@ class GcsSchemaPublisher(SchemaPublisher):
         On success, the staged file is automatically deleted from the bucket.
         On failure (any exception), the file is left in place for inspection/retry.
 
+        .. warning::
+            If your consumer processes staged files in order (e.g. oldest-first),
+            a persistently failing file will block newer files from being published.
+            See the publisher documentation for guidance on handling stuck files.
+
         :param file_name: The name of the schema file to publish.
         :return: The response from the schema publishing service.
         """

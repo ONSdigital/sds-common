@@ -46,6 +46,8 @@ response = client.gcs_publisher.publish("068_1.json")
 
 > `gcs_publisher` does **not** run the version duplication check — files in the staging bucket are assumed to have been validated before staging.
 
+> **Failure and ordering:** If `publish()` raises, the staged file is intentionally left in place. If your consumer processes staged files in order (e.g. oldest-first), a persistently failing file will block newer files from being published. Consider routing failed files to a dead-letter location, or alerting on repeated failures, to prevent the queue from stalling.
+
 ## Errors
 
 All publisher errors are subclasses of `SchemaPublishError` and include `generate_message_content()`, which serialises the error as JSON — useful for publishing failure events to Pub/Sub.
