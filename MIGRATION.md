@@ -11,7 +11,7 @@ Version 2.0.0 is a significant rewrite of `sds-common`. The public API, configur
 | Entry point | A new `SdsCommon` facade replaces direct service instantiation |
 | `Config` | No longer a class with module-level attributes — must be instantiated |
 | Environment variables | Several keys renamed (see [below](#environment-variable-renames)) |
-| `HttpService` | No longer owns auth logic; use `authenticated_http` from `SdsCommon` |
+| `HttpService` | No longer owns auth logic; use `schemas` or `datasets` from `SdsCommon` — they are pre-wired with authenticated HTTP |
 | `AuthHeaderProvider` | New class — extracted from `HttpService` |
 | Facade properties | Clean noun-based names (see [below](#facade-property-names)) |
 | Service methods | Intent-based names (see [below](#service-method-names)) |
@@ -107,7 +107,7 @@ If your deployment explicitly set these variables to `/v1/...` values, update th
 
 ## 4. `HttpService` no longer owns authentication
 
-In v1, `HttpService` accepted a boolean `authenticated` flag. In v2, it is a pure HTTP client. Authenticated requests go through `SdsCommon.authenticated_http`.
+In v1, `HttpService` accepted a boolean `authenticated` flag. In v2, it is a pure HTTP client. Authenticated requests go through `client.schemas` and `client.datasets` — these are pre-wired with an authenticated HTTP client internally.
 
 **Before (v1):**
 ```python
@@ -127,7 +127,10 @@ from sds_common import SdsCommon
 client = SdsCommon()
 
 # Authenticated (IAP Bearer token injected automatically)
-response = client.authenticated_http.make_get_request("https://sds.example.com/api")
+# Use the pre-wired services instead:
+metadata = client.schemas.get_metadata("068")
+# or
+metadata = client.datasets.get_metadata("068", "202301")
 
 # Unauthenticated (e.g. GitHub)
 response = client.http.make_get_request("https://raw.githubusercontent.com/...")
@@ -231,7 +234,7 @@ client.pub_sub.publish(error.generate_message_content(), topic_id="my-topic")
 |---|
 | `secrets` |
 | `http` |
-| `authenticated_http` |
+| `schemas`, `datasets` |
 | `schemas` |
 | `datasets` |
 | `schema_staging_files` |
