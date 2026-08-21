@@ -107,7 +107,7 @@ class SdsCommon:
         return self._build_file_service(Bucket.DATASET_BUCKET)
 
     @cached_property
-    def _pub_sub(self) -> PubSubService:
+    def pub_sub(self) -> PubSubService:
         """GCP Pub/Sub publisher."""
         return PubSubService(
             publisher_client=PublisherClient(),

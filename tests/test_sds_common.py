@@ -54,7 +54,7 @@ class TestSdsCommonLaziness:
     def test_pub_sub_service_is_lazily_created(self, base_config):
         client = SdsCommon(config=base_config)
         with patch("sds_common.sds_common.PublisherClient", return_value=MagicMock()):
-            svc = client._pub_sub
+            svc = client.pub_sub
         assert svc is not None
         assert svc.project_id == "test-project"
 

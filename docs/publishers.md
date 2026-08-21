@@ -79,13 +79,13 @@ client = SdsCommon()
 try:
     client.github_publisher.publish("068_1.json")
 except SchemaPublishError as e:
-    client._pub_sub.publish(
+    client.pub_sub.publish(
         e.generate_message_content(),
         topic_id=client.config.PUBLISH_SCHEMA_ERROR_TOPIC_ID,
     )
 ```
 
-See [Error handling](error_handling.md) for catching specific error types.
+See [Pub/Sub messaging](pub_sub.md#publishing-schema-errors-on-failure) for the failure pattern and [Error handling](error_handling.md) for catching specific error types.
 
 ---
 

@@ -1,4 +1,4 @@
-← [Firestore](firestore.md) | [Back to README](../README.md) | **Next →** [Testing helpers](testing_helpers.md)
+← [Pub/Sub messaging](pub_sub.md) | [Back to README](../README.md) | **Next →** [Testing helpers](testing_helpers.md)
 
 ---
 
@@ -171,4 +171,4 @@ A required environment variable was not set and has no default.
 
 ---
 
-← [Firestore](firestore.md) | [Back to README](../README.md) | **Next →** [Testing helpers](testing_helpers.md)
+← [Pub/Sub messaging](pub_sub.md) | [Back to README](../README.md) | **Next →** [Testing helpers](testing_helpers.md)

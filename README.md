@@ -120,6 +120,7 @@ client = SdsCommon(config=my_config)
 | `gcs_publisher` | `GcsSchemaPublisher` | Publishes schemas from the GCS staging bucket to SDS — see [Schema publishers](docs/publishers.md#publishing-a-schema-from-gcs) |
 | `github_publisher` | `GithubSchemaPublisher` | Fetches schemas from GitHub, validates, and publishes to SDS — see [Schema publishers](docs/publishers.md#publishing-a-schema-from-github) |
 | `firestore` | `FirebaseLoader` | Typed Firestore wrapper for schema collection access — see [Firestore](docs/firestore.md) |
+| `pub_sub` | `PubSubService` | Publishes messages to GCP Pub/Sub topics — see [Pub/Sub messaging](docs/pub_sub.md) |
 
 ---
 
@@ -134,6 +135,7 @@ Read these in order for a complete tour, or jump directly to what you need:
 | [Schema publishers](docs/publishers.md) | Publishing schemas from GitHub or GCS with validation |
 | [Dataset operations](docs/datasets.md) | Fetching dataset metadata |
 | [Firestore](docs/firestore.md) | Accessing the Firestore database and schema collection |
+| [Pub/Sub messaging](docs/pub_sub.md) | Publishing messages to Pub/Sub topics |
 | [Error handling](docs/error_handling.md) | Full exception hierarchy and how to catch specific errors |
 | [Testing helpers](docs/testing_helpers.md) | `PubSubHelper` for integration tests; unit test patterns |
 | [Configuration reference](docs/configuration.md) | All environment variables, overriding config in tests, GCP logging |

@@ -28,7 +28,7 @@ SdsCommon
 ├── _authenticated_session  @cached_property → requests.Session (shared retry adapter)
 ├── _schema_staging_files   @cached_property → FileService (SCHEMA_PUBLISH_BUCKET)
 ├── _dataset_files          @cached_property → FileService (DATASET_BUCKET)
-├── _pub_sub                @cached_property → PubSubService
+├── pub_sub                 @cached_property → PubSubService
 ├── _schema_validator       @cached_property → SchemaValidatorService(schemas)
 └── _firestore_client       @cached_property → firestore.Client
 ```

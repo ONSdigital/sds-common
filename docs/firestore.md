@@ -1,4 +1,4 @@
-← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)
+← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Pub/Sub messaging](pub_sub.md)
 
 ---
 
@@ -29,4 +29,4 @@ if doc.exists:
 
 ---
 
-← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Error handling](error_handling.md)
+← [Dataset operations](datasets.md) | [Back to README](../README.md) | **Next →** [Pub/Sub messaging](pub_sub.md)
