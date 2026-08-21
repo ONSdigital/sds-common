@@ -64,13 +64,13 @@ Nothing is initialised until first access. If you only need auth headers, only t
 
 ## Configuration
 
-The library is configured entirely through environment variables. All variables have sensible defaults for the `ons-sds-sandbox` project so tests and local development work out of the box.
+The library is configured entirely through environment variables. Most variables have sensible defaults for the `ons-sds-sandbox` project, but `SDS_URL` and `SDS_LOADER_URL` are required.
 
 | Environment variable | Default | Description |
 |---|---|---|
 | `PROJECT_ID` | `ons-sds-sandbox` | GCP project ID |
-| `SDS_URL` | `test_url` | Base URL of the SDS API |
-| `SDS_LOADER_URL` | `test_url` | Base URL of the loader service |
+| `SDS_URL` | **required** | Base URL of the SDS API |
+| `SDS_LOADER_URL` | **required** | Base URL of the loader service |
 | `HTTP_REQUEST_TIMEOUT_SECONDS` | `540` | HTTP request timeout in seconds |
 | `IAP_SECRET_ID` | `iap-secret` | GCP Secret Manager secret ID for the IAP OAuth credential |
 | `GITHUB_SCHEMA_BASE_URL` | `https://raw.githubusercontent.com/ONSdigital/sds-schema-definitions/main/` | Base URL for raw schema files on GitHub |
