@@ -58,14 +58,18 @@ class SdsSchemaRequestService:
             raise SchemaMetadataError(str(response.json()), response.status_code)
         return response.json()
 
-    def publish(self, schema: Schema) -> requests.Response:
+    def publish(self, schema_json: dict, filepath: str = 'N/A') -> requests.Response:
         """
-        Publish the schema to SDS.
+        Publish a schema dict to SDS.
 
-        :param schema: the schema to be published.
+        :param schema_json: the schema JSON to be published.
+        :param filepath: optional filepath for use in error messages (e.g. the source filename).
         :return response: the response from the POST request.
+        :raises SurveyIDError: if the schema JSON does not contain a survey_id.
+        :raises SchemaVersionError: if the schema JSON does not contain a schema_version.
         :raises SchemaPostError: if SDS returns a non-200 response.
         """
+        schema = Schema.set_schema(schema_json, filepath)
         logger.info('Publishing schema for survey %s', schema.survey_id)
         url = f'{self.config.SDS_URL}{self.config.POST_SCHEMA_ENDPOINT}'
         response = self.http_service.make_post_request(url, schema.json, params={'survey_id': schema.survey_id})

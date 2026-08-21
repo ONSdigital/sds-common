@@ -39,11 +39,11 @@ all_metadata = client.schemas.get_all_metadata()
 ## Posting a schema directly
 
 ```python
-response = client.schemas.publish(schema_dict)
+response = client.schemas.publish(schema_dict, filepath="068_1.json")
 print(response.status_code)  # 200 on success
 ```
 
-This posts the schema JSON to the SDS API with no prior validation. For the full publish pipeline (fetch → validate → post), use [`github_publisher`](publishers.md#publishing-a-schema-from-github) or [`gcs_publisher`](publishers.md#publishing-a-schema-from-gcs).
+`filepath` is optional — it is only used in error messages if the post fails. This posts the schema JSON directly to SDS with no prior validation. For the full publish pipeline (fetch → validate → post), use [`github_publisher`](publishers.md#publishing-a-schema-from-github) or [`gcs_publisher`](publishers.md#publishing-a-schema-from-gcs).
 
 ---
 

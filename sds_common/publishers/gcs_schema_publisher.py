@@ -43,6 +43,6 @@ class GcsSchemaPublisher(SchemaPublisher):
         """
         schema_json = self._retrieve_schema(filename)
         schema = Schema.set_schema(schema_json, filename)
-        response = self.schema_request_service.publish(schema)
+        response = self.schema_request_service.publish(schema.json, schema.filepath)
         self.file_service.delete(filename)
         return response

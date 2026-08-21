@@ -46,7 +46,7 @@ class GithubSchemaPublisher(SchemaPublisher):
         schema_json = self._retrieve_schema(filename)
         schema = Schema.set_schema(schema_json, filename)
         self._validate(schema)
-        return self.schema_request_service.publish(schema)
+        return self.schema_request_service.publish(schema.json, schema.filepath)
 
     def _validate(self, schema: Schema):
         """

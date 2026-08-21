@@ -7,7 +7,6 @@ import pytest
 import requests
 
 from sds_common.models.schema_publish_errors import SchemaMetadataError, SchemaPostError
-from sds_common.schema.schema import Schema
 
 
 @pytest.fixture
@@ -71,26 +70,42 @@ class TestGetAllSchemaMetadata:
         http.make_get_request.assert_called_once_with("https://sds.test/schemas/all-metadata")
 
 
+VALID_SCHEMA_JSON = {
+    "properties": {
+        "survey_id": {"enum": ["surv1"]},
+        "schema_version": {"const": "v1"},
+    }
+}
+
+
 class TestPostSchema:
     def test_post_schema_200_returns_response(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
         http.make_post_request.return_value = make_response(200)
-        schema = Schema({"data": 1}, "surv1", "v1", "v1.json")
-        resp = svc.publish(schema)
+        resp = svc.publish(VALID_SCHEMA_JSON, "v1.json")
         assert resp.status_code == 200
 
     def test_post_schema_calls_correct_url(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
         http.make_post_request.return_value = make_response(200)
-        schema = Schema({"data": 1}, "surv1", "v1", "v1.json")
-        svc.publish(schema)
+        svc.publish(VALID_SCHEMA_JSON, "v1.json")
         http.make_post_request.assert_called_once_with(
-            "https://sds.test/schemas", {"data": 1}, params={"survey_id": "surv1"}
+            "https://sds.test/schemas", VALID_SCHEMA_JSON, params={"survey_id": "surv1"}
         )
 
     def test_post_schema_raises_on_non_200(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
         http.make_post_request.return_value = make_response(400)
-        schema = Schema({"data": 1}, "surv1", "v1", "v1.json")
         with pytest.raises(SchemaPostError):
-            svc.publish(schema)
+            svc.publish(VALID_SCHEMA_JSON, "v1.json")
+
+    def test_post_schema_raises_survey_id_error_on_missing_field(self, mock_schema_request_service):
+        from sds_common.models.schema_publish_errors import SurveyIDError
+        svc, _ = mock_schema_request_service
+        with pytest.raises(SurveyIDError):
+            svc.publish({"properties": {}}, "bad.json")
+
+    def test_post_schema_uses_na_filepath_by_default(self, mock_schema_request_service, make_response):
+        svc, http = mock_schema_request_service
+        http.make_post_request.return_value = make_response(200)
+        svc.publish(VALID_SCHEMA_JSON)  # no filepath arg
