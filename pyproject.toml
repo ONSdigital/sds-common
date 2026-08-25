@@ -7,17 +7,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "google-auth>=2.38.0",
-    "google-cloud-secret-manager>=2.26.0",
-    "google-cloud-pubsub>=2.36.0",
-    "google-cloud-storage>=3.9.0",
-    "google-cloud-firestore>=2.21.0",
-    "requests>=2.32.3",
+    "google-auth>=2.57.0",
+    "google-cloud-secret-manager>=2.30.0",
+    "google-cloud-pubsub>=2.39.2",
+    "google-cloud-storage>=3.13.1",
+    "google-cloud-firestore>=2.29.0",
+    "requests>=2.34.2",
 ]
 
 [project.optional-dependencies]
 impersonation = [
-    "google-cloud-iam>=2.21.0",
+    "google-cloud-iam>=2.25.0",
 ]
 
 [dependency-groups]
@@ -25,7 +25,7 @@ test = [
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
     "pytest-xdist>=3.6.1",
-    "pytest-order>=1.3.0",
+    "pytest-order>=1.5.0",
 ]
 
 lint = [
