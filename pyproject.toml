@@ -11,7 +11,7 @@ dependencies = [
     "google-cloud-storage==3.13.1",
     "google-cloud-firestore==2.29.0",
     "firebase-admin==7.5.0",
-    "requests==2.32.3",
+    "requests==2.32.3", # Latency issue, do not push version
     "pydantic_settings==2.15.0",
     "python-dotenv==1.2.3",
     "pip_audit==2.10.1",
