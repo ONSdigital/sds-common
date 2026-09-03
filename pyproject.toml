@@ -1,6 +1,6 @@
 [project]
 name = "sds-common"
-version = "1.0.38"
+version = "1.0.39"
 description = "A Python library for common functionality used to interact with SDS."
 requires-python = "==3.13.*"
 dependencies = [
@@ -11,10 +11,9 @@ dependencies = [
     "google-cloud-storage==3.13.1",
     "google-cloud-firestore==2.29.0",
     "firebase-admin==7.5.0",
-    "requests==2.34.2",
+    "requests==2.32.3", # Latency issue, do not push version
     "pydantic_settings==2.15.0",
     "python-dotenv==1.2.3",
-    "functions-framework==3.10.2",
     "pip_audit==2.10.1",
     "setuptools==84.0.0",
     "pytest-order==1.5.0",
