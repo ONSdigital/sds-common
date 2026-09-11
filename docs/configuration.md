@@ -4,7 +4,7 @@
 
 # Configuration reference
 
-All configuration is read from environment variables at the time `Config` is first instantiated. Every variable has a default so the library works out of the box for the `ons-sds-sandbox` project.
+All configuration is read from environment variables at the time `Config` is first instantiated. Most variables have defaults; `SDS_URL` and `SDS_LOADER_URL` are required.
 
 ---
 
