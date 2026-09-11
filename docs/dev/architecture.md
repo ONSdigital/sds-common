@@ -61,7 +61,7 @@ sds_common/
 │   └── logging_config.py       # GCP structured JSON logging
 ├── enums/
 │   └── buckets.py              # Bucket enum (SCHEMA_PUBLISH_BUCKET, DATASET_BUCKET)
-├── errors/
+├── models/
 │   ├── auth_errors.py
 │   ├── config_errors.py
 │   ├── dataset_publish_errors.py
