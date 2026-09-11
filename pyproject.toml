@@ -12,7 +12,7 @@ dependencies = [
     "google-cloud-pubsub>=2.39.2",
     "google-cloud-storage>=3.13.1",
     "google-cloud-firestore>=2.29.0",
-    "requests>=2.34.2",
+    "requests>=2.32.3",
 ]
 
 [project.optional-dependencies]
