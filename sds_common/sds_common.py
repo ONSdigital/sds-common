@@ -118,18 +118,28 @@ class SdsCommon:
 
     @cached_property
     def schemas(self) -> SdsSchemaRequestService:
-        """HTTP client for SDS schema endpoints (metadata, post)."""
+        """HTTP client for SDS schema endpoints (metadata, post).
+        
+        Generates fresh authentication headers on each request, ensuring tokens
+        never expire during the lifetime of a long-lived SdsCommon instance.
+        """
         return SdsSchemaRequestService(
-            http_service=self._authenticated_http,
+            http_service=self._http,
             config=self.config,
+            auth_header_generator=self.iap_auth.generate,
         )
 
     @cached_property
     def datasets(self) -> SdsDatasetRequestService:
-        """HTTP client for SDS dataset endpoints (metadata)."""
+        """HTTP client for SDS dataset endpoints (metadata).
+        
+        Generates fresh authentication headers on each request, ensuring tokens
+        never expire during the lifetime of a long-lived SdsCommon instance.
+        """
         return SdsDatasetRequestService(
-            http_service=self._authenticated_http,
+            http_service=self._http,
             config=self.config,
+            auth_header_generator=self.iap_auth.generate,
         )
 
     # ------------------------------------------------------------ publishers

@@ -84,6 +84,7 @@ def mock_http():
 @pytest.fixture
 def mock_schema_request_service(base_config):
     http = MagicMock()
+    http.session = MagicMock(spec=requests.Session)
     cfg = MagicMock()
     cfg.SDS_URL = "https://sds.test"
     cfg.GET_SCHEMA_METADATA_ENDPOINT = "/schemas/metadata"

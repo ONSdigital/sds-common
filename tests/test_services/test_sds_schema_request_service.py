@@ -23,19 +23,19 @@ def make_response():
 class TestGetSchemaMetadata:
     def test_returns_list_on_200(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(200, [{"schema_version": "v1"}])
+        http.session.get.return_value = make_response(200, [{"schema_version": "v1"}])
         result = svc.get_metadata("surv1")
         assert result == [{"schema_version": "v1"}]
 
     def test_returns_none_on_404(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(404)
+        http.session.get.return_value = make_response(404)
         assert svc.get_metadata("new_survey") is None
 
     def test_raises_on_500_and_logs_warning(self, mock_schema_request_service, make_response):
         from unittest.mock import patch
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(500)
+        http.session.get.return_value = make_response(500)
         with patch("sds_common.services.sds_schema_request_service.logger") as mock_logger:
             with pytest.raises(SchemaMetadataError):
                 svc.get_metadata("surv1")
@@ -43,31 +43,31 @@ class TestGetSchemaMetadata:
 
     def test_calls_correct_url_with_survey_id(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(200, [])
+        http.session.get.return_value = make_response(200, [])
         svc.get_metadata("surv1")
-        http.make_get_request.assert_called_once_with(
-            "https://sds.test/schemas/metadata", params={"survey_id": "surv1"}
+        http.session.get.assert_called_once_with(
+            "https://sds.test/schemas/metadata", headers=None, params={"survey_id": "surv1"}
         )
 
 
 class TestGetAllSchemaMetadata:
     def test_returns_list_on_200(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(200, [{"survey_id": "s1"}])
+        http.session.get.return_value = make_response(200, [{"survey_id": "s1"}])
         result = svc.get_all_metadata()
         assert result == [{"survey_id": "s1"}]
 
     def test_raises_on_error(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(503, {})
+        http.session.get.return_value = make_response(503, {})
         with pytest.raises(SchemaMetadataError):
             svc.get_all_metadata()
 
     def test_calls_correct_url(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_get_request.return_value = make_response(200, [])
+        http.session.get.return_value = make_response(200, [])
         svc.get_all_metadata()
-        http.make_get_request.assert_called_once_with("https://sds.test/schemas/all-metadata")
+        http.session.get.assert_called_once_with("https://sds.test/schemas/all-metadata", headers=None)
 
 
 VALID_SCHEMA_JSON = {
@@ -81,21 +81,21 @@ VALID_SCHEMA_JSON = {
 class TestPostSchema:
     def test_post_schema_200_returns_response(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_post_request.return_value = make_response(200)
+        http.session.post.return_value = make_response(200)
         resp = svc.publish(VALID_SCHEMA_JSON, "v1.json")
         assert resp.status_code == 200
 
     def test_post_schema_calls_correct_url(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_post_request.return_value = make_response(200)
+        http.session.post.return_value = make_response(200)
         svc.publish(VALID_SCHEMA_JSON, "v1.json")
-        http.make_post_request.assert_called_once_with(
-            "https://sds.test/schemas", VALID_SCHEMA_JSON, params={"survey_id": "surv1"}
+        http.session.post.assert_called_once_with(
+            "https://sds.test/schemas", json=VALID_SCHEMA_JSON, headers=None, params={"survey_id": "surv1"}
         )
 
     def test_post_schema_raises_on_non_200(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_post_request.return_value = make_response(400)
+        http.session.post.return_value = make_response(400)
         with pytest.raises(SchemaPostError):
             svc.publish(VALID_SCHEMA_JSON, "v1.json")
 
@@ -107,5 +107,5 @@ class TestPostSchema:
 
     def test_post_schema_uses_na_filepath_by_default(self, mock_schema_request_service, make_response):
         svc, http = mock_schema_request_service
-        http.make_post_request.return_value = make_response(200)
+        http.session.post.return_value = make_response(200)
         svc.publish(VALID_SCHEMA_JSON)  # no filepath arg

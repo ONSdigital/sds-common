@@ -24,6 +24,7 @@ def make_response():
 @pytest.fixture
 def dataset_request_service():
     http = MagicMock()
+    http.session = MagicMock(spec=requests.Session)
     cfg = MagicMock()
     cfg.SDS_URL = "https://sds.test"
     cfg.GET_DATASET_METADATA_ENDPOINT = "/datasets/metadata"
@@ -45,24 +46,25 @@ class TestSdsDatasetRequestService:
                 "filename": "file.json",
             }
         ]
-        http.make_get_request.return_value = make_response(200, body)
+        http.session.get.return_value = make_response(200, body)
         result = svc.get_metadata("s1", "p1")
         assert len(result) == 1
         assert result[0].dataset_id == "d1"
-        http.make_get_request.assert_called_once_with(
+        http.session.get.assert_called_once_with(
             "https://sds.test/datasets/metadata",
+            headers=None,
             params={"survey_id": "s1", "period_id": "p1"},
         )
 
     def test_get_metadata_returns_none_on_404(self, dataset_request_service, make_response):
         svc, http = dataset_request_service
-        http.make_get_request.return_value = make_response(404)
+        http.session.get.return_value = make_response(404)
         result = svc.get_metadata("s1", "p1")
         assert result is None
 
     def test_get_metadata_raises_on_non_200(self, dataset_request_service, make_response):
         svc, http = dataset_request_service
-        http.make_get_request.return_value = make_response(500)
+        http.session.get.return_value = make_response(500)
         with patch("sds_common.services.sds_dataset_request_service.logger") as mock_logger:
             with pytest.raises(DatasetMetadataRetrievalError):
                 svc.get_metadata("s1", "p1")
@@ -70,6 +72,6 @@ class TestSdsDatasetRequestService:
 
     def test_get_metadata_returns_empty_list(self, dataset_request_service, make_response):
         svc, http = dataset_request_service
-        http.make_get_request.return_value = make_response(200, [])
+        http.session.get.return_value = make_response(200, [])
         result = svc.get_metadata("s1", "p1")
         assert result == []

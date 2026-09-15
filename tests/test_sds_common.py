@@ -132,18 +132,18 @@ class TestSdsCommonDependencyWiring:
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******"}
         client.__dict__["iap_auth"] = mock_provider
-        client.__dict__["_authenticated_session"] = MagicMock()
         svc = client.schemas
-        assert svc.http_service.headers == {"Authorization": "******"}
+        assert svc.auth_header_generator == mock_provider.generate
+        assert svc.auth_header_generator() == {"Authorization": "******"}
 
     def test_dataset_service_uses_authenticated_http(self, base_config):
         client = SdsCommon(config=base_config)
         mock_provider = MagicMock(spec=AuthHeaderProvider)
         mock_provider.generate.return_value = {"Authorization": "******"}
         client.__dict__["iap_auth"] = mock_provider
-        client.__dict__["_authenticated_session"] = MagicMock()
         svc = client.datasets
-        assert svc.http_service.headers == {"Authorization": "******"}
+        assert svc.auth_header_generator == mock_provider.generate
+        assert svc.auth_header_generator() == {"Authorization": "******"}
 
 
 class TestSdsCommonFileServices:

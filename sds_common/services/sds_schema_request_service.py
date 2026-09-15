@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Callable
 
 import requests
 
@@ -15,11 +16,20 @@ logger = logging.getLogger(__name__)
 class SdsSchemaRequestService:
     """
     Service to handle requests to SDS schema endpoints.
+    
+    Generates fresh authentication headers on each request by calling the
+    provided ``auth_header_generator`` callable, ensuring tokens never expire.
     """
 
-    def __init__(self, http_service: HttpService, config: Config | None = None) -> None:
+    def __init__(
+        self,
+        http_service: HttpService,
+        config: Config | None = None,
+        auth_header_generator: Callable[[], dict[str, str]] | None = None,
+    ) -> None:
         self.http_service = http_service
         self.config = config or get_config()
+        self.auth_header_generator = auth_header_generator
 
     def get_metadata(self, survey_id: str) -> list[dict] | None:
         """
@@ -30,7 +40,8 @@ class SdsSchemaRequestService:
         :raises SchemaMetadataError: if the response status code is not 200 or 404.
         """
         url = f'{self.config.SDS_URL}{self.config.GET_SCHEMA_METADATA_ENDPOINT}'
-        response = self.http_service.make_get_request(url, params={'survey_id': survey_id})
+        headers = self._get_fresh_headers()
+        response = self.http_service.session.get(url, headers=headers, params={'survey_id': survey_id})
         if response.status_code == 404:
             return None
         if response.status_code != 200:
@@ -49,7 +60,8 @@ class SdsSchemaRequestService:
         :raises SchemaMetadataError: if the response status code is not 200.
         """
         url = f'{self.config.SDS_URL}{self.config.GET_ALL_SCHEMA_METADATA_ENDPOINT}'
-        response = self.http_service.make_get_request(url)
+        headers = self._get_fresh_headers()
+        response = self.http_service.session.get(url, headers=headers)
         if response.status_code != 200:
             logger.warning(
                 "Failed to fetch all schema metadata. Status: %d",
@@ -72,7 +84,8 @@ class SdsSchemaRequestService:
         schema = Schema.set_schema(schema_json, filepath)
         logger.info('Publishing schema for survey %s', schema.survey_id)
         url = f'{self.config.SDS_URL}{self.config.POST_SCHEMA_ENDPOINT}'
-        response = self.http_service.make_post_request(url, schema.json, params={'survey_id': schema.survey_id})
+        headers = self._get_fresh_headers()
+        response = self.http_service.session.post(url, json=schema.json, headers=headers, params={'survey_id': schema.survey_id})
         if response.status_code != 200:
             logger.warning(
                 "Failed to post schema '%s' for survey '%s'. Status: %d",
@@ -81,3 +94,9 @@ class SdsSchemaRequestService:
             raise SchemaPostError(schema.filepath, response.status_code)
         logger.info('Schema %s published for survey %s', schema.filepath, schema.survey_id)
         return response
+
+    def _get_fresh_headers(self) -> dict[str, str] | None:
+        """Generate fresh authentication headers for this request."""
+        if self.auth_header_generator:
+            return self.auth_header_generator()
+        return None

@@ -1,4 +1,6 @@
 from __future__ import annotations
+from typing import Callable
+
 from sds_common.config.config import Config, get_config
 import logging
 from sds_common.models.dataset_models import DatasetMetadata
@@ -9,9 +11,22 @@ logger = logging.getLogger(__name__)
 
 
 class SdsDatasetRequestService:
-    def __init__(self, http_service: HttpService, config: Config | None = None) -> None:
+    """
+    Service to handle requests to SDS dataset endpoints.
+    
+    Generates fresh authentication headers on each request by calling the
+    provided ``auth_header_generator`` callable, ensuring tokens never expire.
+    """
+
+    def __init__(
+        self,
+        http_service: HttpService,
+        config: Config | None = None,
+        auth_header_generator: Callable[[], dict[str, str]] | None = None,
+    ) -> None:
         self.http_service = http_service
         self.config = config or get_config()
+        self.auth_header_generator = auth_header_generator
 
     def get_metadata(self, survey_id: str, period_id: str) -> list[DatasetMetadata] | None:
         """
@@ -23,7 +38,8 @@ class SdsDatasetRequestService:
         :raises DatasetMetadataRetrievalError: if the response status code is not 200 or 404.
         """
         url = self.config.SDS_URL + self.config.GET_DATASET_METADATA_ENDPOINT
-        response = self.http_service.make_get_request(url, params={'survey_id': survey_id, 'period_id': period_id})
+        headers = self._get_fresh_headers()
+        response = self.http_service.session.get(url, headers=headers, params={'survey_id': survey_id, 'period_id': period_id})
         if response.status_code == 404:
             return None
         if response.status_code != 200:
@@ -33,3 +49,9 @@ class SdsDatasetRequestService:
             )
             raise DatasetMetadataRetrievalError(survey_id, period_id, response.status_code)
         return [DatasetMetadata(**dataset) for dataset in response.json()]
+
+    def _get_fresh_headers(self) -> dict[str, str] | None:
+        """Generate fresh authentication headers for this request."""
+        if self.auth_header_generator:
+            return self.auth_header_generator()
+        return None
