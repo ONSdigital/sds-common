@@ -67,7 +67,7 @@ class SdsSchemaRequestService:
                 "Failed to fetch all schema metadata. Status: %d",
                 response.status_code,
             )
-            raise SchemaMetadataError(str(response.json()), response.status_code)
+            raise SchemaMetadataError("all_schemas", response.status_code)
         return response.json()
 
     def publish(self, schema_json: dict, filepath: str = 'N/A') -> requests.Response:
