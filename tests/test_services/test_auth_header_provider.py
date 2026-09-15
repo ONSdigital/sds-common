@@ -86,13 +86,13 @@ class TestAuthHeaderProviderCreateIamClient:
         mock_module.IAMCredentialsClient = mock_cls
         with patch.dict(
             "sys.modules",
-            {"google.iam.credentials_v1.services.iam_credentials": mock_module},
+            {"google.cloud.iam_credentials_v1": mock_module},
         ):
             result = AuthHeaderProvider._create_iam_credentials_client()
         assert result is mock_instance
 
     def test_create_iam_client_raises_when_module_missing(self):
-        key = "google.iam.credentials_v1.services.iam_credentials"
+        key = "google.cloud.iam_credentials_v1"
         original = sys.modules.get(key)
         sys.modules[key] = None  # type: ignore
         try:
