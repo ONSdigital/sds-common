@@ -71,7 +71,7 @@ class AuthHeaderProvider:
     @staticmethod
     def _create_iam_credentials_client() -> Any:
         try:
-            from google.iam.credentials_v1.services.iam_credentials import IAMCredentialsClient
+            from google.cloud import iam_credentials_v1
         except ModuleNotFoundError as error:
             raise ModuleNotFoundError('google-cloud-iam must be installed to use impersonation auth.') from error
-        return IAMCredentialsClient()
+        return iam_credentials_v1.IAMCredentialsClient()
