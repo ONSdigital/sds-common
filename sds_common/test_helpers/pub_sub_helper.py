@@ -140,8 +140,10 @@ class PubSubHelper:
         try:
             self.subscriber_client.get_subscription(request={'subscription': subscription_path})
             return True
-        except (NotFound, GoogleAPIError):
+        except NotFound:
             return False
+        except GoogleAPIError:
+            raise
         except Exception:
             logger.warning(
                 'Unexpected error checking subscription existence for %s',
