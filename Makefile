@@ -47,6 +47,22 @@ bump:
 	@echo "🔄 Generating new lock file..."
 	uv lock
 
+BUMP_PART ?= patch
+
+.PHONY: bump-beta
+bump-beta:
+	@echo "🔼 Bumping project version (beta; set BUMP_PART=major|minor|patch)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py beta $(BUMP_PART)
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: remove-beta
+remove-beta:
+	@echo "🔼 Removing beta suffix from project version..."
+	uv run --only-group version-check python .github/scripts/bump_version.py remove-beta
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
 .PHONY: bump-major
 bump-major:
 	@echo "🔼 Bumping project version (major)..."
@@ -79,6 +95,8 @@ build-dist: install ## Build tar and wheel
 
 .PHONY: publish-dist
 publish-dist: build-dist ## Publish to artifact registry (must be logged into gcloud)
+	set -euo pipefail
 	uv run --only-group publish twine upload \
 		--repository-url https://europe-west2-python.pkg.dev/ons-sds-ci/sds-python-packages \
 		--verbose dist/sds_common-*
+	uv run --only-group publish python .github/scripts/dev/cleanup_dist.py
