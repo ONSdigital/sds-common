@@ -11,8 +11,6 @@ from sds_common.test_helpers.firebase_loader import FirebaseLoader
 from sds_common.test_helpers.firestore_helpers import perform_delete_on_collection_with_test_survey_id
 from sds_common.test_helpers.pub_sub_helper import PubSubHelper
 
-config = get_config()
-
 
 @lru_cache(maxsize=None)
 def _get_firebase_loader(project_id: str, firestore_db_name: str) -> FirebaseLoader:
@@ -46,6 +44,7 @@ def cleanup(firebase_loader: FirebaseLoader | None = None):
     Should be run before and after test to account for test failures.
     """
     if firebase_loader is None:
+        config = get_config()
         firebase_loader = _get_firebase_loader(config.PROJECT_ID, config.FIRESTORE_DB_NAME)
 
     client = firebase_loader.get_client()
@@ -63,6 +62,7 @@ def pubsub_setup(
 ):
     """Creates any subscribers that may be used in tests"""
     if pubsub_helper is None:
+        config = get_config()
         pubsub_helper = _get_pubsub_helper(topic_id, config.PROJECT_ID)
     pubsub_helper.try_create_subscriber(subscriber_id)
 
@@ -74,6 +74,7 @@ def pubsub_teardown(
 ):
     """Deletes subscribers that may have been used in tests"""
     if pubsub_helper is None:
+        config = get_config()
         pubsub_helper = _get_pubsub_helper(topic_id, config.PROJECT_ID)
     pubsub_helper.try_delete_subscriber(subscriber_id)
 
@@ -85,6 +86,7 @@ def pubsub_purge_messages(
 ):
     """Purge any messages that may have been sent to a subscriber"""
     if pubsub_helper is None:
+        config = get_config()
         pubsub_helper = _get_pubsub_helper(topic_id, config.PROJECT_ID)
     pubsub_helper.purge_messages(subscriber_id)
 
@@ -108,6 +110,7 @@ def poll_subscription(
     Polls a subscription for messages until the timeout is reached.
     """
     if pubsub_helper is None:
+        config = get_config()
         pubsub_helper = _get_pubsub_helper(topic_id, config.PROJECT_ID)
     start_time = time.time()
     while time.time() - start_time < timeout:
