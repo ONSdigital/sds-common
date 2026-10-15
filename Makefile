@@ -24,26 +24,47 @@ test:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests..."
-	uv run --only-group test pytest -v tests/
+	SDS_URL=http://www.example.com SDS_LOADER_URL=https://www.example.com uv run --only-group test pytest -v tests/
 
 .PHONY: test-coverage
 test-coverage:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests with coverage..."
-	uv run --only-group test pytest -v --cov=sds_common --cov-report=term-missing tests/
+	SDS_URL=http://www.example.com SDS_LOADER_URL=https://www.example.com uv run --only-group test pytest -v --cov=sds_common --cov-report=term-missing tests/
 
 .PHONY: test-parallel
 test-parallel:
 	@echo "Running Unit Tests in parallel..."
 	uv sync --group test
-	uv run --only-group test pytest -n auto -v tests/
+	SDS_URL=http://www.example.com SDS_LOADER_URL=https://www.example.com uv run --only-group test pytest -n auto -v tests/
 
 
 .PHONY: bump
 bump:
 	@echo "🔼 Bumping project version..."
 	uv run --only-group version-check python .github/scripts/bump_version.py
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: bump-major
+bump-major:
+	@echo "🔼 Bumping project version (major)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py major
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: bump-minor
+bump-minor:
+	@echo "🔼 Bumping project version (minor)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py minor
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: bump-patch
+bump-patch:
+	@echo "🔼 Bumping project version (patch)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py patch
 	@echo "🔄 Generating new lock file..."
 	uv lock
 
