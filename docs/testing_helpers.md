@@ -4,7 +4,25 @@
 
 # Testing helpers
 
-`sds-common` includes `PubSubHelper` for integration tests that need to interact with real GCP Pub/Sub infrastructure.
+`sds-common` includes integration helpers for Firestore cleanup and Pub/Sub-based integration tests.
+
+For the common path, end users no longer need to manually build helper dependencies such as `FirebaseLoader`. Firestore cleanup and Pub/Sub helper functions are exposed as standalone top-level helpers.
+
+## Quick start
+
+```python
+from sds_common import cleanup, pubsub_setup, poll_subscription, pubsub_teardown
+
+# Firestore cleanup with no manual dependency wiring
+cleanup()
+
+subscriber_id = "my-test-subscriber"
+topic_id = "my-topic"
+
+pubsub_setup(subscriber_id, topic_id=topic_id)
+messages = poll_subscription(subscriber_id, topic_id=topic_id)
+pubsub_teardown(subscriber_id, topic_id=topic_id)
+```
 
 ---
 
@@ -24,6 +42,14 @@ helper = PubSubHelper(
     publisher_client=pubsub_v1.PublisherClient(),
     project_id="my-gcp-project",
 )
+```
+
+If you prefer not to construct `PubSubHelper` manually, the standalone helper functions can create one for you from `topic_id` and environment-backed config:
+
+```python
+from sds_common import pubsub_setup
+
+pubsub_setup("my-test-subscriber", topic_id="my-topic")
 ```
 
 ### Typical integration test pattern
@@ -62,6 +88,8 @@ helper.try_delete_subscriber(SUBSCRIBER_ID)
 
 - `try_create_subscriber` is idempotent — skips creation if the subscription already exists.
 - Retry loops use exponential backoff starting at 0.5 s with 5 attempts.
+- `cleanup()` is intended to be imported directly with `from sds_common import cleanup` and will build its own facade-backed Firestore loader when one is not supplied.
+- `pubsub_setup()`, `pubsub_teardown()`, `pubsub_purge_messages()`, and `poll_subscription()` take `subscriber_id` and `topic_id`, and can optionally accept a pre-built `PubSubHelper` via `pubsub_helper=`.
 
 ---
 
