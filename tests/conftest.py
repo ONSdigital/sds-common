@@ -73,7 +73,7 @@ def fake_repo_with_schema(valid_schema_json):
 
 @pytest.fixture
 def file_service(fake_repo):
-    return FileService(bucket_repository=fake_repo)
+    return FileService(file_repository=fake_repo)
 
 
 @pytest.fixture

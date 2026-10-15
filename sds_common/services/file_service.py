@@ -3,8 +3,8 @@ from sds_common.interfaces.file_repository_interface import FileRepositoryInterf
 
 
 class FileService:
-    def __init__(self, bucket_repository: FileRepositoryInterface) -> None:
-        self.bucket_repository = bucket_repository
+    def __init__(self, file_repository: FileRepositoryInterface) -> None:
+        self.file_repository = file_repository
 
     def upload(self, filepath: str) -> None:
         """
@@ -12,7 +12,7 @@ class FileService:
 
         :param filepath: Path to the file to be uploaded.
         """
-        self.bucket_repository.upload_file_from_path(filepath)
+        self.file_repository.upload_file_from_path(filepath)
 
     def get_json(self, filename: str) -> dict:
         """
@@ -21,7 +21,7 @@ class FileService:
         :param filename: Name of the file to be retrieved.
         :return dict: The file loaded as a JSON dictionary.
         """
-        return self.bucket_repository.get_file_as_json(filename)
+        return self.file_repository.get_file_as_json(filename)
 
     def delete(self, filename: str) -> None:
         """
@@ -29,7 +29,7 @@ class FileService:
 
         :param filename: Name of the file to be deleted.
         """
-        self.bucket_repository.delete_file(filename)
+        self.file_repository.delete_file(filename)
 
     def exists(self, filename: str) -> bool:
         """
@@ -38,4 +38,4 @@ class FileService:
         :param filename: Name of the file to be checked.
         :return bool: True if the file exists, False otherwise.
         """
-        return self.bucket_repository.check_file_exists(filename)
+        return self.file_repository.check_file_exists(filename)
