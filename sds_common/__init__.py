@@ -26,6 +26,7 @@ from sds_common.models.storage_errors import BucketNotFoundError
 from sds_common.sds_common import SdsCommon
 from sds_common.test_helpers.integration_helpers import (
     cleanup,
+    inject_wait_time,
     poll_subscription,
     pubsub_purge_messages,
     pubsub_setup,
@@ -80,6 +81,7 @@ __all__ = [
     # Test helpers (intentionally standalone)
     'PubSubHelper',
     'cleanup',
+    'inject_wait_time',
     'pubsub_setup',
     'pubsub_teardown',
     'pubsub_purge_messages',
