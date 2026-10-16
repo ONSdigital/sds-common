@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+
 def delete_blobs_with_test_survey_id(bucket, test_survey_id: str):
     """
     Deletes all blobs with the given survey ID prefix from the specified bucket.

@@ -19,7 +19,7 @@ def repo():
 
 @pytest.fixture
 def svc(repo):
-    return FileService(bucket_repository=repo)
+    return FileService(file_repository=repo)
 
 
 class TestFileService:

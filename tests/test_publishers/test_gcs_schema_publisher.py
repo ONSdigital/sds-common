@@ -39,7 +39,7 @@ def schema_request_service():
 def publisher(schema_request_service, repo):
     return GcsSchemaPublisher(
         schema_request_service=schema_request_service,
-        file_service=FileService(bucket_repository=repo),
+        file_service=FileService(file_repository=repo),
     )
 
 

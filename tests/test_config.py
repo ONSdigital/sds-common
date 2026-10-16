@@ -50,7 +50,6 @@ class TestConfigHelpers:
             assert ConfigHelpers.get_value_from_env("MISSING_VAR", "default") == "default"
 
     def test_get_value_from_env_raises_when_not_set_and_no_default(self):
-        from sds_common.models.config_errors import EnvironmentVariableError
         os.environ.pop("MISSING_VAR_2", None)
         with pytest.raises(EnvironmentVariableError) as exc_info:
             ConfigHelpers.get_value_from_env("MISSING_VAR_2")
@@ -69,12 +68,13 @@ class TestConfig:
         assert cfg.PROJECT_ID == "my-project"
         assert cfg.SDS_URL == "https://example.com"
 
-    def test_config_raises_when_sds_url_not_set(self):
+    def test_config_uses_defaults_when_sds_url_not_set(self):
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("SDS_URL", None)
             os.environ.pop("SDS_LOADER_URL", None)
-            with pytest.raises(EnvironmentVariableError):
-                Config()
+            cfg = Config()
+            assert cfg.SDS_URL == 'https://www.example.com'
+            assert cfg.LOADER_URL == 'https://www.example.com'
 
     def test_config_uses_defaults_when_env_not_set(self, base_config):
         assert base_config.PROJECT_ID == "test-project"

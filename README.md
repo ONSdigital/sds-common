@@ -122,6 +122,39 @@ client = SdsCommon(config=my_config)
 | `firestore` | `FirebaseLoader` | Typed Firestore wrapper for schema collection access — see [Firestore](docs/firestore.md) |
 | `pub_sub` | `PubSubService` | Publishes messages to GCP Pub/Sub topics — see [Pub/Sub messaging](docs/pub_sub.md) |
 
+### Testing helper convenience methods
+
+For Firestore cleanup, use the standalone helper directly from the top-level package:
+
+```python
+from sds_common import cleanup
+
+# Firestore cleanup with no manual FirebaseLoader wiring
+cleanup()
+```
+
+Pub/Sub integration helpers are also available directly from the top-level package, so you do not need to go through the facade:
+
+```python
+from sds_common import poll_subscription, pubsub_setup, pubsub_teardown
+
+pubsub_setup("my-test-subscriber", topic_id="my-topic")
+messages = poll_subscription(
+    "my-test-subscriber",
+    topic_id="my-topic",
+)
+pubsub_teardown("my-test-subscriber", topic_id="my-topic")
+```
+
+The standalone helper functions are also exported from the top-level package and can resolve known dependencies automatically:
+
+```python
+from sds_common import cleanup, pubsub_setup
+
+cleanup()
+pubsub_setup("my-test-subscriber", topic_id="my-topic")
+```
+
 ---
 
 ## Documentation by topic

@@ -24,26 +24,63 @@ test:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests..."
-	uv run --only-group test pytest -v tests/
+	SDS_URL=http://www.example.com SDS_LOADER_URL=https://www.example.com uv run --only-group test pytest -v tests/
 
 .PHONY: test-coverage
 test-coverage:
 	@echo "Running UV sync..."
 	uv sync --group test
 	@echo "Running Unit Tests with coverage..."
-	uv run --only-group test pytest -v --cov=sds_common --cov-report=term-missing tests/
+	SDS_URL=http://www.example.com SDS_LOADER_URL=https://www.example.com uv run --only-group test pytest -v --cov=sds_common --cov-report=term-missing tests/
 
 .PHONY: test-parallel
 test-parallel:
 	@echo "Running Unit Tests in parallel..."
 	uv sync --group test
-	uv run --only-group test pytest -n auto -v tests/
+	SDS_URL=http://www.example.com SDS_LOADER_URL=https://www.example.com uv run --only-group test pytest -n auto -v tests/
 
 
 .PHONY: bump
 bump:
 	@echo "🔼 Bumping project version..."
 	uv run --only-group version-check python .github/scripts/bump_version.py
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+BUMP_PART ?= patch
+
+.PHONY: bump-beta
+bump-beta:
+	@echo "🔼 Bumping project version (beta; set BUMP_PART=major|minor|patch)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py beta $(BUMP_PART)
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: remove-beta
+remove-beta:
+	@echo "🔼 Removing beta suffix from project version..."
+	uv run --only-group version-check python .github/scripts/bump_version.py remove-beta
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: bump-major
+bump-major:
+	@echo "🔼 Bumping project version (major)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py major
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: bump-minor
+bump-minor:
+	@echo "🔼 Bumping project version (minor)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py minor
+	@echo "🔄 Generating new lock file..."
+	uv lock
+
+.PHONY: bump-patch
+bump-patch:
+	@echo "🔼 Bumping project version (patch)..."
+	uv run --only-group version-check python .github/scripts/bump_version.py patch
 	@echo "🔄 Generating new lock file..."
 	uv lock
 
@@ -58,6 +95,8 @@ build-dist: install ## Build tar and wheel
 
 .PHONY: publish-dist
 publish-dist: build-dist ## Publish to artifact registry (must be logged into gcloud)
+	set -euo pipefail
 	uv run --only-group publish twine upload \
 		--repository-url https://europe-west2-python.pkg.dev/ons-sds-ci/sds-python-packages \
 		--verbose dist/sds_common-*
+	uv run --only-group publish python .github/scripts/dev/cleanup_dist.py
