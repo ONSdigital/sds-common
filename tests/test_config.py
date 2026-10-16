@@ -50,7 +50,6 @@ class TestConfigHelpers:
             assert ConfigHelpers.get_value_from_env("MISSING_VAR", "default") == "default"
 
     def test_get_value_from_env_raises_when_not_set_and_no_default(self):
-        from sds_common.models.config_errors import EnvironmentVariableError
         os.environ.pop("MISSING_VAR_2", None)
         with pytest.raises(EnvironmentVariableError) as exc_info:
             ConfigHelpers.get_value_from_env("MISSING_VAR_2")
