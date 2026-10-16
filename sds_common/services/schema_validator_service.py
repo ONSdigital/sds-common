@@ -47,6 +47,7 @@ class SchemaValidatorService:
         metadata = self.sds_schema_request_service.get_metadata(schema.survey_id)
 
         if metadata is None:
+            logger.info('No existing schemas found in SDS for survey %s - this is the first version.', schema.survey_id)
             return
 
         if not isinstance(metadata, list):
